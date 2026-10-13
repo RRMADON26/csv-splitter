@@ -63,7 +63,7 @@
   .side svg { width: 22px; height: 22px; }
 
   /* ---------- top bar ---------- */
-  .top { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 36px; }
+  .top { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; }
   .nav { display: flex; gap: 26px; align-items: center; }
   .nav a { color: var(--text); text-decoration: none; display: flex; gap: 7px; align-items: center; font-weight: 500; font-size: 15px; opacity: .75; padding: 6px 0; }
   .nav a.on { opacity: 1; font-weight: 600; border-bottom: 2px solid var(--accent); }
@@ -180,8 +180,19 @@
   .sum .row span:first-child { color: var(--muted); }
   .sum .acts { display: flex; gap: 10px; margin-top: 14px; }
   .sum .acts .btn { flex: 1; }
-  .privacy { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 28px; font-size: 13px; color: var(--muted); text-align: center; }
-  .privacy svg { width: 16px; height: 16px; color: var(--ok); flex: none; }
+  .safe {
+    display: flex; align-items: center; gap: 28px; margin: -8px 0 32px; padding: 14px 28px 14px 22px;
+    background: color-mix(in srgb, var(--ok) 10%, var(--card)); border: 1px solid color-mix(in srgb, var(--ok) 35%, transparent);
+    border-radius: 24px;
+  }
+  .safe svg.ill { width: 190px; height: 86px; flex: none; }
+  .safe .tx { flex: 1; min-width: 0; }
+  .safe h2 { margin: 0 0 3px; font-size: 20px; font-weight: 600; display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+  .safe h2 em { font-style: normal; font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; background: var(--ok); color: #fff; padding: 3px 9px; border-radius: 99px; }
+  .safe p { margin: 0; font-size: 14px; opacity: .8; max-width: 560px; }
+  .safe ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; flex: none; }
+  .safe li { display: flex; align-items: center; gap: 8px; }
+  .safe li svg { width: 16px; height: 16px; color: var(--ok); flex: none; }
   [hidden] { display: none !important; }
 
   @media (max-width: 1100px) {
@@ -200,6 +211,8 @@
     .hello h1 { font-size: 34px; }
     .two { grid-template-columns: 1fr; }
     .res { grid-template-columns: 1fr auto; }
+    .safe { flex-direction: column; align-items: flex-start; gap: 12px; padding: 18px; }
+    .safe ul { flex-direction: row; flex-wrap: wrap; gap: 6px 16px; }
     .res .bar, .res .sz { display: none; }
     .nav { display: none; }
   }
@@ -229,6 +242,29 @@
       <button class="btn" id="pick" type="button">Choose CSV file</button>
     </div>
   </header>
+
+  <aside class="safe" aria-label="Privacy">
+    <svg class="ill" viewBox="0 0 200 90" fill="none" stroke="var(--ill)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="6" y="10" width="102" height="70" rx="9" fill="var(--card)"/>
+      <path d="M6 26h102"/><circle cx="16" cy="18" r="2" fill="var(--ill)" stroke="none"/><circle cx="24" cy="18" r="2" fill="var(--ill)" stroke="none"/><circle cx="32" cy="18" r="2" fill="var(--ill)" stroke="none"/>
+      <rect x="22" y="36" width="36" height="34" rx="5" fill="var(--accent-soft)"/>
+      <path d="M30 46h20M30 53h20M30 60h12"/>
+      <rect x="62" y="48" width="34" height="26" rx="7" fill="var(--ok)" stroke="var(--ill)"/>
+      <path d="M70 48v-6a9 9 0 0 1 18 0v6"/><circle cx="79" cy="60" r="2.6" fill="#fff" stroke="none"/><path d="M79 61v5" stroke="#fff"/>
+      <path d="M116 45h30" stroke-dasharray="3 5"/>
+      <path d="M160 70a14 14 0 0 1-2-27.8A18 18 0 0 1 192 46a12 12 0 0 1-2 24z" fill="var(--card)"/>
+      <path d="M150 80L196 28" stroke="var(--err)" stroke-width="3"/>
+    </svg>
+    <div class="tx">
+      <h2>Your CSV never leaves your browser <em>100% private</em></h2>
+      <p>Files are read, split and zipped locally on your device. Nothing is uploaded to any server.</p>
+    </div>
+    <ul>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>No upload</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>No server</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Processed locally</li>
+    </ul>
+  </aside>
 
   <section class="hero">
     <div class="hello">
@@ -351,11 +387,6 @@
       </div>
     </div>
   </main>
-
-  <p class="privacy">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="3"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
-    <span>Your CSV stays in this browser. It is processed locally and is never uploaded to any server.</span>
-  </p>
 </div>
 
 <script>

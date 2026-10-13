@@ -2,12 +2,12 @@
 
 A single-file web tool that **splits large CSV files into several smaller ones**. It handles hundreds of thousands of rows or more (tested with 200,000 rows, ~19 MB). Everything runs **in your browser**: your file is never uploaded anywhere.
 
-![CSV Splitter, light theme](docs/preview-light.png?v=2)
+![CSV Splitter, light theme](docs/preview-light.png?v=3)
 
 <details>
 <summary>Dark theme</summary>
 
-![CSV Splitter, dark theme](docs/preview-dark.png?v=2)
+![CSV Splitter, dark theme](docs/preview-dark.png?v=3)
 
 </details>
 
