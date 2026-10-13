@@ -26,15 +26,13 @@ A single-file web tool that **splits large CSV files into several smaller ones**
 ## Usage
 
 1. Open `index.html` in a browser (double-click it, or use a local static server, see below).
-2. Drag a CSV file onto the **+** tile, or click **Pilih file CSV** (Choose CSV file).
-3. Wait for the row count, then configure the **Pengaturan** (Settings) card:
-   - **Cara membagi** (Split by): *rows per file* or *number of output files*
-   - **Awalan nama** (Name prefix): output files are named `prefix_001_originalname.csv`
+2. Drag a CSV file onto the **+** tile, or click **Choose CSV file**.
+3. Wait for the row count, then configure the **Settings** card:
+   - **Split by**: *rows per file* or *number of output files*
+   - **Name prefix**: output files are named `prefix_001_originalname.csv`
    - **Encoding**, and whether the **first row is a header**
-4. Click **Pecah file** (Split file).
-5. Download each file with its **Unduh** (Download) button, or everything with **Unduh ZIP**.
-
-> The interface text is currently in Indonesian.
+4. Click **Split file**.
+5. Download each file with its **Download** button, or everything with **Download ZIP**.
 
 ### Example
 
