@@ -2,14 +2,18 @@
 
 A single-file web tool that **splits large CSV files into several smaller ones**. It handles hundreds of thousands of rows or more (tested with 200,000 rows, ~19 MB). Everything runs **in your browser**: your file is never uploaded anywhere.
 
-![CSV Splitter, light theme](docs/preview-light.png)
+![CSV Splitter, light theme](docs/preview-light.png?v=2)
 
 <details>
 <summary>Dark theme</summary>
 
-![CSV Splitter, dark theme](docs/preview-dark.png)
+![CSV Splitter, dark theme](docs/preview-dark.png?v=2)
 
 </details>
+
+## Privacy
+
+**Your CSV never leaves your browser.** The file is read, split and zipped locally by JavaScript running in the page. It is not uploaded, sent or stored on any server, and the app has no backend at all. You can verify this by opening your browser's developer tools (Network tab) while splitting a file: no request carries your data. The only external request is the font from Google Fonts, which can be removed without affecting functionality.
 
 ## Features
 
