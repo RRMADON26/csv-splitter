@@ -193,6 +193,29 @@
   .safe ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; flex: none; }
   .safe li { display: flex; align-items: center; gap: 8px; }
   .safe li svg { width: 16px; height: 16px; color: var(--ok); flex: none; }
+  /* ---------- loading overlay ---------- */
+  .loader { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 16px;
+    background: color-mix(in srgb, var(--page) 72%, transparent); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+  .loader-card { background: var(--card); border-radius: 32px; padding: 26px 32px 30px; width: min(440px, 100%); text-align: center; box-shadow: var(--shadow-lg); }
+  .coffee { width: 250px; height: 188px; margin: 0 auto 4px; overflow: visible; }
+  .loader-card h3 { margin: 0 0 4px; font-size: 20px; font-weight: 600; }
+  .loader-card p { margin: 0; font-size: 14px; color: var(--muted); }
+  .lbar { height: 14px; border-radius: 99px; background: var(--track); overflow: hidden; margin-top: 20px; }
+  .lbar i { display: block; height: 100%; width: 0; border-radius: 99px; transition: width .15s;
+    background: repeating-linear-gradient(45deg, var(--accent) 0 12px, color-mix(in srgb, var(--accent) 72%, #fff) 12px 24px);
+    background-size: 34px 100%; animation: stripe .8s linear infinite; }
+  .lpct { margin-top: 8px; font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .sip { transform-box: view-box; transform-origin: 156px 146px; animation: sip 3.4s ease-in-out infinite; }
+  .steam path { fill: none; stroke: var(--muted); stroke-width: 2.4; stroke-linecap: round; opacity: 0; animation: steam 2s ease-in-out infinite; }
+  .steam path:nth-child(2) { animation-delay: .5s; } .steam path:nth-child(3) { animation-delay: 1s; }
+  .blink { transform-box: fill-box; transform-origin: center; animation: blink 4s infinite; }
+  .bob { animation: bob 3.4s ease-in-out infinite; }
+  @keyframes stripe { to { background-position: 34px 0; } }
+  @keyframes sip { 0%, 22% { transform: rotate(0); } 42%, 66% { transform: rotate(-45deg); } 86%, 100% { transform: rotate(0); } }
+  @keyframes steam { 0% { opacity: 0; transform: translateY(6px); } 40% { opacity: .8; } 100% { opacity: 0; transform: translateY(-9px); } }
+  @keyframes blink { 0%, 92%, 100% { transform: scaleY(1); } 96% { transform: scaleY(.1); } }
+  @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(1.5px); } }
+  @media (prefers-reduced-motion: reduce) { .sip, .steam path, .blink, .bob, .lbar i { animation: none; } .steam path { opacity: .6; } }
   [hidden] { display: none !important; }
 
   @media (max-width: 1100px) {
@@ -389,13 +412,54 @@
   </main>
 </div>
 
+<div class="loader" id="loader" hidden role="status" aria-live="polite">
+  <div class="loader-card">
+    <svg class="coffee" viewBox="0 0 240 180" fill="none" stroke="var(--ill)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <ellipse cx="120" cy="170" rx="96" ry="6" fill="var(--track)" stroke="none"/>
+      <rect x="22" y="150" width="196" height="9" rx="4.5" fill="var(--accent-soft)"/>
+      <!-- laptop -->
+      <path d="M30 150l6-24h40l6 24z" fill="var(--card)"/><path d="M42 134h28" stroke="var(--accent)"/>
+      <!-- plant -->
+      <path d="M200 150v-10h14v10z" fill="var(--ok)"/><path d="M207 140c-8-8-8-18-2-24M207 140c6-8 8-14 4-22" stroke="var(--ok)"/>
+      <g class="bob">
+        <!-- body -->
+        <path d="M82 152v-34a30 30 0 0 1 30-30h16a30 30 0 0 1 30 30v34z" fill="var(--accent)"/>
+        <rect x="113" y="78" width="14" height="14" rx="5" fill="#f2c9a5"/>
+        <!-- left arm resting -->
+        <path d="M94 108l-8 32 20 8" stroke="var(--accent)" stroke-width="13" fill="none"/>
+        <circle cx="108" cy="148" r="6.5" fill="#f2c9a5"/>
+        <!-- head -->
+        <circle cx="120" cy="62" r="24" fill="#f2c9a5"/>
+        <path d="M95.5 60a24.5 24.5 0 0 1 49 0c-9-9-31-13-49 0z" fill="#3a3170"/>
+        <g class="blink"><circle cx="111" cy="64" r="2" fill="var(--ill)" stroke="none"/></g>
+        <g class="blink"><circle cx="129" cy="64" r="2" fill="var(--ill)" stroke="none"/></g>
+        <path d="M114 74q6 4 12 0" stroke-width="1.6"/>
+        <!-- right arm: upper arm static, forearm + cup swing -->
+        <path d="M146 106l10 40" stroke="var(--accent)" stroke-width="13" fill="none"/>
+        <g class="sip">
+          <path d="M156 146l14-54" stroke="var(--accent)" stroke-width="13" fill="none"/>
+          <g class="steam"><path d="M166 62q-4-5 0-10t0-10"/><path d="M174 64q-4-5 0-10t0-10"/><path d="M182 62q-4-5 0-10t0-10"/></g>
+          <path d="M186 76h5a6 6 0 0 1 0 12h-6" fill="none"/>
+          <path d="M160 68h26v14a13 13 0 0 1-13 13a13 13 0 0 1-13-13z" fill="#fff"/>
+          <path d="M162 72h22" stroke="#8a5a3c" stroke-width="3"/>
+          <circle cx="170" cy="92" r="7" fill="#f2c9a5"/>
+        </g>
+      </g>
+    </svg>
+    <h3 id="ldTitle">Working on it…</h3>
+    <p id="ldSub">Grab a coffee while we crunch your CSV.</p>
+    <div class="lbar"><i id="ldBar"></i></div>
+    <div class="lpct" id="ldPct">0%</div>
+  </div>
+</div>
+
 <script>
 (() => {
   const $ = id => document.getElementById(id);
   const el = {};
   ['drop','file','pick','fileEmpty','fileInfo','iName','iSize','iRows','mode','val','valLabel','valHint','prefix','enc','hdr','go',
    'status','ringFg','ringTxt','stRows','stFiles','stTime','rows','resEmpty','resCount','zipBtn','zipStatus',
-   'mFiles','mFilesS','mPer','mPerS','sSize','sHdr','sEnc','again','thLight','thDark'].forEach(k => el[k] = $(k));
+   'loader','ldTitle','ldBar','ldPct','mFiles','mFilesS','mPer','mPerS','sSize','sHdr','sEnc','again','thLight','thDark'].forEach(k => el[k] = $(k));
 
   let current = null;   // File
   let totalRows = null; // number of records (including the header, if any)
@@ -412,6 +476,28 @@
     el.ringFg.style.strokeDashoffset = String(RING * (1 - p));
     el.ringTxt.textContent = Math.round(p * 100) + '%';
   };
+
+
+  // ---------- loading overlay ----------
+  let ldMinUntil = 0, ldHideTimer = null;
+  const LD_MIN_MS = 800; // keep the overlay up long enough to be seen
+  function loaderShow(title, sub) {
+    clearTimeout(ldHideTimer);
+    el.ldTitle.textContent = title;
+    $('ldSub').textContent = sub || 'Grab a coffee while we crunch your CSV.';
+    loaderSet(0);
+    el.loader.hidden = false;
+    ldMinUntil = performance.now() + LD_MIN_MS;
+  }
+  function loaderSet(p) {
+    el.ldBar.style.width = (p * 100).toFixed(1) + '%';
+    el.ldPct.textContent = Math.round(p * 100) + '%';
+  }
+  function loaderHide() {
+    clearTimeout(ldHideTimer);
+    loaderSet(1);
+    ldHideTimer = setTimeout(() => { el.loader.hidden = true; }, Math.max(0, ldMinUntil - performance.now()));
+  }
 
   // ---------- theme ----------
   function applyTheme(t) {
@@ -469,11 +555,13 @@
     totalRows = null;
     el.go.disabled = true;
     setStatus('Counting rows…');
+    loaderShow('Reading your file…', 'Counting rows, this only takes a moment.');
     let n = 0;
     const ok = await scan(file, encoding, () => { n++; }, p => {
-      if (my === token) { el.iRows.textContent = Math.round(p * 100) + '%'; setRing(p); }
+      if (my === token) { el.iRows.textContent = Math.round(p * 100) + '%'; setRing(p); loaderSet(p); }
     }, () => my !== token);
     if (!ok || my !== token) return;
+    loaderHide();
     totalRows = n;
     setRing(0);
     setStatus('Ready to split');
@@ -534,6 +622,7 @@
     el.go.disabled = true;
     resetResults(); setRing(0);
     setStatus('Processing…');
+    loaderShow('Splitting your file…', 'Grab a coffee while we crunch your CSV.');
 
     const hasHeader = el.hdr.checked;
     const limit = perFile();
@@ -561,7 +650,7 @@
         isFirstRecord = false;
         chunk.push(rec); chunkRows++; totalWritten++;
         if (chunkRows >= limit) flush();
-      }, p => { setRing(p); setStatus(`Processing… ${Math.round(p * 100)}%`); }, () => false);
+      }, p => { setRing(p); loaderSet(p); setStatus(`Processing… ${Math.round(p * 100)}%`); }, () => false);
       if (ok) flush();
       const secs = ((performance.now() - t0) / 1000).toFixed(1);
       renderResult();
@@ -580,6 +669,7 @@
       console.error(e);
       setStatus('Failed: ' + e.message, 'err');
     } finally {
+      loaderHide();
       busy = false;
       el.go.disabled = totalRows == null || totalRows === 0;
     }
@@ -682,14 +772,15 @@
   el.zipBtn.onclick = async () => {
     if (!outputs.length) return;
     el.zipBtn.disabled = true;
+    loaderShow('Packing your ZIP…', 'Wrapping everything up nicely.');
     try {
-      const zip = await buildZip(outputs, p => { el.zipStatus.textContent = `Building ZIP… ${Math.round(p * 100)}%`; });
+      const zip = await buildZip(outputs, p => { loaderSet(p); el.zipStatus.textContent = `Building ZIP… ${Math.round(p * 100)}%`; });
       const base = current.name.replace(/\.[^.]+$/, '');
       download(zip, `${base}_split.zip`);
       el.zipStatus.textContent = `ZIP ready (${fmtSize(zip.size)})`;
     } catch (e) {
       el.zipStatus.textContent = 'Failed: ' + e.message;
-    } finally { el.zipBtn.disabled = false; }
+    } finally { loaderHide(); el.zipBtn.disabled = false; }
   };
 
   // ---------- events ----------

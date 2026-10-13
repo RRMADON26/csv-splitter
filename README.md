@@ -5,6 +5,13 @@ A single-file web tool that **splits large CSV files into several smaller ones**
 ![CSV Splitter, light theme](docs/preview-light.png?v=3)
 
 <details>
+<summary>Loading animation</summary>
+
+![Loading animation](docs/preview-loading.png)
+
+</details>
+
+<details>
 <summary>Dark theme</summary>
 
 ![CSV Splitter, dark theme](docs/preview-dark.png?v=3)
@@ -24,6 +31,7 @@ A single-file web tool that **splits large CSV files into several smaller ones**
 - **Encodings**: UTF-8, Windows-1252 / Latin-1, UTF-16 LE. A UTF-8 BOM is stripped automatically.
 - **Download** files one by one, or all at once as a **ZIP** built in the browser (no libraries).
 - **Light / dark theme**: follows your system, can be switched manually, and the choice is remembered.
+- **Loading animation**: while reading, splitting or zipping, an animated illustration of someone sipping coffee appears with a live progress bar (respects `prefers-reduced-motion`).
 - **Responsive**: works on desktop, tablet and phone.
 - **Zero dependencies**: no build step, no npm, no server.
 
