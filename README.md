@@ -84,6 +84,7 @@ index.html          The app (HTML + CSS + JS in one file)
 generate_dummy.py   Dummy CSV generator for testing
 docs/               Screenshots used in this README
 README.md           Documentation
+LICENSE             MIT license
 ```
 
 ## Testing
@@ -95,3 +96,7 @@ Tested manually in a browser with `dummy_200k.csv`:
 - the header is present in every file;
 - all files joined together (header taken once) are byte-for-byte identical to the original;
 - the ZIP is valid and every entry's CRC matches.
+
+## License
+
+[MIT](LICENSE) © 2026 RRMADON26
