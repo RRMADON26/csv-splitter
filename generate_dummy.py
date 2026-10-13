@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Buat CSV dummy untuk menguji CSV Splitter.
+"""Generate a dummy CSV for testing CSV Splitter.
 
-Pemakaian:
-    python3 generate_dummy.py [jumlah_baris] [nama_file]
+Usage:
+    python3 generate_dummy.py [rows] [output_file]
 
-Contoh:
+Example:
     python3 generate_dummy.py 200000 dummy_200k.csv
 """
 import csv
@@ -24,7 +24,7 @@ with open(out, "w", newline="", encoding="utf-8") as f:
     for i in range(1, rows + 1):
         nama = random.choice(names) + " " + random.choice(names)
         alamat = f"Jl. Mawar No. {random.randint(1, 99)}, RT {random.randint(1, 9)}"
-        if i % 1000 == 0:  # alamat berisi newline dan tanda kutip, untuk menguji parser
+        if i % 1000 == 0:  # address with a newline and quotes, to exercise the parser
             alamat += '\nLantai 2, "Blok A"'
         w.writerow([
             i, nama, f"user{i}@example.com", random.choice(cities), random.randint(18, 65),
@@ -32,4 +32,4 @@ with open(out, "w", newline="", encoding="utf-8") as f:
             f"2025-{random.randint(1, 12):02d}-{random.randint(1, 28):02d}",
         ])
 
-print(f"{rows} baris data ditulis ke {out}")
+print(f"Wrote {rows} data rows to {out}")
