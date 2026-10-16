@@ -442,3 +442,10 @@ input.bad { border-color: var(--err); outline-color: var(--err); }
 }
 @media (pointer: coarse) and (max-width: 640px) { .rule { grid-template-columns: 1fr 40px; } }
 @media (pointer: coarse) { .nav a { padding: 10px 6px; min-height: 40px; } }
+
+/* Transform on narrow screens: flatten the two stacks so the file card can come first */
+@media (max-width: 1100px) {
+  .stack { display: contents; }
+  .stack > * { grid-column: span 12; }
+  .stack > .filecard { order: -2; }
+}
