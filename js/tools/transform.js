@@ -335,10 +335,11 @@
             for (const r of P.finalize()) sink.write(CSV.formatRecord(r, od, qa) + eol);
             sink.rows = P.counts.written;
             const res = await sink.close();
-            out.show([res], { folderName: dest.dirName });
-            const c = P.counts, secs = ((performance.now() - t0) / 1000).toFixed(1);
+            const c = P.counts, secs = ((performance.now() - t0) / 1000).toFixed(1), empty = c.written === 0;
+            out.show([res], { folderName: dest.dirName, announce: !empty });
             progress.set(1); progress.stats(fmt(c.read), fmt(c.written), secs);
-            progress.status(`Done: ${fmt(c.written)} rows written`, 'ok');
+            progress.status(empty ? 'Done, but no rows matched your steps' : `Done: ${fmt(c.written)} rows written`, empty ? 'err' : 'ok');
+            if (empty) toast('No rows survived your steps, so the output only has a header row. Check your filter rules or turn a step off.', 'error', 9000);
             summary.set([['Rows read', fmt(c.read) + (P.done ? ' (stopped early)' : '')], ['Removed by filter', fmt(c.filtered)], ['Duplicates removed', fmt(c.dups)], ['Left out by sample', fmt(c.sampledOut)], ['Rows written', fmt(c.written)]]);
             App.warnLossy(sink.enc);
             if (dest.mode === 'folder') toast(`Saved “${res.name}” to “${dest.dirName}”`, 'ok');

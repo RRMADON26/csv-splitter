@@ -97,6 +97,8 @@
     const t = h(`<div class="toast ${type}">${icon(type === 'error' ? 'warn' : type === 'ok' ? 'check' : 'info')}<span></span></div>`);
     t.querySelector('span').textContent = msg;
     if (action) {
+      $$('.toast.has-act', box).forEach(o => o.remove());
+      t.classList.add('has-act');
       const b = h('<button type="button" class="toast-act"></button>');
       b.textContent = action.label;
       b.onclick = () => { action.fn(); t.classList.add('out'); setTimeout(() => t.remove(), 300); };
@@ -641,7 +643,8 @@
           E('main').disabled = true; E('main').textContent = 'Done'; E('main').onclick = null;
         } else if (outputs.length === 1) {
           const o = outputs[0];
-          E('title').textContent = 'Your file is ready'; E('text').textContent = `${o.name} · ${fmtSize(o.size)}`;
+          E('title').textContent = o.rows === 0 ? 'Your file is empty' : 'Your file is ready';
+          E('text').textContent = o.rows === 0 ? `${o.name} has no data rows (header only).` : `${o.name} · ${fmtSize(o.size)}`;
           E('main').textContent = 'Download'; E('main').onclick = () => { download(o.blob, o.name); markDone(); };
           if (CS_OK && gz) {
             E('alt').hidden = false;
@@ -809,6 +812,7 @@
     go(id) { location.hash = '#/' + id; },
     show(id) {
       const tool = this.tools[id] || this.tools[this.order[0]];
+      if (this.active && this.active !== tool) $$('.toast.has-act').forEach(o => o.remove());
       this.active = tool;
       $$('.view').forEach(v => v.hidden = v.dataset.tool !== tool.id);
       $$('[data-nav]').forEach(a => { const on = a.dataset.nav === tool.id; a.classList.toggle('on', on); on ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current'); });

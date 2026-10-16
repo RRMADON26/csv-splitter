@@ -570,3 +570,4 @@ body.has-file .safe ul { flex-direction: row; gap: 18px; font-size: 12.5px; }
   body.has-file .safe h2 em { display: none; }
 }
 @media (max-width: 640px) { .nav { gap: 2px; } .nav a { padding-left: 6px; padding-right: 6px; } }
+@media (pointer: coarse) { .toast-act { min-height: 40px; padding: 8px 14px; } }
