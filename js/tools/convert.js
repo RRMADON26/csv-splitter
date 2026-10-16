@@ -5,11 +5,11 @@
   const store = App.file;
 
   const FORMATS = {
-    csv: { ext: 'csv', label: 'CSV', mime: 'text/csv' },
-    tsv: { ext: 'tsv', label: 'TSV', mime: 'text/tab-separated-values' },
-    json: { ext: 'json', label: 'JSON', mime: 'application/json' },
-    jsonl: { ext: 'jsonl', label: 'JSON Lines', mime: 'application/x-ndjson' },
-    xlsx: { ext: 'xlsx', label: 'Excel', mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' },
+    csv: { ext: 'csv', short: 'CSV', label: 'CSV', mime: 'text/csv' },
+    tsv: { ext: 'tsv', short: 'TSV', label: 'TSV', mime: 'text/tab-separated-values' },
+    json: { ext: 'json', short: 'JSON', label: 'JSON', mime: 'application/json' },
+    jsonl: { ext: 'jsonl', short: 'JSONL', label: 'JSON Lines', mime: 'application/x-ndjson' },
+    xlsx: { ext: 'xlsx', short: 'Excel', label: 'Excel', mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' },
   };
   const NUM = /^-?(0|[1-9]\d*)(\.\d+)?([eE][+-]?\d+)?$/;
   const DATE = /^(\d{4})-(\d{2})-(\d{2})$/;
@@ -101,12 +101,10 @@
     id: 'convert', label: 'Convert', icon: 'convert',
     short: 'Convert a CSV file', blurb: 'Excel, JSON, JSON Lines, TSV and encodings', verb: 'Convert',
     hero: {
-      title: 'Hi!<br>What format do you need?',
-      text: 'Turn your CSV into Excel, JSON or JSON Lines, switch delimiters, or fix the encoding so accents and symbols survive the trip.',
-      features: [
-        ['convert', 'Excel, JSON & more', 'CSV, TSV, JSON, JSON Lines and real .xlsx files'],
-        ['encoding', 'Fix the encoding', 'UTF-8, UTF-8 with BOM, Windows-1252 and UTF-16'],
-        ['sheet', 'Excel-ready', 'Bold frozen header, real numbers and real dates'],
+      points: [
+        'Make a real Excel workbook: bold frozen header, numbers stored as numbers, dates as dates.',
+        'Export JSON or JSON Lines, as objects or arrays, with or without type detection.',
+        'Change the delimiter or the encoding so accents and symbols survive the trip.',
       ],
     },
 
@@ -116,15 +114,15 @@
       const out = App.resultPanel({ zipBase: () => 'converted' });
       const dz = App.dropzoneTile({ onPick: () => store.pick(), onFiles: f => f[0] && store.set(f[0]) });
       root.appendChild(App.heroHTML(this, dz));
-      const grid = h('<main class="grid"></main>'); root.appendChild(grid);
+      const { side, main } = App.workspace(root);
 
-      const fc = App.fileCard(store); fc.classList.add('c4');
+      const fc = App.fileCard(store);
       const settings = h(`
-<section class="card c4" data-settings>
+<section class="card" data-settings>
   <div class="card-h"><h2>Convert to</h2></div>
   <div data-presets></div>
   <div class="fmts" role="radiogroup" aria-label="Output format">
-    ${Object.entries(FORMATS).map(([k, f]) => `<button type="button" role="radio" class="fmt" data-fmt="${k}"><b>.${f.ext}</b><span>${f.label}</span></button>`).join('')}
+    ${Object.entries(FORMATS).map(([k, f]) => `<button type="button" role="radio" class="fmt" data-fmt="${k}"><b>${f.short}</b><span>.${f.ext}</span></button>`).join('')}
   </div>
   <input type="hidden" data-pref="format" value="csv">
 
@@ -155,14 +153,14 @@
       $('[data-dest]', settings).appendChild(dest.el);
 
       const prev = h(`
-<section class="card c8">
+<section class="card">
   <div class="card-h"><h2>Output preview</h2><span class="link" data-pnote></span></div>
   <div class="empty" data-empty>Choose a file to preview the converted output.</div>
   <pre class="code" data-code hidden></pre>
   <div class="tbl-wrap short" data-xt hidden></div>
 </section>`);
-      progress.el.classList.add('c4'); out.exp.classList.add('c4');
-      [fc, settings, progress.el, prev, out.exp].forEach(n => grid.appendChild(n));
+      [fc, settings].forEach(n => side.appendChild(n));
+      [prev, progress.el, out.exp].forEach(n => main.appendChild(n));
 
       const pref = k => $(`[data-pref="${k}"]`, settings);
       const fmtKey = () => pref('format').value;
@@ -216,7 +214,7 @@
           const cell = v => { if (v === '' || v == null) return '<td class="nul">empty</td>'; if (o.numbers && NUM.test(v) && digitsOf(v) <= 15) return `<td class="r">${esc(v)}</td>`; if (o.dates && DATE.test(v)) return `<td class="dt">${esc(v)}</td>`; return `<td>${esc(v.length > 50 ? v.slice(0, 50) + '…' : v)}</td>`; };
           xt.innerHTML = `<table class="tbl xl"><thead><tr><th class="rn"></th>${names.map((_, i) => `<th class="xh">${colName(i)}</th>`).join('')}</tr></thead><tbody>
 <tr class="hdr"><td class="rn">1</td>${names.map(n => `<td><b>${esc(n)}</b></td>`).join('')}</tr>${rows.map((r, ri) => `<tr><td class="rn">${ri + 2}</td>${names.map((_, i) => cell(r[i])).join('')}</tr>`).join('')}</tbody></table>`;
-          note.textContent = 'Right-aligned = number · green = date';
+          note.textContent = 'Numbers are right-aligned, dates are green';
         } else {
           xt.hidden = true; box.hidden = false;
           const w = textWriter(k, names, cfg(), outOpts());
@@ -239,7 +237,7 @@
         const names = store.columns;
         let rows = 0, first = true, sink = null;
         await App.task('Converting your file…', 'Grab a coffee while we convert your CSV.', async setLd => {
-          const onProgress = p => { progress.set(p); progress.status(`Converting… ${Math.round(p * 100)}%`); setLd(p); };
+          const onProgress = p => { progress.set(p); progress.status('Converting…'); setLd(p); };
           try {
             sink = dest.createSink(name, k === 'xlsx' ? { enc: 'utf-8' } : oo.enc, FORMATS[k].mime);
             if (k === 'xlsx') {
@@ -266,7 +264,7 @@
             const res = await sink.close();
             out.show([res], { folderName: dest.dirName, gz: k !== 'xlsx' });
             progress.set(1); progress.stats(fmt(rows), fmtSize(res.size), ((performance.now() - t0) / 1000).toFixed(1));
-            progress.status(`Done: ${fmt(rows)} rows → ${FORMATS[k].label}`, 'ok');
+            progress.status(`Done. Converted ${fmt(rows)} rows to ${FORMATS[k].label}.`, 'ok');
             App.warnLossy(sink.enc);
             if (k === 'xlsx' && rows > XLSX_ROWS()) toast('The data continues on extra sheets because Excel limits each sheet to 1,048,576 rows.', 'info', 6000);
             if (dest.mode === 'folder') toast(`Saved “${res.name}” to “${dest.dirName}”`, 'ok');

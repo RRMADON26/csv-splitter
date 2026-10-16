@@ -54,25 +54,6 @@
   const icon = (name, cls = '') =>
     `<svg class="ic ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ''}</svg>`;
 
-  const ILL = {
-    bigfile: '<rect x="30" y="8" width="52" height="68" rx="6" fill="var(--card)"/><path d="M40 24h32M40 34h32M40 44h20"/><rect x="56" y="52" width="40" height="26" rx="5" fill="#6b63e6"/><path d="M66 65h20M80 59l6 6-6 6"/>',
-    shield: '<path d="M60 8l32 12v24c0 20-14 32-32 40-18-8-32-20-32-40V20z" fill="var(--card)"/><rect x="46" y="40" width="28" height="22" rx="5" fill="#6b63e6"/><path d="M52 40v-6a8 8 0 0 1 16 0v6"/><circle cx="60" cy="51" r="2" fill="var(--ill)"/>',
-    table: '<rect x="16" y="12" width="88" height="64" rx="8" fill="var(--card)"/><path d="M16 36h88M16 54h88M52 12v64M82 12v64"/><path d="M24 12h28v24H16V20a8 8 0 0 1 8-8z" fill="#6b63e6"/><rect x="52" y="12" width="52" height="24" fill="#6b63e6" fill-opacity=".35" stroke="none"/>',
-    merge: '<rect x="12" y="10" width="34" height="24" rx="5" fill="var(--card)"/><rect x="12" y="54" width="34" height="24" rx="5" fill="var(--card)"/><path d="M20 20h18M20 26h10M20 64h18M20 70h10"/><path d="M46 22h12q10 0 10 10v8q0 10 10 10h8M46 66h12q10 0 10-10v-4"/><rect x="82" y="30" width="28" height="30" rx="5" fill="#6b63e6"/><path d="M89 40h14M89 46h14M89 52h8" stroke="#fff"/>',
-    filter: '<path d="M14 12h92L70 48v28l-20 8V48z" fill="var(--card)"/><circle cx="46" cy="26" r="3.5" fill="#6b63e6" stroke="none"/><circle cx="62" cy="22" r="3.5" fill="#6b63e6" stroke="none"/><circle cx="78" cy="28" r="3.5" fill="#6b63e6" stroke="none"/><path d="M60 58v10" stroke="#6b63e6" stroke-width="3"/>',
-    search: '<rect x="12" y="12" width="64" height="52" rx="7" fill="var(--card)"/><path d="M12 28h64M12 44h64M34 12v52"/><circle cx="82" cy="58" r="16" fill="var(--card)"/><path d="M94 70l12 12" stroke-width="3"/><path d="M75 58l5 5 8-9" stroke="#6b63e6" stroke-width="2.4"/>',
-    convert: '<rect x="10" y="18" width="40" height="50" rx="6" fill="var(--card)"/><path d="M18 32h24M18 42h24M18 52h14"/><rect x="70" y="18" width="40" height="50" rx="6" fill="#6b63e6"/><path d="M80 34c-5 0-5 4-5 8s-2 5-5 5c3 0 5 1 5 5s0 8 5 8M100 34c5 0 5 4 5 8s2 5 5 5" stroke="#fff" transform="translate(-4 -3) scale(1)"/><path d="M52 36h16m-5-5l5 5-5 5M68 54H52m5-5l-5 5 5 5"/>',
-    folder: '<path d="M12 22a6 6 0 0 1 6-6h22l8 8h44a6 6 0 0 1 6 6v36a6 6 0 0 1-6 6H18a6 6 0 0 1-6-6z" fill="var(--card)"/><circle cx="60" cy="52" r="14" fill="#6b63e6"/><path d="M53 52l5 5 9-10" stroke="#fff" stroke-width="2.4"/>',
-    zip: '<rect x="26" y="8" width="68" height="76" rx="8" fill="var(--card)"/><path d="M60 8v10m0 6v6m0 6v6" stroke-dasharray="0" stroke-width="2.4"/><rect x="50" y="52" width="20" height="18" rx="4" fill="#6b63e6"/><path d="M42 24h6M72 24h6M42 34h6M72 34h6"/>',
-    columns: '<rect x="14" y="12" width="92" height="64" rx="8" fill="var(--card)"/><rect x="44" y="12" width="32" height="64" fill="#6b63e6" fill-opacity=".3" stroke="none"/><path d="M14 30h92M14 48h92M14 62h92M44 12v64M76 12v64"/><path d="M52 4l8 6 8-6" stroke="#6b63e6" stroke-width="2.4"/>',
-    dice: '<rect x="24" y="16" width="44" height="44" rx="9" fill="var(--card)"/><rect x="52" y="34" width="44" height="44" rx="9" fill="#6b63e6"/><circle cx="38" cy="30" r="3" fill="var(--ill)"/><circle cx="54" cy="46" r="3" fill="var(--ill)"/><circle cx="64" cy="44" r="3" fill="#fff" stroke="none"/><circle cx="84" cy="68" r="3" fill="#fff" stroke="none"/><circle cx="74" cy="56" r="3" fill="#fff" stroke="none"/>',
-    bolt: '<path d="M64 6L24 50h30l-8 36 44-48H60z" fill="#6b63e6"/>',
-    alert: '<path d="M60 10l46 74H14z" fill="var(--card)"/><path d="M60 38v22" stroke-width="3"/><circle cx="60" cy="70" r="2.6" fill="var(--ill)"/>',
-    chart: '<rect x="14" y="12" width="92" height="64" rx="8" fill="var(--card)"/><rect x="26" y="46" width="12" height="22" fill="#6b63e6" stroke="none"/><rect x="46" y="32" width="12" height="36" fill="#6b63e6" fill-opacity=".6" stroke="none"/><rect x="66" y="40" width="12" height="28" fill="#6b63e6" stroke="none"/><rect x="86" y="24" width="12" height="44" fill="#6b63e6" fill-opacity=".6" stroke="none"/>',
-    sheet: '<rect x="22" y="8" width="76" height="76" rx="7" fill="var(--card)"/><path d="M22 28h76M22 48h76M22 66h76M50 8v76"/><rect x="22" y="8" width="28" height="20" fill="#3fb08f" fill-opacity=".5" stroke="none"/>',
-    encoding: '<rect x="12" y="20" width="44" height="50" rx="6" fill="var(--card)"/><text x="34" y="52" font-size="22" text-anchor="middle" fill="var(--ill)" stroke="none" font-family="sans-serif" font-weight="600">Aé</text><path d="M60 45h18m-5-5l5 5-5 5"/><rect x="82" y="20" width="26" height="50" rx="6" fill="#6b63e6"/><path d="M89 34h12M89 44h12M89 54h8" stroke="#fff"/>',
-  };
-  const ill = kind => `<svg viewBox="0 0 120 92" fill="none" stroke="var(--ill)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ILL[kind] || ''}</svg>`;
 
   // ======================================================================
   // theme + toast
@@ -383,7 +364,7 @@
     const choose = async () => {
       try {
         st.dir = await window.showDirectoryPicker({ mode: 'readwrite' });
-        label.textContent = '📁 ' + st.dir.name;
+        label.textContent = st.dir.name;
       } catch (e) { if (e.name !== 'AbortError') toast('Could not open that folder: ' + e.message, 'error'); }
       return st.dir;
     };
@@ -491,11 +472,28 @@
   // ======================================================================
   // UI components
   // ======================================================================
-  /** The big "+" tile. `onFiles(fileList)` receives dropped / chosen files. */
+  /** Empty state: a blank spreadsheet that is also the drop target. */
   function dropzoneTile({ multiple = false, onPick, onFiles, title, sub }) {
-    title = title || (multiple ? 'Choose CSV files' : 'Choose a CSV file');
-    sub = sub || 'or drop it anywhere on this page';
-    const dz = h(`<div class="dz" tabindex="0" role="button" aria-label="${title}"><div class="plus">+</div><b>${title}</b><small>${sub}</small></div>`);
+    title = title || (multiple ? 'Drop CSV files here' : 'Drop a CSV file here');
+    sub = sub || (multiple ? 'or choose them from your computer. They stay on this device.' : 'or choose one from your computer. It stays on this device.');
+    const cols = 'ABCDEFGHIJKL'.split('').map(c => `<span>${c}</span>`).join('');
+    const rows = Array.from({ length: 9 }, (_, i) => `<span>${i + 1}</span>`).join('');
+    const dz = h(`
+<div class="dropsheet" tabindex="0" role="button" aria-label="${title}, ${sub}">
+  <div class="ds-cols" aria-hidden="true"><span></span>${cols}</div>
+  <div class="ds-body">
+    <div class="ds-rows" aria-hidden="true">${rows}</div>
+    <div class="ds-grid">
+      <div class="ds-sel">
+        <h2>${title}</h2>
+        <p>${sub}</p>
+        <span class="btn accent">${multiple ? 'Choose files' : 'Choose a file'}</span>
+        <ul class="ds-points"></ul>
+        <i class="ds-handle" aria-hidden="true"></i>
+      </div>
+    </div>
+  </div>
+</div>`);
     dz.onclick = () => onPick();
     dz.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onPick(); } };
     ['dragenter', 'dragover'].forEach(t => dz.addEventListener(t, e => { e.preventDefault(); dz.classList.add('over'); }));
@@ -504,12 +502,19 @@
     return dz;
   }
 
+  /** Two-column workspace: a sticky rail for input + settings, a stage for preview + output. */
+  function workspace(root) {
+    const w = h('<div class="workspace"><aside class="rail"></aside><div class="stage"></div></div>');
+    root.appendChild(w);
+    return { side: $('.rail', w), main: $('.stage', w) };
+  }
+
   /** The "Active file" card with encoding / delimiter / header controls, bound to App.file. */
   function fileCard(store) {
     const el = h(`
 <section class="card filecard">
-  <div class="card-h"><h2>Active file</h2><button type="button" class="link" data-act="pick">${icon('file')}Choose another</button></div>
-  <div class="empty" data-s="empty">No file yet.<br>Choose or drag a CSV onto the <b>+</b> tile above.</div>
+  <div class="card-h"><h2>File</h2><button type="button" class="link" data-act="pick">Choose another</button></div>
+  <div class="empty" data-s="empty">No file open.</div>
   <div data-s="busy" hidden><div class="empty">Reading your file…</div></div>
   <div data-s="error" hidden><div class="empty err" data-err></div></div>
   <div data-s="ready" hidden>
@@ -548,8 +553,8 @@
       f('size').textContent = fmtSize(store.file.size);
       f('rows').textContent = fmt(store.dataRows);
       f('cols').textContent = fmt(store.columns.length);
-      f('sub').textContent = `${store.encoding.toUpperCase()} · ${DELIM_LABEL[store.delimiter] || 'custom'}-separated` + (store.blank ? ` · ${fmt(store.blank)} blank line${store.blank > 1 ? 's' : ''} ignored` : '');
-      f('readsum').textContent = `${store.encoding.toUpperCase()} · ${DELIM_LABEL[store.delimiter] || 'custom'}`;
+      f('sub').textContent = `${store.encoding.toUpperCase()}, ${DELIM_LABEL[store.delimiter] || 'custom'}-separated` + (store.blank ? `. ${fmt(store.blank)} blank line${store.blank > 1 ? 's' : ''} skipped.` : '');
+      f('readsum').textContent = `${store.encoding.toUpperCase()}, ${DELIM_LABEL[store.delimiter] || 'custom'}`;
       $('[data-in="enc"]', el).value = store.encChoice;
       $('[data-in="delim"]', el).value = store.delimChoice;
       $('[data-in="header"]', el).checked = store.hasHeader;
@@ -562,23 +567,20 @@
     return el;
   }
 
-  /** Progress ring card. */
-  function progressCard(labels = ['rows', 'files', 'seconds'], title = 'Progress') {
+  /** Status line with a thin progress bar (replaces the old ring card). */
+  function progressCard(labels = ['rows', 'files', 'seconds']) {
     const el = h(`
-<section class="card">
-  <div class="card-h"><h2>${title}</h2></div>
-  <div class="ringwrap">
-    <div class="ring"><svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="46"/><circle class="fg" cx="50" cy="50" r="46"/></svg><b data-r="txt">0%</b></div>
-    <div class="status" data-r="status">Waiting for a file</div>
-    <div class="stats">${labels.map((l, i) => `<div><strong data-r="s${i}">-</strong><small>${l}</small></div>`).join('')}</div>
-  </div>
+<section class="runline" aria-live="polite">
+  <div class="rl-top"><p class="status" data-r="status">Waiting for a file</p><span class="rl-pct" data-r="txt"></span></div>
+  <div class="rl-bar"><i class="fg"></i></div>
+  <p class="rl-stats" hidden>${labels.map((l, i) => `<span><b data-r="s${i}">-</b> ${l}</span>`).join('')}</p>
 </section>`);
-    const fg = $('.fg', el);
+    const fg = $('.fg', el), st = $('.rl-stats', el);
     return {
       el,
-      set(p) { fg.style.strokeDashoffset = String(289 * (1 - p)); $('[data-r="txt"]', el).textContent = Math.round(p * 100) + '%'; },
+      set(p) { fg.style.width = (p * 100).toFixed(1) + '%'; $('[data-r="txt"]', el).textContent = p > 0 && p < 1 ? Math.round(p * 100) + '%' : ''; el.classList.toggle('full', p >= 1); },
       status(t, cls = '') { const s = $('[data-r="status"]', el); s.textContent = t; s.className = 'status ' + cls; },
-      stats(...v) { v.forEach((x, i) => { const n = $(`[data-r="s${i}"]`, el); if (n) n.textContent = x; }); },
+      stats(...v) { v.forEach((x, i) => { const n = $(`[data-r="s${i}"]`, el); if (n) n.textContent = x; }); st.hidden = v.every(x => x === '-'); },
       reset() { this.set(0); this.stats(...labels.map(() => '-')); },
     };
   }
@@ -586,20 +588,18 @@
   /** Results card + purple export card. */
   function resultPanel({ zipBase = () => 'csv-output', itemLabel = 'rows' } = {}) {
     const results = h(`
-<section class="card results">
-  <div class="card-h"><h2>Results</h2><span class="link" data-r="count"></span></div>
-  <div class="empty" data-r="empty">No results yet.<br>Output files will be listed here.</div>
+<section class="card results" hidden>
+  <div class="card-h"><h2>Output files</h2><span class="link" data-r="count"></span></div>
+  <div class="empty" data-r="empty" hidden></div>
   <div class="res-list" data-r="list" hidden></div>
 </section>`);
     const exp = h(`
-<section class="card promo export">
-  ${ill('zip').replace('<svg', '<svg class="pi"')}
-  <h3 data-e="title">Nothing yet</h3>
-  <p data-e="text">Run the tool to create your file.</p>
-  <label class="switch" data-e="sw" hidden><input type="checkbox" checked data-e="compress"><i></i><span>Compress (smaller ZIP)</span></label>
-  <div class="export-btns">
-    <button type="button" class="btn" data-e="main" disabled>Download</button>
-    <button type="button" class="btn ghost-w" data-e="alt" hidden>Download .gz</button>
+<section class="exportbar">
+  <div class="eb-text"><h3 data-e="title">No output yet</h3><p data-e="text">Run the tool to create your files.</p></div>
+  <div class="eb-actions">
+    <label class="check" data-e="sw" hidden><input type="checkbox" checked data-e="compress"> Compress</label>
+    <button type="button" class="btn" data-e="alt" hidden>Download .gz</button>
+    <button type="button" class="btn accent" data-e="main" disabled>Download</button>
   </div>
   <div class="zs" data-e="status"></div>
 </section>`);
@@ -612,8 +612,9 @@
     const api = {
       results, exp,
       clear() {
-        outs = []; R('list').innerHTML = ''; R('list').hidden = true; R('empty').hidden = false; R('count').textContent = '';
-        E('title').textContent = 'Nothing yet'; E('text').textContent = 'Run the tool to create your file.';
+        outs = []; R('list').innerHTML = ''; R('list').hidden = true; R('count').textContent = ''; results.hidden = true;
+        exp.classList.remove('ready');
+        E('title').textContent = 'No output yet'; E('text').textContent = 'Run the tool to create your files.';
         E('sw').hidden = true; E('alt').hidden = true; E('main').disabled = true; E('main').textContent = 'Download'; setStatus('');
         E('main').onclick = null;
         const v = view(); if (v) v.dataset.stage = v.classList.contains('has-file') ? 'file' : '';
@@ -633,18 +634,18 @@
           else { const b = h('<button type="button" class="btn soft sm">Download</button>'); b.onclick = () => { download(o.blob, o.name); markDone(); }; r.appendChild(b); }
           list.appendChild(r);
         });
-        list.hidden = !outputs.length; R('empty').hidden = !!outputs.length;
+        list.hidden = !outputs.length; results.hidden = outputs.length < 2 && !saved; exp.classList.toggle('ready', !!outputs.length);
         R('count').textContent = outputs.length ? `${fmt(outputs.length)} file${outputs.length > 1 ? 's' : ''}` : '';
         // export card
         E('alt').hidden = true; E('sw').hidden = true; E('main').disabled = false; setStatus(note);
         if (saved) {
-          E('title').textContent = 'Saved to your folder';
-          E('text').textContent = `${fmt(outputs.length)} file${outputs.length > 1 ? 's' : ''} written to “${folder}”.`;
+          E('title').textContent = folder ? `Saved to “${folder}”` : 'Saved to your folder';
+          E('text').textContent = `${fmt(outputs.length)} file${outputs.length > 1 ? 's were' : ' was'} written straight to the folder.`;
           E('main').disabled = true; E('main').textContent = 'Done'; E('main').onclick = null;
         } else if (outputs.length === 1) {
           const o = outputs[0];
-          E('title').textContent = o.rows === 0 ? 'Your file is empty' : 'Your file is ready';
-          E('text').textContent = o.rows === 0 ? `${o.name} has no data rows (header only).` : `${o.name} · ${fmtSize(o.size)}`;
+          E('title').textContent = o.rows === 0 ? 'The output is empty' : 'Ready to download';
+          E('text').textContent = o.rows === 0 ? `${o.name} has a header row but no data.` : `${o.name}, ${fmtSize(o.size)}${o.rows != null ? `, ${fmt(o.rows)} ${itemLabel}` : ''}`;
           E('main').textContent = 'Download'; E('main').onclick = () => { download(o.blob, o.name); markDone(); };
           if (CS_OK && gz) {
             E('alt').hidden = false;
@@ -655,7 +656,7 @@
             };
           }
         } else if (outputs.length > 1) {
-          E('title').textContent = 'Download everything'; E('text').textContent = 'All output files bundled into one ZIP.';
+          E('title').textContent = `${fmt(outputs.length)} files ready`; E('text').textContent = 'Download them together as one ZIP, or one at a time from the list.';
           E('sw').hidden = !CS_OK; E('main').textContent = 'Download ZIP';
           E('main').onclick = async () => {
             E('main').disabled = true;
@@ -729,7 +730,7 @@
   function summaryCard(title = 'Summary', actionLabel = 'Choose another file', onAction) {
     const el = h(`<section class="card sum"><div class="card-h"><h2>${title}</h2></div><div data-rows></div>${onAction ? `<div class="acts"><button type="button" class="btn soft sm" data-act>${actionLabel}</button></div>` : ''}</section>`);
     if (onAction) $('[data-act]', el).onclick = onAction;
-    return { el, set(rows) { $('[data-rows]', el).innerHTML = rows.map(([k, v]) => `<div class="row"><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join(''); } };
+    return { el, set(rows) { el.hidden = !rows.length || rows.every(r => r[1] === '—'); $('[data-rows]', el).innerHTML = rows.map(([k, v]) => `<div class="row"><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join(''); } };
   }
 
   const OUT_OPTIONS_HTML = `
@@ -764,19 +765,13 @@
   function heroHTML(tool, dz) {
     const steps = tool.steps === false ? '' : `<ol class="stepper" aria-label="Steps">${[
       ['file', tool.stepFile || 'Choose file'], ['settings', 'Adjust settings'], ['run', tool.verb || 'Run'], ['result', 'Download'],
-    ].map(([k, l], i) => `<li data-s="${k}"><button type="button" data-goto="${k}" title="Go to: ${l}"><i><b>${i + 1}</b>${icon('check')}</i><span>${l}</span></button></li>`).join('')}</ol>`;
+    ].map(([k, l], i) => `<li data-s="${k}"><button type="button" data-goto="${k}"><i><b>${i + 1}</b>${icon('check')}</i><span>${l}</span></button></li>`).join('')}</ol>`;
     const wrap = h(`
 <div class="hero-wrap">
-  <section class="hero">
-    <div class="hello"><h1>${tool.hero.title}</h1><p>${tool.hero.text}</p></div>
-    <div data-dz></div>
-    ${tool.hero.features.map(f => `<div class="feat">${ill(f[0])}<b>${f[1]}</b><span>${f[2]}</span></div>`).join('')}
-  </section>
-  <section class="hero-compact">
-    <div class="hc-title"><span class="hc-ic">${icon(tool.icon)}</span><div><h1>${tool.short || tool.label}</h1><p>${tool.blurb || ''}</p></div></div>
-    ${steps}
-  </section>
+  <header class="toolhead"><div><h1>${tool.short || tool.label}</h1><p>${tool.blurb || ''}</p></div>${steps}</header>
+  <div data-dz></div>
 </div>`);
+    $('.ds-points', dz).innerHTML = (tool.hero.points || []).map(p => `<li>${p}</li>`).join('');
     $('[data-dz]', wrap).replaceWith(dz);
     return wrap;
   }
@@ -791,7 +786,7 @@
           if (c.tagName === 'SELECT') { const o = c.options[c.selectedIndex]; return o ? o.text.replace(/\s*\(.*\)$/, '').replace(/\s+\/.*$/, '') : ''; }
           return c.value;
         }).filter(Boolean);
-        const sv = $('.sum-val', d); if (sv) sv.textContent = parts.join(' · ');
+        const sv = $('.sum-val', d); if (sv) sv.textContent = parts.join(', ');
       };
       if (!d._bound) { d._bound = true; d.addEventListener('change', upd); d.addEventListener('input', upd); }
       upd();
@@ -802,17 +797,17 @@
   // app / router
   // ======================================================================
   const App = window.App = {
-    $, $$, h, esc, fmt, fmtSize, debounce, nextTick, baseName, safeName, icon, ill, toast, task,
+    $, $$, h, esc, fmt, fmtSize, debounce, nextTick, baseName, safeName, icon, toast, task,
     loaderShow, loaderSet, loaderHide, scanRecords, makeEncoder, detectEncoding, destinationPicker, buildZip, gzipBlob,
     download, dropzoneTile, fileCard, progressCard, resultPanel, summaryCard, presetBar, OUT_OPTIONS_HTML, readOutputOptions, warnLossy,
-    heroHTML, DELIM_LABEL, CS_OK, FS_OK, Sink,
+    heroHTML, workspace, DELIM_LABEL, CS_OK, FS_OK, Sink,
     file: new FileStore(),
     tools: {}, order: [], active: null,
     register(tool) { this.tools[tool.id] = tool; this.order.push(tool.id); },
     go(id) { location.hash = '#/' + id; },
     show(id) {
       const tool = this.tools[id] || this.tools[this.order[0]];
-      if (this.active && this.active !== tool) $$('.toast.has-act').forEach(o => o.remove());
+      if (this.active && this.active !== tool) $$('.toast').forEach(o => o.remove());
       this.active = tool;
       $$('.view').forEach(v => v.hidden = v.dataset.tool !== tool.id);
       $$('[data-nav]').forEach(a => { const on = a.dataset.nav === tool.id; a.classList.toggle('on', on); on ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current'); });
@@ -820,7 +815,7 @@
       if (!tool.mounted) { tool.mounted = true; tool.mount(view); }
       tool.onShow && tool.onShow();
       this.refreshViews(); syncMore(view);
-      document.title = `${tool.label} · CSV Toolkit`;
+      document.title = `${tool.label}: CSV Toolkit`;
     },
     /** Sync per-view state (has a file? which step?) and the header chrome. */
     refreshViews() {
@@ -837,12 +832,12 @@
       pick.textContent = (t && t.cta) || 'Choose CSV file';
       if (showChip) {
         $('.fc-name', chip).textContent = this.file.name; $('.fc-name', chip).title = this.file.name;
-        $('.fc-meta', chip).textContent = this.file.ready ? `${fmt(this.file.dataRows)} rows · ${fmtSize(this.file.file.size)}` : 'Reading…';
+        $('.fc-meta', chip).textContent = this.file.ready ? `${fmt(this.file.dataRows)} rows, ${fmtSize(this.file.file.size)}` : 'Reading…';
       }
     },
     goto(step) {
       const v = $(`.view[data-tool="${this.active.id}"]`);
-      const sel = { file: '.filecard, [data-files]', settings: '[data-settings], .card.step', run: '[data-go]', result: '.results, .export' }[step];
+      const sel = { file: '.filecard, [data-files], .dropsheet', settings: '[data-settings], .card.step', run: '[data-go]', result: '.exportbar, .results' }[step];
       const el = sel && $$(sel, v).find(n => n.isConnected && n.offsetParent !== null);
       if (!el) return;
       el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: step === 'run' ? 'center' : 'start' });
@@ -852,11 +847,10 @@
     pickFiles() { const t = this.active; (t && t.pick) ? t.pick() : this.file.pick(); },
     start() {
       initTheme();
-      const side = $('#side'), nav = $('#nav'), views = $('#views');
+      const nav = $('#nav'), views = $('#views');
       this.order.forEach(id => {
         const t = this.tools[id];
-        side.appendChild(h(`<a href="#/${id}" data-nav="${id}" aria-label="${t.label}: ${t.blurb || ''}">${icon(t.icon)}<span class="tip"><b>${t.label}</b>${t.blurb ? `<small>${t.blurb}</small>` : ''}</span></a>`));
-        nav.appendChild(h(`<a href="#/${id}" data-nav="${id}" title="${t.blurb || t.label}">${icon(t.icon)}${t.label}</a>`));
+        nav.appendChild(h(`<a href="#/${id}" data-nav="${id}" title="${t.blurb || t.label}">${t.label}</a>`));
         views.appendChild(h(`<div class="view" data-tool="${id}" hidden></div>`));
       });
       $('#pick').onclick = () => this.pickFiles();

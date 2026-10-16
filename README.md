@@ -2,7 +2,7 @@
 
 A browser-only toolkit for **splitting, merging, inspecting, transforming and converting CSV files**, built to cope with hundreds of thousands of rows or more (tested with 200,000 rows, ~19 MB). Everything runs **in your browser**: your files are never uploaded anywhere.
 
-![Split tool](docs/split.png?v=6)
+![Split tool](docs/split.png?v=7)
 
 ## Privacy
 
@@ -21,6 +21,7 @@ A browser-only toolkit for **splitting, merging, inspecting, transforming and co
 ### Split
 
 - **Four modes**: rows per file, number of output files, maximum file size (MB), or one file per distinct value of a column (up to 500 values).
+- A live strip shows where the file will be cut, before you run anything.
 - The header row is repeated in every output file.
 - Output goes to a **ZIP** (compressed with Deflate), to individual downloads, or **straight into a folder** (File System Access API: Chrome, Edge, Opera). Folder mode writes while reading, so it doesn't hold the results in memory.
 - Save and reload **presets** of your settings.
@@ -32,7 +33,7 @@ A browser-only toolkit for **splitting, merging, inspecting, transforming and co
 - Files may use different delimiters and encodings; each is detected automatically.
 - Optional **source column** with the original file name.
 
-![Merge tool](docs/merge.png?v=6)
+![Merge tool](docs/merge.png?v=7)
 
 ### Inspect
 
@@ -41,7 +42,7 @@ A browser-only toolkit for **splitting, merging, inspecting, transforming and co
 - **Validation**: wrong number of columns, unclosed quotes, undecodable characters (�), garbled text (mojibake), duplicate or missing column names, empty columns, stray leading / trailing spaces, mixed value types, mixed line endings, BOM, blank lines.
 - A health ring shows the share of clean rows; issues and column statistics can be exported as CSV.
 
-![Inspect tool](docs/inspect.png?v=6)
+![Inspect tool](docs/inspect.png?v=7)
 
 *(Screenshot uses `examples/messy-for-inspect.csv`.)*
 
@@ -57,12 +58,12 @@ A five-step pipeline: every step can be switched on or off, and the **live previ
 
 Output options: delimiter, encoding, line endings, quote-everything, header on / off.
 
-![Transform tool](docs/transform.png?v=6)
+![Transform tool](docs/transform.png?v=7)
 
 <details>
 <summary>Dark theme</summary>
 
-![Transform tool, dark theme](docs/transform-dark.png?v=6)
+![Transform tool, dark theme](docs/transform-dark.png?v=7)
 
 </details>
 
@@ -73,13 +74,13 @@ Output options: delimiter, encoding, line endings, quote-everything, header on /
 - Excel: bold, frozen header row; numbers stored as numbers; `YYYY-MM-DD` stored as real dates; automatic column widths; data beyond Excel's 1,048,576-row limit continues on extra sheets.
 - Output encodings: **UTF-8**, **UTF-8 with BOM** (best for Excel), **Windows-1252 / Latin-1**, **UTF-16 LE**.
 
-![Convert tool](docs/convert.png?v=6)
+![Convert tool](docs/convert.png?v=7)
 
 ## Everywhere
 
-- **Guided flow**: once a file is open, each tool shrinks its intro into a compact header with a 4-step guide (choose file → adjust settings → run → download) that tracks where you are; click a step to jump to it.
-- **Hard to get lost**: the open file is shown in the header (with *Change* and *Close*), you can drop a file anywhere on the page, and when a job finishes the page scrolls to the results and offers a one-click download.
-- **Sensible defaults first**: technical settings (encoding, delimiter, line endings, quoting, file names) live under collapsible “more options” panels that show their current values.
+- **Guided flow**: every tool shows a 4-step guide (choose file, adjust settings, run, download) that tracks where you are; click a step to jump to it. Before a file is open, the work area is an empty spreadsheet you can drop a file onto. Afterwards the file and settings stay pinned on the left while the preview and results scroll on the right.
+- **Hard to get lost**: the open file is shown in the header (with *Change* and *Close*), you can drop a file anywhere on the page, and when a job finishes the page scrolls to the result and offers a one-click download. An empty result is flagged instead of reported as a success.
+- **Sensible defaults first**: technical settings (encoding, delimiter, line endings, quoting, file names) live under collapsible panels that show their current values.
 - **Streaming**: files are read in chunks, so the UI stays responsive on large files.
 - **Quote-aware parser (RFC 4180)**: newlines inside quoted fields (e.g. multi-line addresses) belong to one row; records are never cut in half.
 - **Auto-detection** of encoding (UTF-8 / UTF-16 with BOM, UTF-8 vs Windows-1252) and delimiter (`,` `;` tab `|`), both overridable.
@@ -89,7 +90,7 @@ Output options: delimiter, encoding, line endings, quote-everything, header on /
 - **Light / dark theme**, responsive layout, visible keyboard focus states.
 - **Zero dependencies**: no build step, no npm, no server.
 
-![Loading animation](docs/loading.png?v=6)
+![Loading animation](docs/loading.png?v=7)
 
 ## Usage
 

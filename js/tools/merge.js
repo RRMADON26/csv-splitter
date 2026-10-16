@@ -9,12 +9,10 @@
     short: 'Merge CSV files', blurb: 'Combine several files into one', verb: 'Merge', stepFile: 'Add files', cta: 'Add CSV files',
     hasFile() { return this._count ? this._count() > 0 : false; },
     hero: {
-      title: 'Hi!<br>Ready to combine some CSVs?',
-      text: 'Merge several CSV files into a single one. Reorder them, match columns by name, and optionally track where each row came from.',
-      features: [
-        ['merge', 'Any number of files', 'Drop them all at once and drag to reorder'],
-        ['columns', 'Match columns by name', 'Files with a different column order still line up'],
-        ['table', 'Track the source', 'Add a column with each row’s original file name'],
+      points: [
+        'Drop in as many files as you like, then drag them into the order you want.',
+        'Files with columns in a different order still line up when you match columns by name.',
+        'Optionally add a column that records which file each row came from.',
       ],
     },
 
@@ -29,17 +27,17 @@
       const dz = App.dropzoneTile({ multiple: true, sub: 'or drop them anywhere on this page', onPick: () => input.click(), onFiles: f => addFiles(f) });
 
       root.appendChild(App.heroHTML(this, dz));
-      const grid = h('<main class="grid"></main>'); root.appendChild(grid);
+      const { side, main } = App.workspace(root);
 
       const filesCard = h(`
-<section class="card c5" data-files>
+<section class="card" data-files>
   <div class="card-h"><h2>Files to merge</h2><button type="button" class="link" data-clear hidden>${icon('trash')}Clear all</button></div>
-  <div class="empty" data-empty>No files yet.<br>Choose or drag two or more CSV files onto the <b>+</b> tile above.</div>
+  <div class="empty" data-empty>No files yet. Add two or more CSV files.</div>
   <div class="mf-list" data-list></div>
   <button type="button" class="btn soft sm block mt" data-add hidden>${icon('plus')}Add more files</button>
 </section>`);
       const settings = h(`
-<section class="card c4" data-settings>
+<section class="card" data-settings>
   <div class="card-h"><h2>Settings</h2></div>
   <div data-presets></div>
   <label class="check"><input type="checkbox" checked data-pref="hasHeader"> Files have a header row</label>
@@ -60,8 +58,8 @@
       $('[data-out]', settings).innerHTML = App.OUT_OPTIONS_HTML;
       $('[data-dest]', settings).appendChild(dest.el);
       $('[data-presets]', settings).appendChild(App.presetBar('merge', () => settings, () => render()));
-      progress.el.classList.add('c3'); out.results.classList.add('c5'); out.exp.classList.add('c3'); summary.el.classList.add('c4');
-      [filesCard, settings, progress.el, out.results, out.exp, summary.el].forEach(n => grid.appendChild(n));
+      side.appendChild(settings);
+      [filesCard, progress.el, out.exp, out.results, summary.el].forEach(n => main.appendChild(n));
 
       const G = k => $(`[data-${k}]`, settings);
       const pref = k => $(`[data-pref="${k}"]`, settings);
@@ -106,7 +104,7 @@
 <div class="mf" draggable="true" data-id="${it.id}">
   <span class="mf-n">${i + 1}</span>
   <div class="mf-i"><div class="n" title="${esc(it.file.name)}">${esc(it.file.name)}</div>
-    <div class="s">${fmtSize(it.file.size)} · ${it.enc.toUpperCase()} · ${App.DELIM_LABEL[it.delim] || 'custom'} · ${it.header.length} col${it.header.length === 1 ? '' : 's'}${it.rows != null ? ` · ${fmt(it.rows)} rows` : ''}</div><div class="mf-t">${badge}</div></div>
+    <div class="s">${fmtSize(it.file.size)}, ${it.enc.toUpperCase()}, ${App.DELIM_LABEL[it.delim] || 'custom'}-separated, ${it.header.length} column${it.header.length === 1 ? '' : 's'}${it.rows != null ? `, ${fmt(it.rows)} rows` : ''}</div><div class="mf-t">${badge}</div></div>
   <div class="mf-b"><button type="button" class="icon-btn" data-a="up" title="Move up" ${i === 0 ? 'disabled' : ''}>${icon('up')}</button>
   <button type="button" class="icon-btn" data-a="down" title="Move down" ${i === files.length - 1 ? 'disabled' : ''}>${icon('down')}</button>
   <button type="button" class="icon-btn" data-a="rm" title="Remove">${icon('x')}</button></div>
@@ -183,7 +181,7 @@
                 let row = f;
                 if (idx) { row = new Array(width); for (let k = 0; k < width; k++) row[k] = idx[k] < 0 ? '' : (f[idx[k]] == null ? '' : f[idx[k]]); }
                 sink.write(CSV.formatRecord(row, od, qa) + (addSource ? od + srcField : '') + eol);
-              }, { onProgress: p => { const t = (done + p * it.file.size) / totalBytes; progress.set(t); progress.status(`Merging… ${Math.round(t * 100)}%`); setLd(t); } });
+              }, { onProgress: p => { const t = (done + p * it.file.size) / totalBytes; progress.set(t); progress.status('Merging…'); setLd(t); } });
               done += it.file.size; it.rows = n; totalRows += n;
             }
             sink.rows = totalRows;
@@ -191,7 +189,7 @@
             out.show([res], { folderName: dest.dirName });
             const secs = ((performance.now() - t0) / 1000).toFixed(1);
             progress.set(1); progress.stats(fmt(totalRows), fmt(files.length), secs);
-            progress.status(`Done: ${fmt(totalRows)} rows from ${fmt(files.length)} files`, 'ok');
+            progress.status(`Done. Merged ${fmt(totalRows)} rows from ${fmt(files.length)} files.`, 'ok');
             const mism = files.slice(1).filter(f => !sameHeader(files[0], f)).length;
             summary.set([['Files merged', fmt(files.length)], ['Total rows', fmt(totalRows)], ['Output columns', fmt(width + (addSource ? 1 : 0))],
               ['Column mismatches', byName ? `${mism} (matched by name)` : (mism ? `${mism} file${mism > 1 ? 's' : ''}` : 'None')]]);

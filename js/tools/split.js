@@ -8,12 +8,10 @@
     id: 'split', label: 'Split', icon: 'split',
     short: 'Split a CSV file', blurb: 'Break a big file into smaller ones', verb: 'Split',
     hero: {
-      title: 'Hi!<br>Which CSV are we splitting today?',
-      text: 'Split large CSV files, hundreds of thousands of rows or more, into several smaller files. Everything is processed in your browser.',
-      features: [
-        ['bigfile', 'Built for big files', 'Read in chunks, so the browser never freezes'],
-        ['columns', 'Split by column value', 'One file per city, month or any other value'],
-        ['folder', 'Save straight to a folder', 'Skip the download dialogs (Chrome, Edge)'],
+      points: [
+        'Handles hundreds of thousands of rows. The file is read in chunks, so the page stays responsive.',
+        'Cut by row count, number of files, file size, or one file per value in a column.',
+        'Download the parts as one ZIP, one at a time, or save them straight into a folder.',
       ],
     },
 
@@ -25,13 +23,11 @@
       const files = App.dropzoneTile({ onPick: () => store.pick(), onFiles: f => f[0] && store.set(f[0]) });
 
       root.appendChild(App.heroHTML(this, files));
-      const grid = h('<main class="grid"></main>');
-      root.appendChild(grid);
-
-      const fc = App.fileCard(store); fc.classList.add('c4'); grid.appendChild(fc);
+      const { side, main } = App.workspace(root);
+      side.appendChild(App.fileCard(store));
 
       const settings = h(`
-<section class="card c4" data-settings>
+<section class="card" data-settings>
   <div class="card-h"><h2>Settings</h2></div>
   <div data-presets></div>
   <div class="fld"><label class="lb" for="sp-mode">Split by</label>
@@ -61,13 +57,18 @@
   <button class="btn accent block" type="button" data-go disabled>Split file</button>
   <div class="hint center" data-note></div>
 </section>`);
-      grid.appendChild(settings);
+      side.appendChild(settings);
       $('[data-dest]', settings).appendChild(dest.el);
       $('[data-presets]', settings).appendChild(App.presetBar('split', () => settings, update));
 
-      const prog = progress.el; prog.classList.add('c4'); grid.appendChild(prog);
-      out.results.classList.add('c5'); out.exp.classList.add('c3'); summary.el.classList.add('c4');
-      grid.appendChild(out.results); grid.appendChild(out.exp); grid.appendChild(summary.el);
+      // the file map: a strip showing where the file gets cut, live as settings change
+      const map = h(`
+<section class="card filemap">
+  <div class="card-h"><h2>Where the file gets cut</h2><span class="link" data-map-note></span></div>
+  <div class="fm-strip" data-strip></div>
+  <ol class="fm-legend" data-legend></ol>
+</section>`);
+      [map, progress.el, out.exp, out.results, summary.el].forEach(n => main.appendChild(n));
 
       const S = k => $(`[data-${k}]`, settings);
       const mode = () => $('#sp-mode', settings).value;
@@ -87,8 +88,47 @@
         if (!store.ready) hint.textContent = '';
         else if (m === 'rows' || m === 'parts') { const pf = perFile(); hint.textContent = `≈ ${fmt(Math.max(1, Math.ceil(store.dataRows / pf)))} files, up to ${fmt(pf)} data rows each`; }
         else if (m === 'size') hint.textContent = `≈ ${fmt(Math.max(1, Math.ceil(store.file.size / (val() * 1048576))))} files (estimate)`;
-        $('[data-note]', settings).textContent = store.ready ? (store.hasHeader ? 'The header row is repeated in every file.' : 'No header: rows are copied as they are.') : 'Start by choosing a CSV file.';
+        $('[data-note]', settings).textContent = store.ready ? (store.hasHeader ? 'Every file starts with the header row.' : 'There is no header, so rows are copied as they are.') : 'Start by choosing a CSV file.';
         S('go').disabled = busy || !store.ready;
+        if (!lastOutputs) renderMap();
+      }
+
+      let lastOutputs = null;
+      const MAX_DRAWN = 160;
+      function renderMap(outputs) {
+        const strip = $('[data-strip]', map), legend = $('[data-legend]', map), note = $('[data-map-note]', map);
+        strip.className = 'fm-strip'; legend.innerHTML = ''; strip.innerHTML = '';
+        if (!store.ready) { note.textContent = ''; return; }
+        const m = mode(), total = store.dataRows;
+        let parts = null, count = 0;
+        if (outputs) {
+          count = outputs.length;
+          parts = outputs.map((o, i) => ({ label: m === 'column' ? (o.value === '' ? '(empty)' : o.value) : `Part ${i + 1}`, rows: o.rows }));
+          note.textContent = 'After splitting';
+        } else if (m === 'rows' || m === 'parts') {
+          const pf = perFile(); count = Math.max(1, Math.ceil(total / pf));
+          parts = Array.from({ length: Math.min(count, MAX_DRAWN) }, (_, i) => ({ label: `Part ${i + 1}`, rows: Math.max(0, Math.min(pf, total - i * pf)) }));
+          note.textContent = 'Preview';
+        } else if (m === 'size') {
+          const lim = val() * 1048576, size = store.file.size; count = Math.max(1, Math.ceil(size / lim));
+          const per = total / (size / lim);
+          parts = Array.from({ length: Math.min(count, MAX_DRAWN) }, (_, i) => ({ label: `Part ${i + 1}`, rows: Math.max(0, Math.round(Math.min(per, total - i * per))), approx: true }));
+          note.textContent = 'Estimate';
+        } else {
+          strip.classList.add('unknown');
+          strip.innerHTML = `<span>One file per value of “${App.esc($('#sp-col', settings).value)}”. The sizes show up after splitting.</span>`;
+          note.textContent = 'Preview';
+          return;
+        }
+        if (count > MAX_DRAWN) {
+          strip.classList.add('dense');
+          strip.innerHTML = `<span>${fmt(count)} parts. Too many to draw one by one.</span>`;
+        } else {
+          strip.innerHTML = parts.map(p => `<i style="flex-grow:${Math.max(p.rows, total / 400)}" title="${App.esc(p.label)}: ${p.approx ? 'about ' : ''}${fmt(p.rows)} rows"></i>`).join('');
+        }
+        const shown = parts.slice(0, 6);
+        legend.innerHTML = shown.map(p => `<li><b>${App.esc(p.label)}</b><span>${p.approx ? 'about ' : ''}${fmt(p.rows)} rows</span></li>`).join('')
+          + (count > shown.length ? `<li class="more-parts"><b>${fmt(count - shown.length)} more</b><span>${m === 'column' ? 'values' : 'parts'}</span></li>` : '');
       }
 
       function fillColumns() {
@@ -98,11 +138,11 @@
       }
 
       const blank = () => summary.set([['Mode', '—'], ['Total output size', '—'], ['Largest file', '—'], ['Header repeated', '—']]);
-      const resetOutput = () => { out.clear(); progress.reset(); blank(); progress.status(store.ready ? 'Ready to split' : 'Waiting for a file'); progress.set(0); };
+      const resetOutput = () => { lastOutputs = null; out.clear(); progress.reset(); blank(); progress.status(store.ready ? 'Ready to split' : 'Waiting for a file'); progress.set(0); renderMap(); };
 
       store.on('change', () => { if (store.status !== 'ready') { resetOutput(); update(); } });
       store.on('ready', () => { fillColumns(); resetOutput(); update(); });
-      ['input', 'change'].forEach(ev => settings.addEventListener(ev, update));
+      ['input', 'change'].forEach(ev => settings.addEventListener(ev, () => { if (lastOutputs) { lastOutputs = null; } update(); }));
       blank();
       if (store.ready) { fillColumns(); progress.status('Ready to split'); }
       update();
@@ -111,7 +151,7 @@
       S('go').onclick = async () => {
         if (busy || !store.ready) return;
         try { await dest.ensure(); } catch (e) { toast(e.message, 'error'); return; }
-        busy = true; update(); out.clear(); progress.reset(); progress.status('Processing…');
+        busy = true; lastOutputs = null; update(); out.clear(); progress.reset(); progress.status('Splitting…');
         const t0 = performance.now();
         const m = mode(), prefix = safeName($('#sp-prefix', settings).value.trim() || 'part'), base = safeName(baseName(store.name));
         const hasHeader = store.hasHeader, delim = store.delimiter, spec = encSpec();
@@ -119,7 +159,7 @@
         let header = '', cur = null, idx = 0, total = 0;
         const nl = rec => rec.endsWith('\n') ? rec : rec + '\n';
         const open = name => { const s = dest.createSink(name, spec); opened.push(s); if (header) s.write(header); return s; };
-        const finish = s => { closing.push(s.close()); };
+        const finish = s => { closing.push(s.close().then(r => { r.value = s.value; return r; })); };
         const partName = () => `${prefix}_${String(++idx).padStart(3, '0')}_${base}.csv`;
 
         let colIdx = -1, byValue = null, used = null;
@@ -133,7 +173,7 @@
         let first = true, ok = false, enc = null;
 
         await App.task('Splitting your file…', 'Grab a coffee while we crunch your CSV.', async setLd => {
-          const onProgress = p => { progress.set(p); progress.status(`Processing… ${Math.round(p * 100)}%`); setLd(p); };
+          const onProgress = p => { progress.set(p); progress.status('Splitting…'); setLd(p); };
           try {
             const res = await App.scanRecords(store.file, store.encoding, rec => {
               if (first) { first = false; if (hasHeader) { header = nl(rec); return; } }
@@ -145,7 +185,7 @@
                   if (byValue.size >= 500) throw new Error('This column has more than 500 distinct values. Pick a column with fewer unique values.');
                   let name = `${prefix}_${safeName(v || '(empty)')}_${base}.csv`, n = 1;
                   while (used.has(name.toLowerCase())) name = `${prefix}_${safeName(v || '(empty)')}-${++n}_${base}.csv`;
-                  used.add(name.toLowerCase()); s = open(name); byValue.set(v, s);
+                  used.add(name.toLowerCase()); s = open(name); s.value = v; byValue.set(v, s);
                 }
                 s.write(rec); s.rows++;
               } else if (m === 'size') {
@@ -167,7 +207,8 @@
             out.show(outputs, { folderName: dest.dirName });
             const secs = ((performance.now() - t0) / 1000).toFixed(1);
             progress.set(1); progress.stats(fmt(total), fmt(outputs.length), secs);
-            progress.status(`Done: ${fmt(total)} rows → ${fmt(outputs.length)} file${outputs.length === 1 ? '' : 's'}`, 'ok');
+            progress.status(`Done. ${fmt(total)} rows split into ${fmt(outputs.length)} file${outputs.length === 1 ? '' : 's'}.`, 'ok');
+            lastOutputs = outputs; renderMap(outputs);
             const totalSize = outputs.reduce((s, o) => s + o.size, 0);
             summary.set([
               ['Mode', { rows: 'Rows per file', parts: 'Number of files', size: 'Max file size', column: 'By column value' }[m]],

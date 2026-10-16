@@ -87,12 +87,10 @@
     id: 'transform', label: 'Transform', icon: 'transform',
     short: 'Transform a CSV file', blurb: 'Clean, filter, de-duplicate, sample and pick columns', verb: 'Transform',
     hero: {
-      title: 'Hi!<br>How should we reshape your CSV?',
-      text: 'Clean, filter, de-duplicate and sample your rows, then pick, rename and reorder columns. A live preview shows the result as you go.',
-      features: [
-        ['filter', 'Filter rows', 'Keep only rows that match one or more rules'],
-        ['columns', 'Pick & reorder columns', 'Drop what you don’t need and rename the rest'],
-        ['dice', 'Sample or de-duplicate', 'Random samples, first N rows, unique rows only'],
+      points: [
+        'Clean cells, filter rows, remove duplicates and take a sample, in that order.',
+        'Keep, rename and reorder columns. The preview updates as you change each step.',
+        'Choose the delimiter, encoding and line endings of the result.',
       ],
     },
 
@@ -104,7 +102,7 @@
       const summary = App.summaryCard('What happened', 'Choose another file', () => store.pick());
       const dz = App.dropzoneTile({ onPick: () => store.pick(), onFiles: f => f[0] && store.set(f[0]) });
       root.appendChild(App.heroHTML(this, dz));
-      const grid = h('<main class="grid"></main>'); root.appendChild(grid);
+      const { side, main } = App.workspace(root);
 
       const step = (id, n, title, body) => h(`
 <section class="card step" data-step="${id}">
@@ -141,10 +139,10 @@
 </div>
 <div class="hint" data-s-hint></div>`);
       const sCols = step('columns', 5, 'Columns', `
-<div class="col-tools"><button type="button" class="link" data-all>Select all</button><button type="button" class="link" data-none>Select none</button><button type="button" class="link" data-reset>${icon('x')}Reset</button></div>
+<div class="col-tools"><button type="button" class="link" data-all>Select all</button><button type="button" class="link" data-none>Select none</button><button type="button" class="link" data-reset>Reset</button></div>
 <div class="cols-list" data-cols></div>`);
-      const left = h('<div class="c7 stack"></div>');
-      [sClean, sFilter, sDedup, sSample, sCols].forEach(s => left.appendChild(s));
+      const steps = h('<div class="steps"></div>');
+      [sClean, sFilter, sDedup, sSample, sCols].forEach(s => steps.appendChild(s));
 
       const fc = App.fileCard(store);
       const prev = h(`
@@ -166,11 +164,8 @@
 </section>`);
       $('[data-out]', outCard).innerHTML = App.OUT_OPTIONS_HTML;
       $('[data-dest]', outCard).appendChild(dest.el);
-      const right = h('<div class="c5 stack"></div>');
-      [fc, prev, outCard].forEach(n => right.appendChild(n));
-      grid.appendChild(left); grid.appendChild(right);
-      progress.el.classList.add('c4'); summary.el.classList.add('c4'); out.exp.classList.add('c4');
-      [progress.el, summary.el, out.exp].forEach(n => grid.appendChild(n));
+      [fc, outCard].forEach(n => side.appendChild(n));
+      [steps, prev, progress.el, out.exp, summary.el].forEach(n => main.appendChild(n));
 
       const pref = k => $(`[data-pref="${k}"]`, root);
       const on = id => pref('en_' + id).checked;
@@ -246,9 +241,9 @@
 
       function summaries(cfg) {
         const S = (id, t) => { const el = $(`[data-step="${id}"]`, root); $('[data-sum]', el).textContent = t; el.classList.toggle('active', on(id)); $('.step-body', el).hidden = !on(id); };
-        S('clean', !on('clean') ? 'Off' : [cfg.clean.trim && 'trim spaces', cfg.clean.lines && 'flatten line breaks'].filter(Boolean).join(', ') || 'Nothing selected');
+        S('clean', !on('clean') ? 'Off' : [cfg.clean.trim && 'Trim spaces', cfg.clean.lines && 'flatten line breaks'].filter(Boolean).join(', ') || 'Nothing selected');
         const nr = cfg.filter.rules.length;
-        S('filter', !on('filter') ? 'Off' : nr ? `${nr} rule${nr > 1 ? 's' : ''} · ${cfg.filter.any ? 'any' : 'all'} must match` : 'No rules yet');
+        S('filter', !on('filter') ? 'Off' : nr ? `${nr} rule${nr > 1 ? 's' : ''}, ${cfg.filter.any ? 'any' : 'all'} must match` : 'No rules yet');
         S('dedup', !on('dedup') ? 'Off' : cfg.dedup.cols ? `By ${cfg.dedup.cols.length} column${cfg.dedup.cols.length === 1 ? '' : 's'}` : 'Whole row');
         const m = cfg.sample.mode;
         S('sample', !on('sample') ? 'Off' : { first: `First ${fmt(cfg.sample.n)} rows`, random: `Random ${fmt(cfg.sample.n)} rows`, percent: `Random ${cfg.sample.n}%`, nth: `Every ${fmt(cfg.sample.n)}th row` }[m]);
@@ -274,7 +269,7 @@
         wrap.innerHTML = `<table class="tbl pv"><thead><tr>${names.map(n => `<th><span class="cn">${esc(n)}</span></th>`).join('')}</tr></thead><tbody>${rows.slice(0, 8).map(r => `<tr>${names.map((_, i) => { const v = r[i] == null ? '' : r[i]; return v === '' ? '<td class="nul">empty</td>' : `<td title="${esc(v)}">${esc(v.length > 60 ? v.slice(0, 60) + '…' : v)}</td>`; }).join('')}</tr>`).join('')}</tbody></table>`;
         wrap.hidden = rows.length === 0; empty.hidden = rows.length > 0;
         if (!rows.length) empty.textContent = 'No rows survive these steps in the first rows of the file.';
-        note.textContent = `${fmt(rows.length)} of the first ${fmt(store.sample.length)} rows kept`;
+        note.textContent = `${fmt(rows.length)} of the first ${fmt(store.sample.length)} rows pass`;
       }
       const changed = App.debounce(updatePreview, 120);
       let busy = false;
@@ -331,14 +326,14 @@
               if (first) { first = false; if (hasH) return; }
               const r = P.process(CSV.parseRecord(rec, delim));
               if (r) sink.write(CSV.formatRecord(r, od, qa) + eol);
-            }, { isCancelled: () => P.done, onProgress: p => { progress.set(p); progress.status(`Transforming… ${Math.round(p * 100)}%`); setLd(p); } });
+            }, { isCancelled: () => P.done, onProgress: p => { progress.set(p); progress.status('Transforming…'); setLd(p); } });
             for (const r of P.finalize()) sink.write(CSV.formatRecord(r, od, qa) + eol);
             sink.rows = P.counts.written;
             const res = await sink.close();
             const c = P.counts, secs = ((performance.now() - t0) / 1000).toFixed(1), empty = c.written === 0;
             out.show([res], { folderName: dest.dirName, announce: !empty });
             progress.set(1); progress.stats(fmt(c.read), fmt(c.written), secs);
-            progress.status(empty ? 'Done, but no rows matched your steps' : `Done: ${fmt(c.written)} rows written`, empty ? 'err' : 'ok');
+            progress.status(empty ? 'Done, but no rows matched your steps.' : `Done. Wrote ${fmt(c.written)} rows.`, empty ? 'err' : 'ok');
             if (empty) toast('No rows survived your steps, so the output only has a header row. Check your filter rules or turn a step off.', 'error', 9000);
             summary.set([['Rows read', fmt(c.read) + (P.done ? ' (stopped early)' : '')], ['Removed by filter', fmt(c.filtered)], ['Duplicates removed', fmt(c.dups)], ['Left out by sample', fmt(c.sampledOut)], ['Rows written', fmt(c.written)]]);
             App.warnLossy(sink.enc);

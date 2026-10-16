@@ -58,50 +58,48 @@
     id: 'inspect', label: 'Inspect', icon: 'inspect',
     short: 'Inspect a CSV file', blurb: 'Preview the data and find problems', steps: false,
     hero: {
-      title: 'Hi!<br>What’s hiding inside your CSV?',
-      text: 'Preview the data, see what each column contains, and catch broken rows, bad encodings and other surprises before they cause trouble.',
-      features: [
-        ['search', 'Instant preview', 'The first 20 rows and the detected column types'],
-        ['chart', 'Column statistics', 'Empty values, distinct counts, ranges and top values'],
-        ['alert', 'Spot problems', 'Ragged rows, broken quotes, bad characters and more'],
+      points: [
+        'See the first rows straight away, with the type each column seems to hold.',
+        'Per column: how full it is, how many distinct values, the range and the most common values.',
+        'Finds rows with the wrong number of columns, broken quotes, garbled characters and stray spaces.',
       ],
     },
 
     mount(root) {
       const dz = App.dropzoneTile({ onPick: () => store.pick(), onFiles: f => f[0] && store.set(f[0]) });
       root.appendChild(App.heroHTML(this, dz));
-      const grid = h('<main class="grid"></main>'); root.appendChild(grid);
-      const fc = App.fileCard(store); fc.classList.add('c4');
+      const { side, main } = App.workspace(root);
+      const fc = App.fileCard(store);
 
-      const overview = h(`<section class="card c4"><div class="card-h"><h2>Overview</h2></div><div class="tiles" data-tiles></div></section>`);
+      const overview = h(`<section class="card"><div class="card-h"><h2>Overview</h2></div><dl class="kv" data-tiles></dl></section>`);
       const health = h(`
-<section class="card c4">
+<section class="card health">
   <div class="card-h"><h2>Health check</h2><span data-pill></span></div>
-  <div class="ringwrap">
-    <div class="ring"><svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="46"/><circle class="fg" cx="50" cy="50" r="46" data-fg/></svg><b data-pct>—</b></div>
-    <div class="status" data-status>Waiting for a file</div>
-    <div class="stats"><div><strong data-e>-</strong><small>errors</small></div><div><strong data-w>-</strong><small>warnings</small></div><div><strong data-i>-</strong><small>notes</small></div></div>
-  </div>
+  <p class="hc-line"><b data-pct>—</b> of rows are clean</p>
+  <div class="hc-bar"><i data-fg></i></div>
+  <p class="status" data-status>Waiting for a file</p>
+  <p class="hc-counts"><span><b data-e>-</b> <i data-le>errors</i></span><span><b data-w>-</b> <i data-lw>warnings</i></span><span><b data-i>-</b> <i data-li>notes</i></span></p>
 </section>`);
       const preview = h(`
-<section class="card c12">
+<section class="card">
   <div class="card-h"><h2>Preview</h2><span class="link" data-prev-note></span></div>
   <div class="empty" data-empty>Choose a file to see its first rows.</div>
   <div class="tbl-wrap" data-prev hidden></div>
 </section>`);
       const stats = h(`
-<section class="card c12">
+<section class="card">
   <div class="card-h"><h2>Columns</h2><button type="button" class="link" data-exp-stats hidden>${icon('download')}Export CSV</button></div>
   <div class="empty" data-empty>Column statistics will appear here.</div>
   <div class="tbl-wrap" data-stats hidden></div>
 </section>`);
       const issues = h(`
-<section class="card c12">
+<section class="card">
   <div class="card-h"><h2>Issues</h2><button type="button" class="link" data-exp-issues hidden>${icon('download')}Export CSV</button></div>
   <div class="empty" data-empty>Problems found in the data will be listed here.</div>
   <div class="issue-list" data-issues hidden></div>
 </section>`);
-      [fc, overview, health, issues, preview, stats].forEach(n => grid.appendChild(n));
+      [fc, health, overview].forEach(n => side.appendChild(n));
+      [issues, preview, stats].forEach(n => main.appendChild(n));
 
       let last = null, key = '', busy = false;
       const stale = () => store.ready && key !== [store.file.name, store.file.size, store.file.lastModified, store.encoding, store.delimiter, store.hasHeader].join('|');
@@ -115,7 +113,7 @@
         wrap.innerHTML = `<table class="tbl pv"><thead><tr><th class="rn">#</th>${cols.map((c, i) => `<th><span class="cn" title="${esc(c)}">${esc(c)}</span>${typeBadge(i)}</th>`).join('')}</tr></thead>
 <tbody>${rows.map((r, ri) => `<tr><td class="rn">${ri + 1}</td>${cols.map((_, i) => { const v = r[i] == null ? '' : r[i]; return v === '' ? '<td class="nul">empty</td>' : `<td title="${esc(v)}">${esc(v.length > 80 ? v.slice(0, 80) + '…' : v)}</td>`; }).join('')}</tr>`).join('')}</tbody></table>`;
         wrap.hidden = false; empty.hidden = true;
-        $('[data-prev-note]', preview).textContent = `Showing ${fmt(rows.length)} of ${fmt(store.dataRows)} rows`;
+        $('[data-prev-note]', preview).textContent = `First ${fmt(rows.length)} of ${fmt(store.dataRows)} rows`;
       }
 
       function renderTiles(r) {
@@ -125,17 +123,18 @@
           ['Size', store.ready ? fmtSize(store.file.size) : '—'], ['Encoding', store.ready ? store.encoding.toUpperCase() : '—'],
           ['Delimiter', store.ready ? (App.DELIM_LABEL[store.delimiter] || 'custom') : '—'], ['Line endings', store.ready ? eol : '—'],
         ];
-        $('[data-tiles]', overview).innerHTML = t.map(([k, v]) => `<div class="tile"><strong>${esc(v)}</strong><small>${k}</small></div>`).join('');
+        $('[data-tiles]', overview).innerHTML = t.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('');
       }
 
       // ------------------------------------------------------------ results rendering
       function renderResult(r) {
         // health
         const fg = $('[data-fg]', health), clean = r.rows ? (r.rows - r.badRows) / r.rows : 1;
-        fg.style.strokeDashoffset = String(289 * (1 - clean));
+        fg.style.width = (clean * 100).toFixed(1) + '%'; fg.classList.toggle('bad', clean < 0.98);
         $('[data-pct]', health).textContent = (clean >= 0.9995 && r.badRows ? 99.9 : Math.round(clean * 1000) / 10) + '%';
         const E = r.issues.filter(x => x.sev === 'error').length, W = r.issues.filter(x => x.sev === 'warn').length, I = r.issues.filter(x => x.sev === 'info').length;
         $('[data-e]', health).textContent = E; $('[data-w]', health).textContent = W; $('[data-i]', health).textContent = I;
+        $('[data-le]', health).textContent = E === 1 ? 'error' : 'errors'; $('[data-lw]', health).textContent = W === 1 ? 'warning' : 'warnings'; $('[data-li]', health).textContent = I === 1 ? 'note' : 'notes';
         $('[data-status]', health).textContent = r.badRows ? `${fmt(r.badRows)} of ${fmt(r.rows)} rows have problems` : 'Every row looks clean';
         $('[data-status]', health).className = 'status ' + (E ? 'err' : W || r.badRows ? '' : 'ok');
         $('[data-pill]', health).innerHTML = E ? `<span class="pill err">${icon('warn')}Needs attention</span>` : W ? `<span class="pill warn">${icon('warn')}Review suggested</span>` : `<span class="pill ok">${icon('check')}Looks healthy</span>`;
@@ -148,7 +147,7 @@
         const sw = $('[data-stats]', stats);
         sw.innerHTML = `<table class="tbl"><thead><tr><th>Column</th><th>Filled</th><th>Distinct</th><th>Range</th><th>Top values</th></tr></thead><tbody>${r.cols.map(c => `
 <tr><td><div class="cn" title="${esc(c.name)}">${esc(c.name)}</div><span class="typ t-${c.ty.t.toLowerCase()}">${c.ty.t}</span>${c.ty.odd ? `<span class="pill warn sm" title="Values that don't fit the ${c.ty.t.toLowerCase()} type">${fmt(c.ty.odd)} off</span>` : ''}</td>
-<td><div class="fillbar"><i style="width:${(c.filledPct).toFixed(1)}%"></i></div><small>${c.filledPct.toFixed(c.filledPct === 100 || c.filledPct === 0 ? 0 : 1)}%${c.empty ? ` · ${fmt(c.empty)} empty` : ''}</small></td>
+<td><div class="fillbar"><i style="width:${(c.filledPct).toFixed(1)}%"></i></div><small>${c.filledPct.toFixed(c.filledPct === 100 || c.filledPct === 0 ? 0 : 1)}%${c.empty ? `, ${fmt(c.empty)} empty` : ''}</small></td>
 <td class="r">${c.capped ? fmt(DISTINCT_CAP) + '+' : fmt(c.distinct)}</td>
 <td><span class="rg">${esc(c.range)}</span>${c.extra ? `<small>${esc(c.extra)}</small>` : ''}</td>
 <td>${c.top.length ? c.top.map(([v, n]) => `<span class="tv" title="${esc(v)}">${esc(v.length > 18 ? v.slice(0, 18) + '…' : v)}<em>${fmt(n)}</em></span>`).join('') : '<small>—</small>'}</td></tr>`).join('')}</tbody></table>`;
@@ -158,7 +157,7 @@
 
       function reset() {
         last = null; key = '';
-        $('[data-fg]', health).style.strokeDashoffset = '289'; $('[data-pct]', health).textContent = '—';
+        $('[data-fg]', health).style.width = '0'; $('[data-pct]', health).textContent = '—';
         $('[data-status]', health).textContent = store.ready ? 'Analyzing…' : 'Waiting for a file'; $('[data-status]', health).className = 'status';
         $('[data-pill]', health).innerHTML = '';
         ['e', 'w', 'i'].forEach(k => $(`[data-${k}]`, health).textContent = '-');
@@ -200,7 +199,7 @@
           const names = store.columns, issuesL = [];
           if (res.unclosedQuote) issuesL.push({ sev: 'error', title: 'Unclosed quote at the end of the file', detail: 'A field opens with a quote that is never closed. Everything after it may be read as one giant cell.' });
           if (ragged) issuesL.push({ sev: 'error', title: `${fmt(ragged)} row${ragged > 1 ? 's' : ''} with the wrong number of columns`, detail: `The header has ${expected} columns. Unquoted delimiters inside text are the usual cause.`, examples: raggedEx.concat(ragged > raggedEx.length ? [`…and ${fmt(ragged - raggedEx.length)} more`] : []) });
-          if (repl) issuesL.push({ sev: 'error', title: `${fmt(repl)} row${repl > 1 ? 's' : ''} with undecodable characters (�)`, detail: `The file isn’t valid ${enc.toUpperCase()}. Try another encoding under “Encoding & delimiter” in the Active file card.`, examples: replEx });
+          if (repl) issuesL.push({ sev: 'error', title: `${fmt(repl)} row${repl > 1 ? 's' : ''} with undecodable characters (�)`, detail: `The file isn’t valid ${enc.toUpperCase()}. Try another encoding under “Encoding & delimiter” in the File panel.`, examples: replEx });
           if (moji) issuesL.push({ sev: 'warn', title: `Possible garbled text in ${fmt(moji)} row${moji > 1 ? 's' : ''}`, detail: 'Sequences like “Ã©” usually mean UTF-8 text was read as Latin-1 (or saved twice). Try switching the encoding.', examples: mojiEx });
           const dupNames = hasH ? store.header.filter((n, i) => store.header.indexOf(n) !== i) : [];
           if (dupNames.length) issuesL.push({ sev: 'warn', title: 'Duplicate column names', detail: [...new Set(dupNames)].join(', ') });
