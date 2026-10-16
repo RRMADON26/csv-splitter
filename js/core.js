@@ -336,6 +336,8 @@
       this.chain = this.chain.then(() => this.err || this.writable.write(c)).catch(e => { this.err = this.err || e; });
     }
     write(s) { this.buf.push(s); this.bufLen += s.length; this.size += this.enc.byteLen(s); if (this.bufLen >= 262144) this.flush(); }
+    /** Append an already-encoded Blob (e.g. a finished .xlsx). */
+    writeBlob(b) { this.flush(); this.emitChunk(b); this.size += b.size; }
     flush() { if (!this.buf.length) return; const c = this.enc.encode(this.buf.join('')); this.buf = []; this.bufLen = 0; this.emitChunk(c); }
     async close() {
       this.flush();
@@ -594,7 +596,7 @@
         E('sw').hidden = true; E('alt').hidden = true; E('main').disabled = true; E('main').textContent = 'Download'; setStatus('');
         E('main').onclick = null;
       },
-      show(outputs, { folderName = '', note = '' } = {}) {
+      show(outputs, { folderName = '', note = '', gz = true } = {}) {
         outs = outputs; folder = folderName;
         const saved = outputs.length && outputs[0].saved;
         const max = Math.max(...outputs.map(o => o.size), 1);
@@ -621,7 +623,7 @@
           const o = outputs[0];
           E('title').textContent = 'Your file is ready'; E('text').textContent = `${o.name} · ${fmtSize(o.size)}`;
           E('main').textContent = 'Download'; E('main').onclick = () => download(o.blob, o.name);
-          if (CS_OK) {
+          if (CS_OK && gz) {
             E('alt').hidden = false;
             E('alt').onclick = async () => {
               E('alt').disabled = true; setStatus('Compressing…');
