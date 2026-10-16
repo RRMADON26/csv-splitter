@@ -120,7 +120,7 @@
 <button type="button" class="btn soft sm" data-add-rule>${icon('plus')}Add rule</button>
 <div class="two mt">
   <div class="fld"><label class="lb">Keep rows that match</label><select data-pref="f_mode"><option value="all">All rules</option><option value="any">Any rule</option></select></div>
-  <div class="fld"><label class="lb">&nbsp;</label><label class="check"><input type="checkbox" data-pref="f_cs"> Case sensitive</label></div>
+  <div class="fld"><label class="lb lb-gap">&nbsp;</label><label class="check"><input type="checkbox" data-pref="f_cs"> Case sensitive</label></div>
 </div>`);
       const sDedup = step('dedup', 3, 'Remove duplicates', `
 <div class="fld"><label class="lb">Two rows are duplicates when…</label>
@@ -157,7 +157,7 @@
   <div data-out></div>
   <div class="two">
     <div class="fld"><label class="lb" for="tf-name">File name</label><input id="tf-name" type="text" value="transformed.csv" data-pref="outName"></div>
-    <div class="fld"><label class="lb">&nbsp;</label><label class="check"><input type="checkbox" checked data-pref="outHeader"> Write a header row</label></div>
+    <div class="fld"><label class="lb lb-gap">&nbsp;</label><label class="check"><input type="checkbox" checked data-pref="outHeader"> Write a header row</label></div>
   </div>
   <div class="fld"><label class="lb">Save</label><div data-dest></div></div>
   <button class="btn accent block" type="button" data-go disabled>Transform file</button>

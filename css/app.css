@@ -449,3 +449,12 @@ input.bad { border-color: var(--err); outline-color: var(--err); }
   .stack > * { grid-column: span 12; }
   .stack > .filecard { order: -2; }
 }
+@media (max-width: 640px) {
+  .lb-gap { display: none; }
+  .mf-list, .issue-list { max-height: none; }
+  .fmts { grid-template-columns: repeat(5, 1fr); gap: 6px; }
+  .fmt { padding: 12px 2px; }
+  .fmt span { display: none; }
+  .fmt b { font-size: 13px; }
+}
+@media (max-width: 640px) { .two { row-gap: 0; } }
