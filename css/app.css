@@ -409,3 +409,36 @@ input.bad { border-color: var(--err); outline-color: var(--err); }
 .tbl.xl tr.hdr td { background: var(--tile); }
 .tbl.xl td.r { text-align: right; } .tbl.xl td.dt { color: var(--ok); }
 @media (max-width: 640px) { .fmts { grid-template-columns: repeat(3, 1fr); } }
+
+/* ================= mobile & touch polish ================= */
+@media (max-width: 640px) {
+  .nav { gap: 16px; }
+  .nav a .ic { display: none; }
+  .nav a { font-size: 14px; }
+  .safe { flex-direction: row; align-items: center; gap: 12px; padding: 12px 14px; margin: -4px 0 20px; border-radius: 20px; }
+  .safe svg.ill { width: 84px; height: 38px; }
+  .safe h2 { font-size: 15px; gap: 6px; }
+  .safe h2 em { font-size: 9.5px; padding: 2px 7px; }
+  .safe p { font-size: 12px; }
+  .safe ul { display: none; }
+  .feat, .dz { min-height: 140px; }
+  .feat svg { height: 64px; }
+  .hello p { font-size: 14px; }
+  .card { padding: 20px 18px; border-radius: 24px; }
+  body { padding: 12px 10px; }
+  .shell { padding: 18px 14px 28px; border-radius: 26px; }
+}
+@media (pointer: coarse) {
+  .link { min-height: 40px; padding: 8px 6px; }
+  .seg button { min-height: 38px; padding: 8px 14px; }
+  .icon-btn { width: 40px; height: 40px; }
+  .chip { padding: 9px 15px; }
+  .btn.sm { min-height: 40px; }
+  .check { min-height: 38px; }
+  .colrow { grid-template-columns: 22px minmax(0, 1fr) 40px 40px; }
+  .rule { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) 40px; }
+  select, input[type=text], input[type=number] { min-height: 42px; }
+  .presets select { min-height: 40px; }
+}
+@media (pointer: coarse) and (max-width: 640px) { .rule { grid-template-columns: 1fr 40px; } }
+@media (pointer: coarse) { .nav a { padding: 10px 6px; min-height: 40px; } }

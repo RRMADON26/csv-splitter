@@ -163,6 +163,8 @@ node tests/csv.test.js
 
 The tools themselves were tested in a real browser with `dummy_200k.csv`: row counts, byte-for-byte reassembly of split files, ZIP integrity, filter / de-duplication results compared against an independent Python implementation, JSON validity, encodings byte by byte, and `.xlsx` files re-opened with `openpyxl` (types, bold header, frozen pane, dates, multi-sheet overflow).
 
+The layout was also checked with touch emulation at 390 px (phone) and 768 px (tablet) in light and dark: every tool completes its flow by tapping, there is no horizontal page scroll, and on touch screens buttons and fields are enlarged to at least ~40 px.
+
 ## License
 
 [MIT](LICENSE) © 2026 RRMADON26
