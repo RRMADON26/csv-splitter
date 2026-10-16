@@ -83,7 +83,7 @@ Output options: delimiter, encoding, line endings, quote-everything, header on /
 - **Output**: individual downloads, ZIP with real compression, `.gz` for single files, or save directly to a folder.
 - **Presets** for your favorite settings, saved in your browser.
 - **Loading animation**: a person sipping coffee with a live progress bar (respects `prefers-reduced-motion`).
-- **Light / dark theme**, responsive layout, keyboard-accessible controls.
+- **Light / dark theme**, responsive layout, visible keyboard focus states.
 - **Zero dependencies**: no build step, no npm, no server.
 
 ![Loading animation](docs/loading.png?v=4)
