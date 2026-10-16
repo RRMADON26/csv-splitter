@@ -312,7 +312,7 @@
       const first = rows[0] || [];
       const names = this.hasHeader ? first : Array.from({ length: width }, (_, i) => 'Column ' + (i + 1));
       this.header = names;
-      this.columns = Array.from({ length: Math.max(width, names.length) }, (_, i) => (names[i] != null && names[i] !== '') ? names[i] : 'Column ' + (i + 1));
+      this.columns = Array.from({ length: this.hasHeader ? names.length : width }, (_, i) => (names[i] != null && names[i] !== '') ? names[i] : 'Column ' + (i + 1));
       this.sample = (this.hasHeader ? rows.slice(1) : rows).slice(0, SAMPLE_ROWS);
     }
   }
@@ -648,7 +648,7 @@
   }
 
   /** Preset bar: saves/loads every [data-pref] control inside `rootFn()`. */
-  function presetBar(toolId, rootFn, afterApply) {
+  function presetBar(toolId, rootFn, afterApply, hooks) {
     const KEY = 'csvkit.presets.v1';
     const load = () => { try { return (JSON.parse(localStorage.getItem(KEY)) || {})[toolId] || {}; } catch (e) { return {}; } };
     const save = obj => { try { const all = JSON.parse(localStorage.getItem(KEY)) || {}; all[toolId] = obj; localStorage.setItem(KEY, JSON.stringify(all)); } catch (e) { toast('Could not save presets in this browser.', 'error'); } };
@@ -665,13 +665,14 @@
       sel.innerHTML = '<option value="">Presets…</option>' + names.map(n => `<option>${esc(n)}</option>`).join('');
       sel.value = names.includes(pick) ? pick : ''; del.hidden = !sel.value;
     };
-    const collect = () => { const o = {}; $$('[data-pref]', rootFn()).forEach(c => { o[c.dataset.pref] = c.type === 'checkbox' ? c.checked : c.value; }); return o; };
+    const collect = () => { const o = {}; $$('[data-pref]', rootFn()).forEach(c => { o[c.dataset.pref] = c.type === 'checkbox' ? c.checked : c.value; }); if (hooks && hooks.collect) o.__extra = hooks.collect(); return o; };
     const apply = o => {
       $$('[data-pref]', rootFn()).forEach(c => {
         const v = o[c.dataset.pref]; if (v === undefined) return;
         if (c.type === 'checkbox') c.checked = !!v; else if (c.tagName === 'SELECT') { if ([...c.options].some(op => op.value === String(v))) c.value = v; } else c.value = v;
         c.dispatchEvent(new Event('input', { bubbles: true })); c.dispatchEvent(new Event('change', { bubbles: true }));
       });
+      if (hooks && hooks.apply && o.__extra) hooks.apply(o.__extra);
       afterApply && afterApply();
     };
     sel.onchange = () => { del.hidden = !sel.value; if (sel.value) { apply(load()[sel.value]); toast(`Preset “${sel.value}” applied`, 'ok', 2200); } };
