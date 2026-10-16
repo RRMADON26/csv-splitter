@@ -701,7 +701,7 @@
   <div class="fld"><label class="lb">Encoding</label>
     <select data-pref="outEnc"><option value="utf-8">UTF-8</option><option value="utf-8-bom">UTF-8 with BOM (Excel)</option><option value="windows-1252">Windows-1252 / Latin-1</option><option value="utf-16le">UTF-16 LE</option></select></div>
   <div class="fld"><label class="lb">Line endings</label>
-    <select data-pref="outEol"><option value="lf">LF (Unix / macOS)</option><option value="crlf">CRLF (Windows)</option></select></div>
+    <select data-pref="outEol"><option value="lf">LF</option><option value="crlf">CRLF</option></select></div>
   <div class="fld"><label class="lb">&nbsp;</label><label class="check"><input type="checkbox" data-pref="outQuote"> Quote every field</label></div>
 </div>`;
   function readOutputOptions(root, store) {
