@@ -6,7 +6,8 @@
 
   App.register({
     id: 'merge', label: 'Merge', icon: 'merge',
-    short: 'Merge CSV files', blurb: 'Combine several files into one', verb: 'Merge', stepFile: 'Add files', cta: 'Add CSV files',
+    short: 'Merge CSV files', blurb: 'Combine several files into one', verb: 'Merge', stepFile: 'Add Files', cta: 'Add Files…',
+    subtitle() { const n = this._count ? this._count() : 0; return n ? `${n} file${n > 1 ? 's' : ''} added` : 'No files added'; },
     hasFile() { return this._count ? this._count() > 0 : false; },
     hero: {
       points: [
@@ -23,7 +24,7 @@
       const dest = App.destinationPicker();
       const progress = App.progressCard(['rows', 'files', 'seconds']);
       const out = App.resultPanel({ zipBase: () => 'merged' });
-      const summary = App.summaryCard('Summary', 'Start over', () => { state.files = []; render(); resetOutput(); });
+      const summary = App.summaryCard('Summary', 'Start Over', () => { state.files = []; render(); resetOutput(); });
       const dz = App.dropzoneTile({ multiple: true, sub: 'or drop them anywhere on this page', onPick: () => input.click(), onFiles: f => addFiles(f) });
 
       root.appendChild(App.heroHTML(this, dz));
@@ -31,10 +32,10 @@
 
       const filesCard = h(`
 <section class="card" data-files>
-  <div class="card-h"><h2>Files to merge</h2><button type="button" class="link" data-clear hidden>${icon('trash')}Clear all</button></div>
+  <div class="card-h"><h2>Files to Merge</h2><button type="button" class="link" data-clear hidden>Remove All</button></div>
   <div class="empty" data-empty>No files yet. Add two or more CSV files.</div>
   <div class="mf-list" data-list></div>
-  <button type="button" class="btn soft sm block mt" data-add hidden>${icon('plus')}Add more files</button>
+  <button type="button" class="btn soft sm block mt" data-add hidden>Add Files…</button>
 </section>`);
       const settings = h(`
 <section class="card" data-settings>
@@ -52,7 +53,7 @@
   <div data-out></div>
   <div class="fld"><label class="lb" for="mg-name">Output file name</label><input id="mg-name" type="text" value="merged.csv" data-pref="outName"></div>
   <div class="fld"><label class="lb">Save to</label><div data-dest></div></div>
-  <button class="btn accent block" type="button" data-go disabled>Merge files</button>
+  <button class="btn accent block" type="button" data-go disabled>Merge Files</button>
   <div class="hint center" data-note></div>
 </section>`);
       $('[data-out]', settings).innerHTML = App.OUT_OPTIONS_HTML;

@@ -59,17 +59,8 @@
   // theme + toast
   // ======================================================================
   function initTheme() {
-    const light = $('#thLight'), dark = $('#thDark');
-    const apply = t => {
-      document.documentElement.dataset.theme = t;
-      dark.classList.toggle('on', t === 'dark'); light.classList.toggle('on', t !== 'dark');
-      try { localStorage.setItem('csv-theme', t); } catch (e) { /* ignore */ }
-    };
-    let t = null;
-    try { t = localStorage.getItem('csv-theme'); } catch (e) { /* ignore */ }
-    if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    apply(t);
-    light.onclick = () => apply('light'); dark.onclick = () => apply('dark');
+    try { localStorage.removeItem('csv-theme'); } catch (e) { /* ignore */ }
+    delete document.documentElement.dataset.theme;
   }
 
   function toast(msg, type = 'info', ms = 4200, action) {
@@ -346,11 +337,11 @@
     const el = h(`
 <div class="dest">
   <div class="seg wide" role="group" aria-label="Output destination">
-    <button type="button" data-m="download" class="on">${icon('download')}Download</button>
-    <button type="button" data-m="folder" ${FS_OK ? '' : 'disabled title="Your browser cannot save directly to a folder (try Chrome, Edge or Opera)"'}>${icon('folder')}Save to folder</button>
+    <button type="button" data-m="download" class="on">Download</button>
+    <button type="button" data-m="folder" ${FS_OK ? '' : 'disabled title="This browser can’t save straight to a folder. Try Chrome, Edge or Opera."'}>Save to Folder</button>
   </div>
   <div class="dest-folder" hidden>
-    <button type="button" class="btn soft sm" data-act="choose">Choose folder…</button>
+    <button type="button" class="btn sm" data-act="choose">Choose Folder…</button>
     <span class="hint" data-label>No folder chosen</span>
   </div>
 </div>`);
@@ -472,26 +463,24 @@
   // ======================================================================
   // UI components
   // ======================================================================
-  /** Empty state: a blank spreadsheet that is also the drop target. */
+  /** Empty state: a drop well with a document icon. */
   function dropzoneTile({ multiple = false, onPick, onFiles, title, sub }) {
-    title = title || (multiple ? 'Drop CSV files here' : 'Drop a CSV file here');
-    sub = sub || (multiple ? 'or choose them from your computer. They stay on this device.' : 'or choose one from your computer. It stays on this device.');
-    const cols = 'ABCDEFGHIJKL'.split('').map(c => `<span>${c}</span>`).join('');
-    const rows = Array.from({ length: 9 }, (_, i) => `<span>${i + 1}</span>`).join('');
+    title = title || (multiple ? 'Drop CSV Files Here' : 'Drop a CSV File Here');
+    sub = sub || (multiple ? 'Or choose them from your computer. They stay on this device.' : 'Or choose one from your computer. It stays on this device.');
     const dz = h(`
-<div class="dropsheet" tabindex="0" role="button" aria-label="${title}, ${sub}">
-  <div class="ds-cols" aria-hidden="true"><span></span>${cols}</div>
-  <div class="ds-body">
-    <div class="ds-rows" aria-hidden="true">${rows}</div>
-    <div class="ds-grid">
-      <div class="ds-sel">
-        <h2>${title}</h2>
-        <p>${sub}</p>
-        <span class="btn accent">${multiple ? 'Choose files' : 'Choose a file'}</span>
-        <ul class="ds-points"></ul>
-        <i class="ds-handle" aria-hidden="true"></i>
-      </div>
-    </div>
+<div class="dropsheet" tabindex="0" role="button" aria-label="${title}. ${sub}">
+  <div class="dw">
+    <svg class="dw-doc" viewBox="0 0 64 80" aria-hidden="true">
+      <path d="M8 2h34l20 20v50a6 6 0 0 1-6 6H8a6 6 0 0 1-6-6V8a6 6 0 0 1 6-6z" fill="var(--doc)" stroke="var(--doc-edge)" stroke-width="1.5"/>
+      <path d="M42 2v14a6 6 0 0 0 6 6h14" fill="var(--doc-fold)" stroke="var(--doc-edge)" stroke-width="1.5"/>
+      <path d="M14 36h36M14 46h36M14 56h36M27 30v32M39 30v32" stroke="var(--doc-grid)" stroke-width="1.5"/>
+      <rect x="10" y="62" width="44" height="12" rx="3" fill="var(--accent)"/>
+      <text x="32" y="71" text-anchor="middle" font-size="8.5" font-weight="700" fill="#fff" font-family="-apple-system, system-ui, sans-serif">CSV</text>
+    </svg>
+    <h2>${title}</h2>
+    <p>${sub}</p>
+    <span class="btn accent">${multiple ? 'Choose Files…' : 'Choose File…'}</span>
+    <ul class="ds-points"></ul>
   </div>
 </div>`);
     dz.onclick = () => onPick();
@@ -513,7 +502,7 @@
   function fileCard(store) {
     const el = h(`
 <section class="card filecard">
-  <div class="card-h"><h2>File</h2><button type="button" class="link" data-act="pick">Choose another</button></div>
+  <div class="card-h"><h2>File</h2><span class="card-acts"><button type="button" class="btn sm" data-act="pick">Change…</button><button type="button" class="btn sm" data-act="close">Close</button></span></div>
   <div class="empty" data-s="empty">No file open.</div>
   <div data-s="busy" hidden><div class="empty">Reading your file…</div></div>
   <div data-s="error" hidden><div class="empty err" data-err></div></div>
@@ -529,7 +518,7 @@
     </div>
     <label class="check"><input type="checkbox" data-in="header"> First row is a header</label>
     <details class="more">
-      <summary><span>Encoding &amp; delimiter</span><small class="sum-val" data-f="readsum"></small></summary>
+      <summary><span>Encoding and delimiter</span><small class="sum-val" data-f="readsum"></small></summary>
       <div class="more-body">
         <div class="two">
           <div class="fld"><label class="lb">Encoding</label>
@@ -560,6 +549,7 @@
       $('[data-in="header"]', el).checked = store.hasHeader;
     };
     $('[data-act="pick"]', el).onclick = () => store.pick();
+    $('[data-act="close"]', el).onclick = () => store.clear();
     $('[data-in="enc"]', el).onchange = e => store.setEncoding(e.target.value);
     $('[data-in="delim"]', el).onchange = e => store.setDelimiter(e.target.value);
     $('[data-in="header"]', el).onchange = e => store.setHeader(e.target.checked);
@@ -589,7 +579,7 @@
   function resultPanel({ zipBase = () => 'csv-output', itemLabel = 'rows' } = {}) {
     const results = h(`
 <section class="card results" hidden>
-  <div class="card-h"><h2>Output files</h2><span class="link" data-r="count"></span></div>
+  <div class="card-h"><h2>Output Files</h2><span class="link" data-r="count"></span></div>
   <div class="empty" data-r="empty" hidden></div>
   <div class="res-list" data-r="list" hidden></div>
 </section>`);
@@ -597,7 +587,7 @@
 <section class="exportbar">
   <div class="eb-text"><h3 data-e="title">No output yet</h3><p data-e="text">Run the tool to create your files.</p></div>
   <div class="eb-actions">
-    <label class="check" data-e="sw" hidden><input type="checkbox" checked data-e="compress"> Compress</label>
+    <label class="check" data-e="sw" hidden><input type="checkbox" checked data-e="compress"> Compress ZIP</label>
     <button type="button" class="btn" data-e="alt" hidden>Download .gz</button>
     <button type="button" class="btn accent" data-e="main" disabled>Download</button>
   </div>
@@ -631,7 +621,7 @@
           $('.bar i', r).style.width = (o.size / max * 100).toFixed(0) + '%';
           $('.sz', r).textContent = fmtSize(o.size);
           if (saved) r.appendChild(h(`<span class="pill ok">${icon('check')}Saved</span>`));
-          else { const b = h('<button type="button" class="btn soft sm">Download</button>'); b.onclick = () => { download(o.blob, o.name); markDone(); }; r.appendChild(b); }
+          else { const b = h('<button type="button" class="btn sm">Download</button>'); b.onclick = () => { download(o.blob, o.name); markDone(); }; r.appendChild(b); }
           list.appendChild(r);
         });
         list.hidden = !outputs.length; results.hidden = outputs.length < 2 && !saved; exp.classList.toggle('ready', !!outputs.length);
@@ -673,7 +663,7 @@
         [results, exp].forEach(c => { c.classList.remove('pulse'); void c.offsetWidth; c.classList.add('pulse'); });
         setTimeout(() => {
           const r = target.getBoundingClientRect();
-          if (r.top < 0 || r.top > innerHeight * 0.55) window.scrollTo({ top: scrollY + r.top - 24, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+          if (r.top < 0 || r.top > innerHeight * 0.6) target.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
         }, 80);
         if (announce && !saved && outputs.length) {
           toast(outputs.length > 1 ? `${fmt(outputs.length)} files are ready` : `“${outputs[0].name}” is ready`, 'ok', 8000,
@@ -693,9 +683,9 @@
     const el = h(`
 <div class="presets">
   <select aria-label="Presets"><option value="">Presets…</option></select>
-  <button type="button" class="btn soft sm" data-a="save" title="Save the current settings as a preset">${icon('star')}Save</button>
+  <button type="button" class="btn sm" data-a="save" title="Save the current settings as a preset">Save Preset…</button>
   <button type="button" class="icon-btn" data-a="del" title="Delete selected preset" hidden>${icon('trash')}</button>
-  <span class="preset-new" hidden><input type="text" placeholder="Preset name" maxlength="40"><button type="button" class="btn sm" data-a="ok">Save</button></span>
+  <span class="preset-new" hidden><input type="text" placeholder="Preset name" maxlength="40"><button type="button" class="btn accent sm" data-a="ok">Save</button></span>
 </div>`);
     const sel = $('select', el), del = $('[data-a="del"]', el), box = $('.preset-new', el), inp = $('input', box);
     const refresh = (pick = '') => {
@@ -728,14 +718,14 @@
 
   /** Key/value summary card. */
   function summaryCard(title = 'Summary', actionLabel = 'Choose another file', onAction) {
-    const el = h(`<section class="card sum"><div class="card-h"><h2>${title}</h2></div><div data-rows></div>${onAction ? `<div class="acts"><button type="button" class="btn soft sm" data-act>${actionLabel}</button></div>` : ''}</section>`);
+    const el = h(`<section class="card sum"><div class="card-h"><h2>${title}</h2></div><div data-rows></div>${onAction ? `<div class="acts"><button type="button" class="btn sm" data-act>${actionLabel}</button></div>` : ''}</section>`);
     if (onAction) $('[data-act]', el).onclick = onAction;
     return { el, set(rows) { el.hidden = !rows.length || rows.every(r => r[1] === '—'); $('[data-rows]', el).innerHTML = rows.map(([k, v]) => `<div class="row"><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join(''); } };
   }
 
   const OUT_OPTIONS_HTML = `
 <details class="more" data-keys="outDelim,outEnc,outEol,outQuote">
-<summary><span>Delimiter, encoding &amp; line endings</span><small class="sum-val"></small></summary>
+<summary><span>Format details</span><small class="sum-val"></small></summary>
 <div class="more-body">
 <div class="two">
   <div class="fld"><label class="lb">Delimiter</label>
@@ -764,11 +754,11 @@
   /** Hero block: title/description + dropzone tile + 3 feature cards. */
   function heroHTML(tool, dz) {
     const steps = tool.steps === false ? '' : `<ol class="stepper" aria-label="Steps">${[
-      ['file', tool.stepFile || 'Choose file'], ['settings', 'Adjust settings'], ['run', tool.verb || 'Run'], ['result', 'Download'],
+      ['file', tool.stepFile || 'Choose File'], ['settings', 'Adjust Settings'], ['run', tool.verb || 'Run'], ['result', 'Download'],
     ].map(([k, l], i) => `<li data-s="${k}"><button type="button" data-goto="${k}"><i><b>${i + 1}</b>${icon('check')}</i><span>${l}</span></button></li>`).join('')}</ol>`;
     const wrap = h(`
 <div class="hero-wrap">
-  <header class="toolhead"><div><h1>${tool.short || tool.label}</h1><p>${tool.blurb || ''}</p></div>${steps}</header>
+  <header class="toolhead"><p>${tool.blurb || ''}</p>${steps}</header>
   <div data-dz></div>
 </div>`);
     $('.ds-points', dz).innerHTML = (tool.hero.points || []).map(p => `<li>${p}</li>`).join('');
@@ -826,14 +816,15 @@
       });
       const av = this.active && $(`.view[data-tool="${this.active.id}"]`);
       document.body.classList.toggle('has-file', !!(av && av.classList.contains('has-file')));
-      const t = this.active, chip = $('#filechip'), pick = $('#pick');
-      const showChip = !!(t && !t.hasFile && (this.file.ready || this.file.status === 'reading'));
-      chip.hidden = !showChip; pick.hidden = showChip;
-      pick.textContent = (t && t.cta) || 'Choose CSV file';
-      if (showChip) {
-        $('.fc-name', chip).textContent = this.file.name; $('.fc-name', chip).title = this.file.name;
-        $('.fc-meta', chip).textContent = this.file.ready ? `${fmt(this.file.dataRows)} rows, ${fmtSize(this.file.file.size)}` : 'Reading…';
-      }
+      const t = this.active, pick = $('#pick'), run = $('#tbRun');
+      if (!t) return;
+      $('#winTitle').textContent = t.label;
+      const shared = !t.hasFile;
+      const sub = shared ? (this.file.status === 'reading' ? 'Reading…' : this.file.ready ? this.file.name : 'No file open') : (t.subtitle ? t.subtitle() : '');
+      $('#winSub').textContent = sub; $('#winSub').title = sub;
+      pick.textContent = shared ? (this.file.ready ? 'Change File…' : 'Choose File…') : (t.cta || 'Add Files…');
+      const go = av && $('[data-go]', av);
+      run.hidden = !go; run.textContent = t.verb || 'Run'; run.disabled = !go || go.disabled;
     },
     goto(step) {
       const v = $(`.view[data-tool="${this.active.id}"]`);
@@ -850,18 +841,22 @@
       const nav = $('#nav'), views = $('#views');
       this.order.forEach(id => {
         const t = this.tools[id];
-        nav.appendChild(h(`<a href="#/${id}" data-nav="${id}" title="${t.blurb || t.label}">${t.label}</a>`));
+        nav.appendChild(h(`<a href="#/${id}" data-nav="${id}" title="${t.blurb || t.label}">${icon(t.icon)}<span>${t.label}</span></a>`));
         views.appendChild(h(`<div class="view" data-tool="${id}" hidden></div>`));
       });
       $('#pick').onclick = () => this.pickFiles();
-      $('#fcChange').onclick = () => this.file.pick();
-      $('#fcClose').onclick = () => this.file.clear();
+      $('#tbRun').onclick = () => { const go = $(`.view[data-tool="${this.active.id}"] [data-go]`); if (go && !go.disabled) go.click(); };
+      const toggle = (cls, btn, on, off) => { const hidden = document.body.classList.toggle(cls); btn.setAttribute('aria-pressed', String(!hidden)); btn.title = hidden ? on : off; btn.setAttribute('aria-label', btn.title); };
+      $('#tbSidebar').onclick = e => toggle('no-sidebar', e.currentTarget, 'Show Sidebar', 'Hide Sidebar');
+      $('#tbInspector').onclick = e => toggle('no-inspector', e.currentTarget, 'Show Inspector', 'Hide Inspector');
+      new MutationObserver(() => { const t = this.active; if (!t) return; const go = $(`.view[data-tool="${t.id}"] [data-go]`); if (go) $('#tbRun').disabled = go.disabled; })
+        .observe(views, { attributes: true, attributeFilter: ['disabled'], subtree: true });
       this.file.on('change', () => this.refreshViews());
       document.addEventListener('click', e => { const b = e.target.closest('[data-goto]'); if (b) this.goto(b.dataset.goto); });
       const route = () => this.show((location.hash.match(/^#\/(\w+)/) || [])[1]);
       window.addEventListener('hashchange', route);
       // full-window drop target
-      const ov = h(`<div class="drop-ov" hidden><div class="drop-box">${icon('download')}<b data-t>Drop to open</b><span>Your file stays on this device.</span></div></div>`);
+      const ov = h(`<div class="drop-ov" hidden><div class="drop-box">${icon('download')}<b data-t>Drop to Open</b><span>Your file stays on this device.</span></div></div>`);
       document.body.appendChild(ov);
       let depth = 0;
       const isFiles = e => Array.from((e.dataTransfer && e.dataTransfer.types) || []).includes('Files');
@@ -869,7 +864,7 @@
       window.addEventListener('dragenter', e => {
         if (!isFiles(e)) return;
         depth++; const t = this.active;
-        $('[data-t]', ov).textContent = t && t.hasFile ? `Drop to add to ${t.label}` : `Drop to open in ${t ? t.label : 'the toolkit'}`;
+        $('[data-t]', ov).textContent = t && t.hasFile ? `Drop to Add to ${t.label}` : `Drop to Open in ${t ? t.label : 'CSV Toolkit'}`;
         ov.hidden = false;
       });
       window.addEventListener('dragleave', e => { if (!isFiles(e)) return; depth = Math.max(0, depth - 1); if (!depth) ov.hidden = true; });

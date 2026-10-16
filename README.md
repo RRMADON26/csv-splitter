@@ -2,11 +2,11 @@
 
 A browser-only toolkit for **splitting, merging, inspecting, transforming and converting CSV files**, built to cope with hundreds of thousands of rows or more (tested with 200,000 rows, ~19 MB). Everything runs **in your browser**: your files are never uploaded anywhere.
 
-![Split tool](docs/split.png?v=7)
+![Split tool](docs/split.png?v=8)
 
 ## Privacy
 
-**Your CSV never leaves your browser.** Files are read, processed and zipped locally by JavaScript running in the page. Nothing is uploaded, sent or stored on any server, and the app has no backend at all. You can verify this by opening your browser's developer tools (Network tab) while using any tool: no request carries your data. The only external request is the font from Google Fonts, which can be removed without affecting functionality.
+**Your CSV never leaves your browser.** Files are read, processed and zipped locally by JavaScript running in the page. Nothing is uploaded, sent or stored on any server, and the app has no backend at all. You can verify this by opening your browser's developer tools (Network tab) while using any tool: once the page has loaded, it makes no network requests at all. It uses the system font, so nothing is fetched from font services either.
 
 ## The tools
 
@@ -33,7 +33,7 @@ A browser-only toolkit for **splitting, merging, inspecting, transforming and co
 - Files may use different delimiters and encodings; each is detected automatically.
 - Optional **source column** with the original file name.
 
-![Merge tool](docs/merge.png?v=7)
+![Merge tool](docs/merge.png?v=8)
 
 ### Inspect
 
@@ -42,7 +42,7 @@ A browser-only toolkit for **splitting, merging, inspecting, transforming and co
 - **Validation**: wrong number of columns, unclosed quotes, undecodable characters (�), garbled text (mojibake), duplicate or missing column names, empty columns, stray leading / trailing spaces, mixed value types, mixed line endings, BOM, blank lines.
 - A health ring shows the share of clean rows; issues and column statistics can be exported as CSV.
 
-![Inspect tool](docs/inspect.png?v=7)
+![Inspect tool](docs/inspect.png?v=8)
 
 *(Screenshot uses `examples/messy-for-inspect.csv`.)*
 
@@ -58,12 +58,12 @@ A five-step pipeline: every step can be switched on or off, and the **live previ
 
 Output options: delimiter, encoding, line endings, quote-everything, header on / off.
 
-![Transform tool](docs/transform.png?v=7)
+![Transform tool](docs/transform.png?v=8)
 
 <details>
 <summary>Dark theme</summary>
 
-![Transform tool, dark theme](docs/transform-dark.png?v=7)
+![Transform tool, dark theme](docs/transform-dark.png?v=8)
 
 </details>
 
@@ -74,7 +74,7 @@ Output options: delimiter, encoding, line endings, quote-everything, header on /
 - Excel: bold, frozen header row; numbers stored as numbers; `YYYY-MM-DD` stored as real dates; automatic column widths; data beyond Excel's 1,048,576-row limit continues on extra sheets.
 - Output encodings: **UTF-8**, **UTF-8 with BOM** (best for Excel), **Windows-1252 / Latin-1**, **UTF-16 LE**.
 
-![Convert tool](docs/convert.png?v=7)
+![Convert tool](docs/convert.png?v=8)
 
 ## Everywhere
 
@@ -87,10 +87,11 @@ Output options: delimiter, encoding, line endings, quote-everything, header on /
 - **Output**: individual downloads, ZIP with real compression, `.gz` for single files, or save directly to a folder.
 - **Presets** for your favorite settings, saved in your browser.
 - **Loading animation**: a person sipping coffee with a live progress bar (respects `prefers-reduced-motion`).
-- **Light / dark theme**, responsive layout, visible keyboard focus states.
+- **Feels like a Mac app**: a sidebar for the tools, a toolbar with the current tool, the open file and the main action, and an inspector on the right for the file and its settings. System font, system colors, macOS-sized controls, zebra-striped tables and notification-style messages. On phones it becomes a single column.
+- **Follows the system appearance** (light or dark), responsive layout, visible keyboard focus states, respects reduced motion and reduced transparency.
 - **Zero dependencies**: no build step, no npm, no server.
 
-![Loading animation](docs/loading.png?v=7)
+![Loading animation](docs/loading.png?v=8)
 
 ## Usage
 
@@ -140,7 +141,6 @@ The result has 200,000 data rows plus 1 header. Every 1,000th row contains a mul
 - Records are detected by `\n`, so very old files that end lines with a lone `\r` are not supported. `\r\n` works.
 - Delimiters must be a single character; column counts are only validated in **Inspect**.
 - Saving directly to a folder needs a Chromium-based browser (Chrome, Edge, Opera).
-- The font is loaded from Google Fonts; offline, the system font is used instead.
 
 ## Project structure
 

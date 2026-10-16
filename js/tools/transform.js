@@ -99,7 +99,7 @@
       const dest = App.destinationPicker();
       const progress = App.progressCard(['rows read', 'rows kept', 'seconds']);
       const out = App.resultPanel({ zipBase: () => 'transformed' });
-      const summary = App.summaryCard('What happened', 'Choose another file', () => store.pick());
+      const summary = App.summaryCard('What Happened', 'Choose Another File…', () => store.pick());
       const dz = App.dropzoneTile({ onPick: () => store.pick(), onFiles: f => f[0] && store.set(f[0]) });
       root.appendChild(App.heroHTML(this, dz));
       const { side, main } = App.workspace(root);
@@ -111,17 +111,17 @@
   <div class="step-body" hidden>${body}</div>
 </section>`);
 
-      const sClean = step('clean', 1, 'Clean cells', `
+      const sClean = step('clean', 1, 'Clean Cells', `
 <label class="check"><input type="checkbox" checked data-pref="cl_trim"> Trim spaces around every cell</label>
 <label class="check"><input type="checkbox" data-pref="cl_lines"> Replace line breaks inside cells with a space</label>`);
-      const sFilter = step('filter', 2, 'Filter rows', `
+      const sFilter = step('filter', 2, 'Filter Rows', `
 <div class="rules" data-rules></div>
-<button type="button" class="btn soft sm" data-add-rule>${icon('plus')}Add rule</button>
+<button type="button" class="btn soft sm" data-add-rule>Add Rule</button>
 <div class="two mt">
   <div class="fld"><label class="lb">Keep rows that match</label><select data-pref="f_mode"><option value="all">All rules</option><option value="any">Any rule</option></select></div>
   <div class="fld"><label class="lb lb-gap">&nbsp;</label><label class="check"><input type="checkbox" data-pref="f_cs"> Case sensitive</label></div>
 </div>`);
-      const sDedup = step('dedup', 3, 'Remove duplicates', `
+      const sDedup = step('dedup', 3, 'Remove Duplicates', `
 <div class="fld"><label class="lb">Two rows are duplicates when…</label>
   <select data-pref="d_mode"><option value="row">the whole row is identical</option><option value="cols">the selected columns are identical</option></select></div>
 <div class="chips" data-dchips hidden></div>
@@ -130,7 +130,7 @@
   <label class="check"><input type="checkbox" checked data-pref="d_trim"> Ignore surrounding spaces</label>
 </div>
 <div class="hint">The first occurrence is kept. Needs memory for every unique row.</div>`);
-      const sSample = step('sample', 4, 'Sample rows', `
+      const sSample = step('sample', 4, 'Sample Rows', `
 <div class="two">
   <div class="fld"><label class="lb">Method</label><select data-pref="s_mode">
     <option value="first">First N rows</option><option value="random">Random N rows</option>
@@ -139,14 +139,14 @@
 </div>
 <div class="hint" data-s-hint></div>`);
       const sCols = step('columns', 5, 'Columns', `
-<div class="col-tools"><button type="button" class="link" data-all>Select all</button><button type="button" class="link" data-none>Select none</button><button type="button" class="link" data-reset>Reset</button></div>
+<div class="col-tools"><button type="button" class="link" data-all>Select All</button><button type="button" class="link" data-none>Select None</button><button type="button" class="link" data-reset>Reset</button></div>
 <div class="cols-list" data-cols></div>`);
       const steps = h('<div class="steps"></div>');
       [sClean, sFilter, sDedup, sSample, sCols].forEach(s => steps.appendChild(s));
 
       const fc = App.fileCard(store);
       const prev = h(`
-<section class="card"><div class="card-h"><h2>Live preview</h2><span class="link" data-pnote></span></div>
+<section class="card"><div class="card-h"><h2>Live Preview</h2><span class="link" data-pnote></span></div>
   <div class="empty" data-empty>Choose a file to see the result of your steps.</div>
   <div class="tbl-wrap short" data-pv hidden></div></section>`);
       const outCard = h(`
@@ -159,7 +159,7 @@
     <div class="fld"><label class="lb lb-gap">&nbsp;</label><label class="check"><input type="checkbox" checked data-pref="outHeader"> Write a header row</label></div>
   </div>
   <div class="fld"><label class="lb">Save to</label><div data-dest></div></div>
-  <button class="btn accent block" type="button" data-go disabled>Transform file</button>
+  <button class="btn accent block" type="button" data-go disabled>Transform File</button>
   <div class="hint center" data-note></div>
 </section>`);
       $('[data-out]', outCard).innerHTML = App.OUT_OPTIONS_HTML;

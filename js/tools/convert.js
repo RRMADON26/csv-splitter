@@ -119,7 +119,7 @@
       const fc = App.fileCard(store);
       const settings = h(`
 <section class="card" data-settings>
-  <div class="card-h"><h2>Convert to</h2></div>
+  <div class="card-h"><h2>Convert To</h2></div>
   <div data-presets></div>
   <div class="fmts" role="radiogroup" aria-label="Output format">
     ${Object.entries(FORMATS).map(([k, f]) => `<button type="button" role="radio" class="fmt" data-fmt="${k}"><b>${f.short}</b><span>.${f.ext}</span></button>`).join('')}
@@ -146,7 +146,7 @@
 
   <div class="fld mt"><label class="lb" for="cv-name">File name</label><input id="cv-name" type="text" value="converted.csv" data-pref="outName"></div>
   <div class="fld"><label class="lb">Save to</label><div data-dest></div></div>
-  <button class="btn accent block" type="button" data-go disabled>Convert file</button>
+  <button class="btn accent block" type="button" data-go disabled>Convert File</button>
   <div class="hint center" data-note></div>
 </section>`);
       $('[data-out]', settings).innerHTML = App.OUT_OPTIONS_HTML;
@@ -154,7 +154,7 @@
 
       const prev = h(`
 <section class="card">
-  <div class="card-h"><h2>Output preview</h2><span class="link" data-pnote></span></div>
+  <div class="card-h"><h2>Output Preview</h2><span class="link" data-pnote></span></div>
   <div class="empty" data-empty>Choose a file to preview the converted output.</div>
   <pre class="code" data-code hidden></pre>
   <div class="tbl-wrap short" data-xt hidden></div>

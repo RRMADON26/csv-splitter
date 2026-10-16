@@ -19,7 +19,7 @@
       const dest = App.destinationPicker();
       const progress = App.progressCard(['rows', 'files', 'seconds']);
       const out = App.resultPanel({ zipBase: () => baseName(store.name || 'split') + '_split' });
-      const summary = App.summaryCard('Summary', 'Choose another file', () => store.pick());
+      const summary = App.summaryCard('Summary', 'Choose Another File…', () => store.pick());
       const files = App.dropzoneTile({ onPick: () => store.pick(), onFiles: f => f[0] && store.set(f[0]) });
 
       root.appendChild(App.heroHTML(this, files));
@@ -44,7 +44,7 @@
     <select id="sp-col" data-pref="col"></select>
     <div class="hint">One file per distinct value (up to 500).</div></div>
   <details class="more" data-keys="prefix,outEnc">
-  <summary><span>File names &amp; encoding</span><small class="sum-val"></small></summary>
+  <summary><span>File names and encoding</span><small class="sum-val"></small></summary>
   <div class="more-body">
   <div class="two">
     <div class="fld"><label class="lb" for="sp-prefix">Name prefix</label><input id="sp-prefix" type="text" value="part" data-pref="prefix"></div>
@@ -54,7 +54,7 @@
   </div>
   </details>
   <div class="fld"><label class="lb">Save to</label><div data-dest></div></div>
-  <button class="btn accent block" type="button" data-go disabled>Split file</button>
+  <button class="btn accent block" type="button" data-go disabled>Split File</button>
   <div class="hint center" data-note></div>
 </section>`);
       side.appendChild(settings);
@@ -64,7 +64,7 @@
       // the file map: a strip showing where the file gets cut, live as settings change
       const map = h(`
 <section class="card filemap">
-  <div class="card-h"><h2>Where the file gets cut</h2><span class="link" data-map-note></span></div>
+  <div class="card-h"><h2>Where the File Gets Cut</h2><span class="link" data-map-note></span></div>
   <div class="fm-strip" data-strip></div>
   <ol class="fm-legend" data-legend></ol>
 </section>`);

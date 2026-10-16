@@ -74,7 +74,7 @@
       const overview = h(`<section class="card"><div class="card-h"><h2>Overview</h2></div><dl class="kv" data-tiles></dl></section>`);
       const health = h(`
 <section class="card health">
-  <div class="card-h"><h2>Health check</h2><span data-pill></span></div>
+  <div class="card-h"><h2>Health Check</h2><span data-pill></span></div>
   <p class="hc-line"><b data-pct>—</b> of rows are clean</p>
   <div class="hc-bar"><i data-fg></i></div>
   <p class="status" data-status>Waiting for a file</p>
@@ -88,13 +88,13 @@
 </section>`);
       const stats = h(`
 <section class="card">
-  <div class="card-h"><h2>Columns</h2><button type="button" class="link" data-exp-stats hidden>${icon('download')}Export CSV</button></div>
+  <div class="card-h"><h2>Columns</h2><button type="button" class="link" data-exp-stats hidden>Export CSV</button></div>
   <div class="empty" data-empty>Column statistics will appear here.</div>
   <div class="tbl-wrap" data-stats hidden></div>
 </section>`);
       const issues = h(`
 <section class="card">
-  <div class="card-h"><h2>Issues</h2><button type="button" class="link" data-exp-issues hidden>${icon('download')}Export CSV</button></div>
+  <div class="card-h"><h2>Issues</h2><button type="button" class="link" data-exp-issues hidden>Export CSV</button></div>
   <div class="empty" data-empty>Problems found in the data will be listed here.</div>
   <div class="issue-list" data-issues hidden></div>
 </section>`);
@@ -199,7 +199,7 @@
           const names = store.columns, issuesL = [];
           if (res.unclosedQuote) issuesL.push({ sev: 'error', title: 'Unclosed quote at the end of the file', detail: 'A field opens with a quote that is never closed. Everything after it may be read as one giant cell.' });
           if (ragged) issuesL.push({ sev: 'error', title: `${fmt(ragged)} row${ragged > 1 ? 's' : ''} with the wrong number of columns`, detail: `The header has ${expected} columns. Unquoted delimiters inside text are the usual cause.`, examples: raggedEx.concat(ragged > raggedEx.length ? [`…and ${fmt(ragged - raggedEx.length)} more`] : []) });
-          if (repl) issuesL.push({ sev: 'error', title: `${fmt(repl)} row${repl > 1 ? 's' : ''} with undecodable characters (�)`, detail: `The file isn’t valid ${enc.toUpperCase()}. Try another encoding under “Encoding & delimiter” in the File panel.`, examples: replEx });
+          if (repl) issuesL.push({ sev: 'error', title: `${fmt(repl)} row${repl > 1 ? 's' : ''} with undecodable characters (�)`, detail: `The file isn’t valid ${enc.toUpperCase()}. Try another encoding under “Encoding and delimiter” in the File panel.`, examples: replEx });
           if (moji) issuesL.push({ sev: 'warn', title: `Possible garbled text in ${fmt(moji)} row${moji > 1 ? 's' : ''}`, detail: 'Sequences like “Ã©” usually mean UTF-8 text was read as Latin-1 (or saved twice). Try switching the encoding.', examples: mojiEx });
           const dupNames = hasH ? store.header.filter((n, i) => store.header.indexOf(n) !== i) : [];
           if (dupNames.length) issuesL.push({ sev: 'warn', title: 'Duplicate column names', detail: [...new Set(dupNames)].join(', ') });
