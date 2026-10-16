@@ -6,6 +6,8 @@
 
   App.register({
     id: 'merge', label: 'Merge', icon: 'merge',
+    short: 'Merge CSV files', blurb: 'Combine several files into one', verb: 'Merge', stepFile: 'Add files', cta: 'Add CSV files',
+    hasFile() { return this._count ? this._count() > 0 : false; },
     hero: {
       title: 'Hi!<br>Ready to combine some CSVs?',
       text: 'Merge several CSV files into a single one. Reorder them, match columns by name, and optionally track where each row came from.',
@@ -24,13 +26,13 @@
       const progress = App.progressCard(['rows', 'files', 'seconds']);
       const out = App.resultPanel({ zipBase: () => 'merged' });
       const summary = App.summaryCard('Summary', 'Start over', () => { state.files = []; render(); resetOutput(); });
-      const dz = App.dropzoneTile({ multiple: true, label: 'Choose or drag<br>CSV files', onPick: () => input.click(), onFiles: f => addFiles(f) });
+      const dz = App.dropzoneTile({ multiple: true, sub: 'or drop them anywhere on this page', onPick: () => input.click(), onFiles: f => addFiles(f) });
 
       root.appendChild(App.heroHTML(this, dz));
       const grid = h('<main class="grid"></main>'); root.appendChild(grid);
 
       const filesCard = h(`
-<section class="card c5">
+<section class="card c5" data-files>
   <div class="card-h"><h2>Files to merge</h2><button type="button" class="link" data-clear hidden>${icon('trash')}Clear all</button></div>
   <div class="empty" data-empty>No files yet.<br>Choose or drag two or more CSV files onto the <b>+</b> tile above.</div>
   <div class="mf-list" data-list></div>
@@ -51,7 +53,7 @@
   <div class="fld" data-source-name hidden><input type="text" value="source_file" data-pref="sourceName" aria-label="Source column name"></div>
   <div data-out></div>
   <div class="fld"><label class="lb" for="mg-name">Output file name</label><input id="mg-name" type="text" value="merged.csv" data-pref="outName"></div>
-  <div class="fld"><label class="lb">Output</label><div data-dest></div></div>
+  <div class="fld"><label class="lb">Save to</label><div data-dest></div></div>
   <button class="btn accent block" type="button" data-go disabled>Merge files</button>
   <div class="hint center" data-note></div>
 </section>`);
@@ -137,6 +139,7 @@
         $('[data-note]', settings).textContent = files.length < 2 ? 'Add at least two files to merge.'
           : mism && pref('match').value !== 'name' && !headerless ? `${mism} file${mism > 1 ? 's have' : ' has'} different columns. Consider “Match columns by name”.` : '';
         G('go').disabled = state.busy || files.length < 2;
+        App.refreshViews();
       }
       settings.addEventListener('input', render); settings.addEventListener('change', render);
 
@@ -199,6 +202,7 @@
         state.busy = false; render();
       };
 
+      this._count = () => state.files.length;
       resetOutput(); render();
       this.add = addFiles; this.openPicker = () => input.click();
     },

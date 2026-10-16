@@ -99,6 +99,7 @@
 
   App.register({
     id: 'convert', label: 'Convert', icon: 'convert',
+    short: 'Convert a CSV file', blurb: 'Excel, JSON, JSON Lines, TSV and encodings', verb: 'Convert',
     hero: {
       title: 'Hi!<br>What format do you need?',
       text: 'Turn your CSV into Excel, JSON or JSON Lines, switch delimiters, or fix the encoding so accents and symbols survive the trip.',
@@ -146,7 +147,7 @@
   </div>
 
   <div class="fld mt"><label class="lb" for="cv-name">File name</label><input id="cv-name" type="text" value="converted.csv" data-pref="outName"></div>
-  <div class="fld"><label class="lb">Save</label><div data-dest></div></div>
+  <div class="fld"><label class="lb">Save to</label><div data-dest></div></div>
   <button class="btn accent block" type="button" data-go disabled>Convert file</button>
   <div class="hint center" data-note></div>
 </section>`);
@@ -173,7 +174,7 @@
         $$('[data-fmt]', settings).forEach(b => { const on = b.dataset.fmt === k; b.classList.toggle('on', on); b.setAttribute('aria-checked', on); });
         $$('[data-opt]', settings).forEach(el => el.hidden = !el.dataset.opt.split(' ').includes(k));
         $('[data-opt="json"]', settings).hidden = k !== 'json';
-        if (!fromPreset && (k === 'csv' || k === 'tsv')) pref('outDelim').value = k === 'tsv' ? '\t' : ',';
+        if (!fromPreset && (k === 'csv' || k === 'tsv')) { pref('outDelim').value = k === 'tsv' ? '\t' : ','; pref('outDelim').dispatchEvent(new Event('change', { bubbles: true })); }
         if (!fromPreset) syncName();
         update();
       }
@@ -205,7 +206,7 @@
       function update() {
         const k = fmtKey(), box = $('[data-code]', prev), xt = $('[data-xt]', prev), empty = $('[data-empty]', prev), note = $('[data-pnote]', prev);
         $('[data-go]', settings).disabled = busy || !store.ready;
-        $('[data-note]', settings).textContent = '';
+        $('[data-note]', settings).textContent = store.ready ? '' : 'Start by choosing a CSV file.';
         if (!store.ready) { box.hidden = xt.hidden = true; empty.hidden = false; note.textContent = ''; return; }
         const names = store.columns, rows = store.sample.slice(0, 5);
         empty.hidden = true;

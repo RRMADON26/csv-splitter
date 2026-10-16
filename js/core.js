@@ -91,11 +91,17 @@
     light.onclick = () => apply('light'); dark.onclick = () => apply('dark');
   }
 
-  function toast(msg, type = 'info', ms = 4200) {
+  function toast(msg, type = 'info', ms = 4200, action) {
     let box = $('#toasts');
     if (!box) { box = h('<div id="toasts" class="toasts" role="status" aria-live="polite"></div>'); document.body.appendChild(box); }
     const t = h(`<div class="toast ${type}">${icon(type === 'error' ? 'warn' : type === 'ok' ? 'check' : 'info')}<span></span></div>`);
     t.querySelector('span').textContent = msg;
+    if (action) {
+      const b = h('<button type="button" class="toast-act"></button>');
+      b.textContent = action.label;
+      b.onclick = () => { action.fn(); t.classList.add('out'); setTimeout(() => t.remove(), 300); };
+      t.appendChild(b);
+    }
     box.appendChild(t);
     setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 300); }, ms);
   }
@@ -272,6 +278,7 @@
       this.input.onchange = () => { if (this.input.files[0]) this.set(this.input.files[0]); this.input.value = ''; };
     }
     pick() { this.input.click(); }
+    clear() { this.token++; this.file = null; this.status = 'idle'; this.raw = []; this.records = 0; this.blank = 0; this.header = []; this.columns = []; this.sample = []; loaderHide(); this.emit('change'); }
     get ready() { return this.status === 'ready'; }
     get name() { return this.file ? this.file.name : ''; }
     get dataRows() { return Math.max(0, this.records - (this.hasHeader ? 1 : 0)); }
@@ -483,8 +490,10 @@
   // UI components
   // ======================================================================
   /** The big "+" tile. `onFiles(fileList)` receives dropped / chosen files. */
-  function dropzoneTile({ multiple = false, onPick, onFiles, label }) {
-    const dz = h(`<div class="dz" tabindex="0" role="button" aria-label="Choose or drag a file"><div class="plus">+</div><small>${label || 'Choose or drag<br>a CSV file'}</small></div>`);
+  function dropzoneTile({ multiple = false, onPick, onFiles, title, sub }) {
+    title = title || (multiple ? 'Choose CSV files' : 'Choose a CSV file');
+    sub = sub || 'or drop it anywhere on this page';
+    const dz = h(`<div class="dz" tabindex="0" role="button" aria-label="${title}"><div class="plus">+</div><b>${title}</b><small>${sub}</small></div>`);
     dz.onclick = () => onPick();
     dz.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onPick(); } };
     ['dragenter', 'dragover'].forEach(t => dz.addEventListener(t, e => { e.preventDefault(); dz.classList.add('over'); }));
@@ -511,13 +520,19 @@
         <span>${icon('cols')}<b data-f="cols">-</b> columns</span>
       </div>
     </div>
-    <div class="two">
-      <div class="fld"><label class="lb">Encoding</label>
-        <select data-in="enc"><option value="auto">Auto-detect</option><option value="utf-8">UTF-8</option><option value="windows-1252">Windows-1252 / Latin-1</option><option value="utf-16le">UTF-16 LE</option></select></div>
-      <div class="fld"><label class="lb">Delimiter</label>
-        <select data-in="delim"><option value="auto">Auto-detect</option><option value=",">Comma ,</option><option value=";">Semicolon ;</option><option value="&#9;">Tab</option><option value="|">Pipe |</option></select></div>
-    </div>
     <label class="check"><input type="checkbox" data-in="header"> First row is a header</label>
+    <details class="more">
+      <summary><span>Encoding &amp; delimiter</span><small class="sum-val" data-f="readsum"></small></summary>
+      <div class="more-body">
+        <div class="two">
+          <div class="fld"><label class="lb">Encoding</label>
+            <select data-in="enc"><option value="auto">Auto-detect</option><option value="utf-8">UTF-8</option><option value="windows-1252">Windows-1252 / Latin-1</option><option value="utf-16le">UTF-16 LE</option></select></div>
+          <div class="fld"><label class="lb">Delimiter</label>
+            <select data-in="delim"><option value="auto">Auto-detect</option><option value=",">Comma ,</option><option value=";">Semicolon ;</option><option value="&#9;">Tab</option><option value="|">Pipe |</option></select></div>
+        </div>
+        <div class="hint">Auto-detect is right for almost every file. Change it only if characters look wrong or the columns don’t split correctly.</div>
+      </div>
+    </details>
   </div>
 </section>`);
     const show = s => $$('[data-s]', el).forEach(n => n.hidden = n.dataset.s !== s);
@@ -532,6 +547,7 @@
       f('rows').textContent = fmt(store.dataRows);
       f('cols').textContent = fmt(store.columns.length);
       f('sub').textContent = `${store.encoding.toUpperCase()} · ${DELIM_LABEL[store.delimiter] || 'custom'}-separated` + (store.blank ? ` · ${fmt(store.blank)} blank line${store.blank > 1 ? 's' : ''} ignored` : '');
+      f('readsum').textContent = `${store.encoding.toUpperCase()} · ${DELIM_LABEL[store.delimiter] || 'custom'}`;
       $('[data-in="enc"]', el).value = store.encChoice;
       $('[data-in="delim"]', el).value = store.delimChoice;
       $('[data-in="header"]', el).checked = store.hasHeader;
@@ -588,6 +604,9 @@
     const R = k => $(`[data-r="${k}"]`, results), E = k => $(`[data-e="${k}"]`, exp);
     let outs = [], folder = '';
     const setStatus = t => { E('status').textContent = t; };
+    const view = () => results.closest('.view') || exp.closest('.view');
+    const stage = s => { const v = view(); if (v) v.dataset.stage = s; };
+    const markDone = () => stage('done');
     const api = {
       results, exp,
       clear() {
@@ -595,8 +614,9 @@
         E('title').textContent = 'Nothing yet'; E('text').textContent = 'Run the tool to create your file.';
         E('sw').hidden = true; E('alt').hidden = true; E('main').disabled = true; E('main').textContent = 'Download'; setStatus('');
         E('main').onclick = null;
+        const v = view(); if (v) v.dataset.stage = v.classList.contains('has-file') ? 'file' : '';
       },
-      show(outputs, { folderName = '', note = '', gz = true } = {}) {
+      show(outputs, { folderName = '', note = '', gz = true, announce = true } = {}) {
         outs = outputs; folder = folderName;
         const saved = outputs.length && outputs[0].saved;
         const max = Math.max(...outputs.map(o => o.size), 1);
@@ -608,7 +628,7 @@
           $('.bar i', r).style.width = (o.size / max * 100).toFixed(0) + '%';
           $('.sz', r).textContent = fmtSize(o.size);
           if (saved) r.appendChild(h(`<span class="pill ok">${icon('check')}Saved</span>`));
-          else { const b = h('<button type="button" class="btn soft sm">Download</button>'); b.onclick = () => download(o.blob, o.name); r.appendChild(b); }
+          else { const b = h('<button type="button" class="btn soft sm">Download</button>'); b.onclick = () => { download(o.blob, o.name); markDone(); }; r.appendChild(b); }
           list.appendChild(r);
         });
         list.hidden = !outputs.length; R('empty').hidden = !!outputs.length;
@@ -622,12 +642,12 @@
         } else if (outputs.length === 1) {
           const o = outputs[0];
           E('title').textContent = 'Your file is ready'; E('text').textContent = `${o.name} · ${fmtSize(o.size)}`;
-          E('main').textContent = 'Download'; E('main').onclick = () => download(o.blob, o.name);
+          E('main').textContent = 'Download'; E('main').onclick = () => { download(o.blob, o.name); markDone(); };
           if (CS_OK && gz) {
             E('alt').hidden = false;
             E('alt').onclick = async () => {
               E('alt').disabled = true; setStatus('Compressing…');
-              try { const gz = await gzipBlob(o.blob); download(gz, o.name + '.gz'); setStatus(`.gz ready (${fmtSize(gz.size)}, ${(100 - gz.size / o.size * 100).toFixed(0)}% smaller)`); }
+              try { const gz = await gzipBlob(o.blob); download(gz, o.name + '.gz'); markDone(); setStatus(`.gz ready (${fmtSize(gz.size)}, ${(100 - gz.size / o.size * 100).toFixed(0)}% smaller)`); }
               catch (e) { setStatus('Failed: ' + e.message); } finally { E('alt').disabled = false; }
             };
           }
@@ -638,10 +658,22 @@
             E('main').disabled = true;
             await task('Packing your ZIP…', 'Wrapping everything up nicely.', async p => {
               const zip = await buildZip(outs, { compress: E('compress').checked, onProgress: p });
-              download(zip, zipBase() + '.zip'); setStatus(`ZIP ready (${fmtSize(zip.size)})`);
+              download(zip, zipBase() + '.zip'); markDone(); setStatus(`ZIP ready (${fmtSize(zip.size)})`);
             });
             E('main').disabled = false;
           };
+        }
+        // make the result impossible to miss
+        stage(saved ? 'done' : 'ran');
+        const target = results.isConnected ? results : exp;
+        [results, exp].forEach(c => { c.classList.remove('pulse'); void c.offsetWidth; c.classList.add('pulse'); });
+        setTimeout(() => {
+          const r = target.getBoundingClientRect();
+          if (r.top < 0 || r.top > innerHeight * 0.55) window.scrollTo({ top: scrollY + r.top - 24, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+        }, 80);
+        if (announce && !saved && outputs.length) {
+          toast(outputs.length > 1 ? `${fmt(outputs.length)} files are ready` : `“${outputs[0].name}” is ready`, 'ok', 8000,
+            { label: outputs.length > 1 ? 'Download ZIP' : 'Download', fn: () => E('main').click() });
         }
       },
     };
@@ -698,6 +730,9 @@
   }
 
   const OUT_OPTIONS_HTML = `
+<details class="more" data-keys="outDelim,outEnc,outEol,outQuote">
+<summary><span>Delimiter, encoding &amp; line endings</span><small class="sum-val"></small></summary>
+<div class="more-body">
 <div class="two">
   <div class="fld"><label class="lb">Delimiter</label>
     <select data-pref="outDelim"><option value="input">Same as input</option><option value=",">Comma ,</option><option value=";">Semicolon ;</option><option value="&#9;">Tab</option><option value="|">Pipe |</option></select></div>
@@ -705,8 +740,10 @@
     <select data-pref="outEnc"><option value="utf-8">UTF-8</option><option value="utf-8-bom">UTF-8 with BOM (Excel)</option><option value="windows-1252">Windows-1252 / Latin-1</option><option value="utf-16le">UTF-16 LE</option></select></div>
   <div class="fld"><label class="lb">Line endings</label>
     <select data-pref="outEol"><option value="lf">LF</option><option value="crlf">CRLF</option></select></div>
-  <div class="fld"><label class="lb lb-gap">&nbsp;</label><label class="check"><input type="checkbox" data-pref="outQuote"> Quote every field</label></div>
-</div>`;
+  <div class="fld"><label class="lb lb-gap">&nbsp;</label><label class="check"><input type="checkbox" data-pref="outQuote" data-sum="quoted"> Quote every field</label></div>
+</div>
+</div>
+</details>`;
   function readOutputOptions(root, store) {
     const g = k => $(`[data-pref="${k}"]`, root);
     const encVal = g('outEnc').value;
@@ -722,14 +759,40 @@
 
   /** Hero block: title/description + dropzone tile + 3 feature cards. */
   function heroHTML(tool, dz) {
+    const steps = tool.steps === false ? '' : `<ol class="stepper" aria-label="Steps">${[
+      ['file', tool.stepFile || 'Choose file'], ['settings', 'Adjust settings'], ['run', tool.verb || 'Run'], ['result', 'Download'],
+    ].map(([k, l], i) => `<li data-s="${k}"><button type="button" data-goto="${k}" title="Go to: ${l}"><i><b>${i + 1}</b>${icon('check')}</i><span>${l}</span></button></li>`).join('')}</ol>`;
     const wrap = h(`
-<section class="hero">
-  <div class="hello"><h1>${tool.hero.title}</h1><p>${tool.hero.text}</p></div>
-  <div data-dz></div>
-  ${tool.hero.features.map(f => `<div class="feat">${ill(f[0])}<b>${f[1]}</b><span>${f[2]}</span></div>`).join('')}
-</section>`);
+<div class="hero-wrap">
+  <section class="hero">
+    <div class="hello"><h1>${tool.hero.title}</h1><p>${tool.hero.text}</p></div>
+    <div data-dz></div>
+    ${tool.hero.features.map(f => `<div class="feat">${ill(f[0])}<b>${f[1]}</b><span>${f[2]}</span></div>`).join('')}
+  </section>
+  <section class="hero-compact">
+    <div class="hc-title"><span class="hc-ic">${icon(tool.icon)}</span><div><h1>${tool.short || tool.label}</h1><p>${tool.blurb || ''}</p></div></div>
+    ${steps}
+  </section>
+</div>`);
     $('[data-dz]', wrap).replaceWith(dz);
     return wrap;
+  }
+
+  /** Keep the "More options" summaries in sync with the controls inside them. */
+  function syncMore(root) {
+    $$('details.more[data-keys]', root).forEach(d => {
+      const upd = () => {
+        const parts = d.dataset.keys.split(',').map(k => {
+          const c = $(`[data-pref="${k}"]`, d); if (!c) return '';
+          if (c.type === 'checkbox') return c.checked ? (c.dataset.sum || '') : '';
+          if (c.tagName === 'SELECT') { const o = c.options[c.selectedIndex]; return o ? o.text.replace(/\s*\(.*\)$/, '').replace(/\s+\/.*$/, '') : ''; }
+          return c.value;
+        }).filter(Boolean);
+        const sv = $('.sum-val', d); if (sv) sv.textContent = parts.join(' · ');
+      };
+      if (!d._bound) { d._bound = true; d.addEventListener('change', upd); d.addEventListener('input', upd); }
+      upd();
+    });
   }
 
   // ======================================================================
@@ -752,7 +815,33 @@
       const view = $(`.view[data-tool="${tool.id}"]`);
       if (!tool.mounted) { tool.mounted = true; tool.mount(view); }
       tool.onShow && tool.onShow();
+      this.refreshViews(); syncMore(view);
       document.title = `${tool.label} · CSV Toolkit`;
+    },
+    /** Sync per-view state (has a file? which step?) and the header chrome. */
+    refreshViews() {
+      $$('.view').forEach(v => {
+        const t = this.tools[v.dataset.tool], has = !!(t.hasFile ? t.hasFile() : this.file.ready);
+        v.classList.toggle('has-file', has);
+        if (!has) v.dataset.stage = ''; else if (!v.dataset.stage) v.dataset.stage = 'file';
+      });
+      const t = this.active, chip = $('#filechip'), pick = $('#pick');
+      const showChip = !!(t && !t.hasFile && (this.file.ready || this.file.status === 'reading'));
+      chip.hidden = !showChip; pick.hidden = showChip;
+      pick.textContent = (t && t.cta) || 'Choose CSV file';
+      if (showChip) {
+        $('.fc-name', chip).textContent = this.file.name; $('.fc-name', chip).title = this.file.name;
+        $('.fc-meta', chip).textContent = this.file.ready ? `${fmt(this.file.dataRows)} rows · ${fmtSize(this.file.file.size)}` : 'Reading…';
+      }
+    },
+    goto(step) {
+      const v = $(`.view[data-tool="${this.active.id}"]`);
+      const sel = { file: '.filecard, [data-files]', settings: '[data-settings], .card.step', run: '[data-go]', result: '.results, .export' }[step];
+      const el = sel && $$(sel, v).find(n => n.isConnected && n.offsetParent !== null);
+      if (!el) return;
+      el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: step === 'run' ? 'center' : 'start' });
+      const card = el.closest('.card') || el; card.classList.remove('pulse'); void card.offsetWidth; card.classList.add('pulse');
+      if (step === 'run') setTimeout(() => el.focus({ preventScroll: true }), 400);
     },
     pickFiles() { const t = this.active; (t && t.pick) ? t.pick() : this.file.pick(); },
     start() {
@@ -760,13 +849,32 @@
       const side = $('#side'), nav = $('#nav'), views = $('#views');
       this.order.forEach(id => {
         const t = this.tools[id];
-        side.appendChild(h(`<a href="#/${id}" data-nav="${id}" title="${t.label}" aria-label="${t.label}">${icon(t.icon)}<span class="tip">${t.label}</span></a>`));
-        nav.appendChild(h(`<a href="#/${id}" data-nav="${id}">${icon(t.icon)}${t.label}</a>`));
+        side.appendChild(h(`<a href="#/${id}" data-nav="${id}" aria-label="${t.label}: ${t.blurb || ''}">${icon(t.icon)}<span class="tip"><b>${t.label}</b>${t.blurb ? `<small>${t.blurb}</small>` : ''}</span></a>`));
+        nav.appendChild(h(`<a href="#/${id}" data-nav="${id}" title="${t.blurb || t.label}">${icon(t.icon)}${t.label}</a>`));
         views.appendChild(h(`<div class="view" data-tool="${id}" hidden></div>`));
       });
       $('#pick').onclick = () => this.pickFiles();
+      $('#fcChange').onclick = () => this.file.pick();
+      $('#fcClose').onclick = () => this.file.clear();
+      this.file.on('change', () => this.refreshViews());
+      document.addEventListener('click', e => { const b = e.target.closest('[data-goto]'); if (b) this.goto(b.dataset.goto); });
       const route = () => this.show((location.hash.match(/^#\/(\w+)/) || [])[1]);
       window.addEventListener('hashchange', route);
+      // full-window drop target
+      const ov = h(`<div class="drop-ov" hidden><div class="drop-box">${icon('download')}<b data-t>Drop to open</b><span>Your file stays on this device.</span></div></div>`);
+      document.body.appendChild(ov);
+      let depth = 0;
+      const isFiles = e => Array.from((e.dataTransfer && e.dataTransfer.types) || []).includes('Files');
+      const hideOv = () => { depth = 0; ov.hidden = true; };
+      window.addEventListener('dragenter', e => {
+        if (!isFiles(e)) return;
+        depth++; const t = this.active;
+        $('[data-t]', ov).textContent = t && t.hasFile ? `Drop to add to ${t.label}` : `Drop to open in ${t ? t.label : 'the toolkit'}`;
+        ov.hidden = false;
+      });
+      window.addEventListener('dragleave', e => { if (!isFiles(e)) return; depth = Math.max(0, depth - 1); if (!depth) ov.hidden = true; });
+      window.addEventListener('drop', hideOv, true);
+      window.addEventListener('dragend', hideOv);
       window.addEventListener('dragover', e => e.preventDefault());
       window.addEventListener('drop', e => {
         e.preventDefault();

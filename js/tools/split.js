@@ -6,6 +6,7 @@
 
   App.register({
     id: 'split', label: 'Split', icon: 'split',
+    short: 'Split a CSV file', blurb: 'Break a big file into smaller ones', verb: 'Split',
     hero: {
       title: 'Hi!<br>Which CSV are we splitting today?',
       text: 'Split large CSV files, hundreds of thousands of rows or more, into several smaller files. Everything is processed in your browser.',
@@ -46,12 +47,17 @@
   <div class="fld" data-f="col" hidden><label class="lb" for="sp-col">Column</label>
     <select id="sp-col" data-pref="col"></select>
     <div class="hint">One file per distinct value (up to 500).</div></div>
+  <details class="more" data-keys="prefix,outEnc">
+  <summary><span>File names &amp; encoding</span><small class="sum-val"></small></summary>
+  <div class="more-body">
   <div class="two">
     <div class="fld"><label class="lb" for="sp-prefix">Name prefix</label><input id="sp-prefix" type="text" value="part" data-pref="prefix"></div>
     <div class="fld"><label class="lb" for="sp-enc">Output encoding</label>
       <select id="sp-enc" data-pref="outEnc"><option value="utf-8">UTF-8</option><option value="utf-8-bom">UTF-8 with BOM</option><option value="windows-1252">Windows-1252</option><option value="utf-16le">UTF-16 LE</option></select></div>
   </div>
-  <div class="fld"><label class="lb">Output</label><div data-dest></div></div>
+  </div>
+  </details>
+  <div class="fld"><label class="lb">Save to</label><div data-dest></div></div>
   <button class="btn accent block" type="button" data-go disabled>Split file</button>
   <div class="hint center" data-note></div>
 </section>`);
@@ -81,7 +87,7 @@
         if (!store.ready) hint.textContent = '';
         else if (m === 'rows' || m === 'parts') { const pf = perFile(); hint.textContent = `≈ ${fmt(Math.max(1, Math.ceil(store.dataRows / pf)))} files, up to ${fmt(pf)} data rows each`; }
         else if (m === 'size') hint.textContent = `≈ ${fmt(Math.max(1, Math.ceil(store.file.size / (val() * 1048576))))} files (estimate)`;
-        $('[data-note]', settings).textContent = store.ready && store.hasHeader ? 'The header row is repeated in every file.' : (store.ready ? 'No header: rows are copied as they are.' : '');
+        $('[data-note]', settings).textContent = store.ready ? (store.hasHeader ? 'The header row is repeated in every file.' : 'No header: rows are copied as they are.') : 'Start by choosing a CSV file.';
         S('go').disabled = busy || !store.ready;
       }
 

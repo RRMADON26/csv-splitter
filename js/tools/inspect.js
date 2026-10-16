@@ -56,6 +56,7 @@
 
   App.register({
     id: 'inspect', label: 'Inspect', icon: 'inspect',
+    short: 'Inspect a CSV file', blurb: 'Preview the data and find problems', steps: false,
     hero: {
       title: 'Hi!<br>What’s hiding inside your CSV?',
       text: 'Preview the data, see what each column contains, and catch broken rows, bad encodings and other surprises before they cause trouble.',
@@ -199,7 +200,7 @@
           const names = store.columns, issuesL = [];
           if (res.unclosedQuote) issuesL.push({ sev: 'error', title: 'Unclosed quote at the end of the file', detail: 'A field opens with a quote that is never closed. Everything after it may be read as one giant cell.' });
           if (ragged) issuesL.push({ sev: 'error', title: `${fmt(ragged)} row${ragged > 1 ? 's' : ''} with the wrong number of columns`, detail: `The header has ${expected} columns. Unquoted delimiters inside text are the usual cause.`, examples: raggedEx.concat(ragged > raggedEx.length ? [`…and ${fmt(ragged - raggedEx.length)} more`] : []) });
-          if (repl) issuesL.push({ sev: 'error', title: `${fmt(repl)} row${repl > 1 ? 's' : ''} with undecodable characters (�)`, detail: `The file isn’t valid ${enc.toUpperCase()}. Try another encoding in the File card.`, examples: replEx });
+          if (repl) issuesL.push({ sev: 'error', title: `${fmt(repl)} row${repl > 1 ? 's' : ''} with undecodable characters (�)`, detail: `The file isn’t valid ${enc.toUpperCase()}. Try another encoding under “Encoding & delimiter” in the Active file card.`, examples: replEx });
           if (moji) issuesL.push({ sev: 'warn', title: `Possible garbled text in ${fmt(moji)} row${moji > 1 ? 's' : ''}`, detail: 'Sequences like “Ã©” usually mean UTF-8 text was read as Latin-1 (or saved twice). Try switching the encoding.', examples: mojiEx });
           const dupNames = hasH ? store.header.filter((n, i) => store.header.indexOf(n) !== i) : [];
           if (dupNames.length) issuesL.push({ sev: 'warn', title: 'Duplicate column names', detail: [...new Set(dupNames)].join(', ') });

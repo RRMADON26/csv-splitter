@@ -85,6 +85,7 @@
 
   App.register({
     id: 'transform', label: 'Transform', icon: 'transform',
+    short: 'Transform a CSV file', blurb: 'Clean, filter, de-duplicate, sample and pick columns', verb: 'Transform',
     hero: {
       title: 'Hi!<br>How should we reshape your CSV?',
       text: 'Clean, filter, de-duplicate and sample your rows, then pick, rename and reorder columns. A live preview shows the result as you go.',
@@ -159,7 +160,7 @@
     <div class="fld"><label class="lb" for="tf-name">File name</label><input id="tf-name" type="text" value="transformed.csv" data-pref="outName"></div>
     <div class="fld"><label class="lb lb-gap">&nbsp;</label><label class="check"><input type="checkbox" checked data-pref="outHeader"> Write a header row</label></div>
   </div>
-  <div class="fld"><label class="lb">Save</label><div data-dest></div></div>
+  <div class="fld"><label class="lb">Save to</label><div data-dest></div></div>
   <button class="btn accent block" type="button" data-go disabled>Transform file</button>
   <div class="hint center" data-note></div>
 </section>`);
@@ -262,7 +263,7 @@
         const cfg = readConfig(), wrap = $('[data-pv]', prev), empty = $('[data-empty]', prev), note = $('[data-pnote]', prev);
         summaries(cfg);
         const pb = problems(cfg);
-        $('[data-note]', outCard).textContent = pb;
+        $('[data-note]', outCard).textContent = store.ready ? pb : 'Start by choosing a CSV file.';
         $('[data-go]', outCard).disabled = busy || !store.ready || !!pb;
         if (!store.ready) { wrap.hidden = true; empty.hidden = false; note.textContent = ''; return; }
         if (pb) { wrap.hidden = true; empty.hidden = false; empty.textContent = pb; return; }
