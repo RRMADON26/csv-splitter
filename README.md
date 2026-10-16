@@ -2,7 +2,7 @@
 
 A browser-only toolkit for **splitting, merging, inspecting, transforming and converting CSV files**, built to cope with hundreds of thousands of rows or more (tested with 200,000 rows, ~19 MB). Everything runs **in your browser**: your files are never uploaded anywhere.
 
-![Split tool](docs/split.png?v=8)
+![Split tool](docs/split.png?v=9)
 
 ## Privacy
 
@@ -33,7 +33,7 @@ A browser-only toolkit for **splitting, merging, inspecting, transforming and co
 - Files may use different delimiters and encodings; each is detected automatically.
 - Optional **source column** with the original file name.
 
-![Merge tool](docs/merge.png?v=8)
+![Merge tool](docs/merge.png?v=9)
 
 ### Inspect
 
@@ -42,7 +42,7 @@ A browser-only toolkit for **splitting, merging, inspecting, transforming and co
 - **Validation**: wrong number of columns, unclosed quotes, undecodable characters (�), garbled text (mojibake), duplicate or missing column names, empty columns, stray leading / trailing spaces, mixed value types, mixed line endings, BOM, blank lines.
 - A health ring shows the share of clean rows; issues and column statistics can be exported as CSV.
 
-![Inspect tool](docs/inspect.png?v=8)
+![Inspect tool](docs/inspect.png?v=9)
 
 *(Screenshot uses `examples/messy-for-inspect.csv`.)*
 
@@ -58,14 +58,7 @@ A five-step pipeline: every step can be switched on or off, and the **live previ
 
 Output options: delimiter, encoding, line endings, quote-everything, header on / off.
 
-![Transform tool](docs/transform.png?v=8)
-
-<details>
-<summary>Dark theme</summary>
-
-![Transform tool, dark theme](docs/transform-dark.png?v=8)
-
-</details>
+![Transform tool](docs/transform.png?v=9)
 
 ### Convert
 
@@ -74,7 +67,7 @@ Output options: delimiter, encoding, line endings, quote-everything, header on /
 - Excel: bold, frozen header row; numbers stored as numbers; `YYYY-MM-DD` stored as real dates; automatic column widths; data beyond Excel's 1,048,576-row limit continues on extra sheets.
 - Output encodings: **UTF-8**, **UTF-8 with BOM** (best for Excel), **Windows-1252 / Latin-1**, **UTF-16 LE**.
 
-![Convert tool](docs/convert.png?v=8)
+![Convert tool](docs/convert.png?v=9)
 
 ## Everywhere
 
@@ -87,11 +80,19 @@ Output options: delimiter, encoding, line endings, quote-everything, header on /
 - **Output**: individual downloads, ZIP with real compression, `.gz` for single files, or save directly to a folder.
 - **Presets** for your favorite settings, saved in your browser.
 - **Loading animation**: a person sipping coffee with a live progress bar (respects `prefers-reduced-motion`).
+- **Looks like iOS 26 (light)**: an opaque content layer of white rounded sections on a light grouped background, and a Liquid Glass layer floating above it for navigation and controls: a glass sidebar, glass toolbar buttons, a floating glass tab bar on phones, glass notification banners and loading sheet. Capsule buttons, iOS text fields, segmented controls and switches, system font and system colors. Always light; respects reduced motion, reduced transparency and increased contrast.
+- **Layout**: tools in the sidebar, a large title with the open file and the main action, results in the middle and the file and its settings on the right. On phones it becomes a single column with a tab bar at the bottom.
+- **Streaming**: files are read in chunks, so the UI stays responsive on large files.
+- **Quote-aware parser (RFC 4180)**: newlines inside quoted fields (e.g. multi-line addresses) belong to one row; records are never cut in half.
+- **Auto-detection** of encoding (UTF-8 / UTF-16 with BOM, UTF-8 vs Windows-1252) and delimiter (`,` `;` tab `|`), both overridable.
+- **Output**: individual downloads, ZIP with real compression, `.gz` for single files, or save directly to a folder.
+- **Presets** for your favorite settings, saved in your browser.
+- **Loading animation**: a person sipping coffee with a live progress bar (respects `prefers-reduced-motion`).
 - **Feels like a Mac app**: a sidebar for the tools, a toolbar with the current tool, the open file and the main action, and an inspector on the right for the file and its settings. System font, system colors, macOS-sized controls, zebra-striped tables and notification-style messages. On phones it becomes a single column.
 - **Follows the system appearance** (light or dark), responsive layout, visible keyboard focus states, respects reduced motion and reduced transparency.
 - **Zero dependencies**: no build step, no npm, no server.
 
-![Loading animation](docs/loading.png?v=8)
+![Loading animation](docs/loading.png?v=9)
 
 ## Usage
 
