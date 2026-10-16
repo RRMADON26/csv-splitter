@@ -551,3 +551,22 @@ details.more > summary > span { white-space: nowrap; }
 .dz .plus { width: 44px; height: 44px; border-radius: 13px; font-size: 26px; }
 .dz:hover .plus { transform: scale(1.06); }
 .dz .plus { transition: transform .15s; }
+
+/* Privacy banner: one line once a file is open */
+.safe-mini { display: none; }
+.safe { transition: padding .2s ease, margin .2s ease, border-radius .2s ease; }
+body.has-file .safe { padding: 9px 18px; gap: 12px; margin: -10px 0 22px; border-radius: 14px; align-items: center; }
+body.has-file .safe svg.ill, body.has-file .safe p { display: none; }
+body.has-file .safe-mini { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 9px; background: var(--ok); color: #fff; flex: none; }
+body.has-file .safe-mini svg { width: 15px; height: 15px; }
+body.has-file .safe .tx { flex: 1; min-width: 0; }
+body.has-file .safe h2 { font-size: 14px; margin: 0; flex-wrap: nowrap; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+body.has-file .safe h2 em { font-size: 10px; padding: 2px 8px; margin-left: 8px; vertical-align: 1px; }
+body.has-file .safe ul { flex-direction: row; gap: 18px; font-size: 12.5px; }
+@media (max-width: 900px) { body.has-file .safe ul { display: none; } }
+@media (max-width: 640px) {
+  body.has-file .safe { flex-direction: row; padding: 8px 12px; margin: -4px 0 16px; }
+  body.has-file .safe h2 { font-size: 13px; }
+  body.has-file .safe h2 em { display: none; }
+}
+@media (max-width: 640px) { .nav { gap: 2px; } .nav a { padding-left: 6px; padding-right: 6px; } }

@@ -825,6 +825,8 @@
         v.classList.toggle('has-file', has);
         if (!has) v.dataset.stage = ''; else if (!v.dataset.stage) v.dataset.stage = 'file';
       });
+      const av = this.active && $(`.view[data-tool="${this.active.id}"]`);
+      document.body.classList.toggle('has-file', !!(av && av.classList.contains('has-file')));
       const t = this.active, chip = $('#filechip'), pick = $('#pick');
       const showChip = !!(t && !t.hasFile && (this.file.ready || this.file.status === 'reading'));
       chip.hidden = !showChip; pick.hidden = showChip;
