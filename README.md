@@ -2,7 +2,7 @@
 
 A browser-only toolkit for **splitting, merging, inspecting, transforming and converting CSV files**, built to cope with hundreds of thousands of rows or more (tested with 200,000 rows, ~19 MB). Everything runs **in your browser**: your files are never uploaded anywhere.
 
-![Split tool](docs/split.png?v=5)
+![Split tool](docs/split.png?v=6)
 
 ## Privacy
 
@@ -32,7 +32,7 @@ A browser-only toolkit for **splitting, merging, inspecting, transforming and co
 - Files may use different delimiters and encodings; each is detected automatically.
 - Optional **source column** with the original file name.
 
-![Merge tool](docs/merge.png?v=5)
+![Merge tool](docs/merge.png?v=6)
 
 ### Inspect
 
@@ -41,7 +41,7 @@ A browser-only toolkit for **splitting, merging, inspecting, transforming and co
 - **Validation**: wrong number of columns, unclosed quotes, undecodable characters (�), garbled text (mojibake), duplicate or missing column names, empty columns, stray leading / trailing spaces, mixed value types, mixed line endings, BOM, blank lines.
 - A health ring shows the share of clean rows; issues and column statistics can be exported as CSV.
 
-![Inspect tool](docs/inspect.png?v=5)
+![Inspect tool](docs/inspect.png?v=6)
 
 *(Screenshot uses `examples/messy-for-inspect.csv`.)*
 
@@ -57,12 +57,12 @@ A five-step pipeline: every step can be switched on or off, and the **live previ
 
 Output options: delimiter, encoding, line endings, quote-everything, header on / off.
 
-![Transform tool](docs/transform.png?v=5)
+![Transform tool](docs/transform.png?v=6)
 
 <details>
 <summary>Dark theme</summary>
 
-![Transform tool, dark theme](docs/transform-dark.png?v=5)
+![Transform tool, dark theme](docs/transform-dark.png?v=6)
 
 </details>
 
@@ -73,7 +73,7 @@ Output options: delimiter, encoding, line endings, quote-everything, header on /
 - Excel: bold, frozen header row; numbers stored as numbers; `YYYY-MM-DD` stored as real dates; automatic column widths; data beyond Excel's 1,048,576-row limit continues on extra sheets.
 - Output encodings: **UTF-8**, **UTF-8 with BOM** (best for Excel), **Windows-1252 / Latin-1**, **UTF-16 LE**.
 
-![Convert tool](docs/convert.png?v=5)
+![Convert tool](docs/convert.png?v=6)
 
 ## Everywhere
 
@@ -89,7 +89,7 @@ Output options: delimiter, encoding, line endings, quote-everything, header on /
 - **Light / dark theme**, responsive layout, visible keyboard focus states.
 - **Zero dependencies**: no build step, no npm, no server.
 
-![Loading animation](docs/loading.png?v=5)
+![Loading animation](docs/loading.png?v=6)
 
 ## Usage
 
