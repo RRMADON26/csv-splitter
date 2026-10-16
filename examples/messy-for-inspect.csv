@@ -1,0 +1,11 @@
+id,name,age,joined,active,notes,name
+1,Ana,30,2024-01-05,yes,ok,x
+2, Bo ,abc,2024-02-30,no,"has, comma",y
+3,Cy,41,2024-03-01,yes
+4,Di,29,2024-04-04,yes,x,extra,more
+5,Eé,35,2024-05-05,no,Ã© mojibake,z
+
+
+6,Fi,28,2024-06-06,yes,"multi
+line",q
+7,Gu,27,2024-07-07,no,�,r

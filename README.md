@@ -1,61 +1,99 @@
-# CSV Splitter
+# CSV Toolkit
 
-A single-file web tool that **splits large CSV files into several smaller ones**. It handles hundreds of thousands of rows or more (tested with 200,000 rows, ~19 MB). Everything runs **in your browser**: your file is never uploaded anywhere.
+A browser-only toolkit for **splitting, merging, inspecting, transforming and converting CSV files**, built to cope with hundreds of thousands of rows or more (tested with 200,000 rows, ~19 MB). Everything runs **in your browser**: your files are never uploaded anywhere.
 
-![CSV Splitter, light theme](docs/preview-light.png?v=3)
+![Split tool](docs/split.png?v=4)
 
-<details>
-<summary>Loading animation</summary>
+## Privacy
 
-![Loading animation](docs/preview-loading.png)
+**Your CSV never leaves your browser.** Files are read, processed and zipped locally by JavaScript running in the page. Nothing is uploaded, sent or stored on any server, and the app has no backend at all. You can verify this by opening your browser's developer tools (Network tab) while using any tool: no request carries your data. The only external request is the font from Google Fonts, which can be removed without affecting functionality.
 
-</details>
+## The tools
+
+| Tool | What it does |
+|---|---|
+| **Split** | Break a big file into several smaller ones: by rows per file, number of files, maximum file size, or by the value of a column (one file per city, month, …). |
+| **Merge** | Combine many files into one. Reorder them, match columns by name even when the order differs, and optionally add a column with each row's source file. |
+| **Inspect** | Preview the first rows, see per-column statistics and detected types, and catch ragged rows, broken quotes, bad encodings and other data problems. |
+| **Transform** | Clean cells, filter rows, remove duplicates, sample, and pick / rename / reorder columns, with a live preview. |
+| **Convert** | Turn CSV into TSV, JSON, JSON Lines or a real Excel `.xlsx`, and change the output encoding. |
+
+### Split
+
+- **Four modes**: rows per file, number of output files, maximum file size (MB), or one file per distinct value of a column (up to 500 values).
+- The header row is repeated in every output file.
+- Output goes to a **ZIP** (compressed with Deflate), to individual downloads, or **straight into a folder** (File System Access API: Chrome, Edge, Opera). Folder mode writes while reading, so it doesn't hold the results in memory.
+- Save and reload **presets** of your settings.
+
+### Merge
+
+- Drag to reorder files, or use the arrow buttons.
+- **Keep columns as they are** (appends rows; warns when files have different columns) or **match columns by name** (output columns = every column found; missing values stay empty).
+- Files may use different delimiters and encodings; each is detected automatically.
+- Optional **source column** with the original file name.
+
+![Merge tool](docs/merge.png?v=4)
+
+### Inspect
+
+- Instant preview of the first 20 rows with detected types (integer, decimal, date, boolean, text).
+- Per column: filled %, empty count, distinct values, min / max / average, top values.
+- **Validation**: wrong number of columns, unclosed quotes, undecodable characters (�), garbled text (mojibake), duplicate or missing column names, empty columns, stray leading / trailing spaces, mixed value types, mixed line endings, BOM, blank lines.
+- A health ring shows the share of clean rows; issues and column statistics can be exported as CSV.
+
+![Inspect tool](docs/inspect.png?v=4)
+
+*(Screenshot uses `examples/messy-for-inspect.csv`.)*
+
+### Transform
+
+A five-step pipeline: every step can be switched on or off, and the **live preview** updates as you edit.
+
+1. **Clean cells**: trim spaces, flatten line breaks.
+2. **Filter rows**: any number of rules (equals, contains, starts / ends with, greater / less than, is empty, regular expression…), matching *all* or *any*, optionally case sensitive.
+3. **Remove duplicates**: by the whole row or by selected columns, optionally ignoring case and spaces.
+4. **Sample rows**: first N, random N (original order is preserved), random percentage, or every Nth row. "First N" stops reading as soon as it has enough.
+5. **Columns**: keep, rename and reorder.
+
+Output options: delimiter, encoding, line endings, quote-everything, header on / off.
+
+![Transform tool](docs/transform.png?v=4)
 
 <details>
 <summary>Dark theme</summary>
 
-![CSV Splitter, dark theme](docs/preview-dark.png?v=3)
+![Transform tool, dark theme](docs/transform-dark.png?v=4)
 
 </details>
 
-## Privacy
+### Convert
 
-**Your CSV never leaves your browser.** The file is read, split and zipped locally by JavaScript running in the page. It is not uploaded, sent or stored on any server, and the app has no backend at all. You can verify this by opening your browser's developer tools (Network tab) while splitting a file: no request carries your data. The only external request is the font from Google Fonts, which can be removed without affecting functionality.
+- **CSV, TSV, JSON** (compact or pretty), **JSON Lines** and **Excel (.xlsx)**.
+- JSON: rows as objects or arrays, detect numbers and `true` / `false`, choose what to do with empty cells.
+- Excel: bold, frozen header row; numbers stored as numbers; `YYYY-MM-DD` stored as real dates; automatic column widths; data beyond Excel's 1,048,576-row limit continues on extra sheets.
+- Output encodings: **UTF-8**, **UTF-8 with BOM** (best for Excel), **Windows-1252 / Latin-1**, **UTF-16 LE**.
 
-## Features
+![Convert tool](docs/convert.png?v=4)
 
-- **Streaming**: the file is read in chunks, so the UI stays responsive even with large files.
-- **Quote-aware parser (RFC 4180)**: newlines inside quoted fields (e.g. multi-line addresses) count as part of one row, so records are never cut in half.
-- **Two ways to split**: by *rows per file* or by *number of output files*.
-- **Header repeated** in every output file (can be turned off).
-- **Encodings**: UTF-8, Windows-1252 / Latin-1, UTF-16 LE. A UTF-8 BOM is stripped automatically.
-- **Download** files one by one, or all at once as a **ZIP** built in the browser (no libraries).
-- **Light / dark theme**: follows your system, can be switched manually, and the choice is remembered.
-- **Loading animation**: while reading, splitting or zipping, an animated illustration of someone sipping coffee appears with a live progress bar (respects `prefers-reduced-motion`).
-- **Responsive**: works on desktop, tablet and phone.
+## Everywhere
+
+- **Streaming**: files are read in chunks, so the UI stays responsive on large files.
+- **Quote-aware parser (RFC 4180)**: newlines inside quoted fields (e.g. multi-line addresses) belong to one row; records are never cut in half.
+- **Auto-detection** of encoding (UTF-8 / UTF-16 with BOM, UTF-8 vs Windows-1252) and delimiter (`,` `;` tab `|`), both overridable.
+- **Output**: individual downloads, ZIP with real compression, `.gz` for single files, or save directly to a folder.
+- **Presets** for your favorite settings, saved in your browser.
+- **Loading animation**: a person sipping coffee with a live progress bar (respects `prefers-reduced-motion`).
+- **Light / dark theme**, responsive layout, keyboard-accessible controls.
 - **Zero dependencies**: no build step, no npm, no server.
+
+![Loading animation](docs/loading.png?v=4)
 
 ## Usage
 
 1. Open `index.html` in a browser (double-click it, or use a local static server, see below).
-2. Drag a CSV file onto the **+** tile, or click **Choose CSV file**.
-3. Wait for the row count, then configure the **Settings** card:
-   - **Split by**: *rows per file* or *number of output files*
-   - **Name prefix**: output files are named `prefix_001_originalname.csv`
-   - **Encoding**, and whether the **first row is a header**
-4. Click **Split file**.
-5. Download each file with its **Download** button, or everything with **Download ZIP**.
-
-### Example
-
-A file with 200,000 data rows, split at 50,000 rows per file, produces 4 files:
-
-```
-part_001_data.csv   50,000 rows
-part_002_data.csv   50,000 rows
-part_003_data.csv   50,000 rows
-part_004_data.csv   50,000 rows
-```
+2. Pick a tool from the top bar or the sidebar.
+3. Drag a CSV onto the **+** tile, or click **Choose CSV file**. The file is shared between Split, Inspect, Transform and Convert; Merge has its own multi-file list.
+4. Adjust the settings and click the main button. Download the results or save them to a folder.
 
 ### Run with a local server (optional)
 
@@ -64,50 +102,66 @@ python3 -m http.server 8765
 # then open http://localhost:8765
 ```
 
-## Try it with dummy data
+## Try it with sample data
 
-`generate_dummy.py` creates a test CSV, including rows with commas, quotes and newlines inside fields.
+`examples/` has small files for trying things out:
+
+| File | Good for |
+|---|---|
+| `merge-a.csv`, `merge-b-semicolon.csv`, `merge-c-latin1.csv` | **Merge**: different column order, delimiter and encoding |
+| `messy-for-inspect.csv` | **Inspect**: ragged rows, bad characters, duplicate headers, stray spaces |
+
+`generate_dummy.py` creates a large test CSV (including fields with commas, quotes and newlines):
 
 ```bash
 python3 generate_dummy.py 200000 dummy_200k.csv
 ```
 
-The result has 200,000 data rows plus 1 header. Every 1,000th row contains a multi-line address, so `wc -l` reports 200,201 physical lines, while the tool correctly reports **200,000 data rows**.
+The result has 200,000 data rows plus 1 header. Every 1,000th row contains a multi-line address, so `wc -l` reports 200,201 physical lines while the tools correctly report **200,000 data rows**.
 
 ## How it works
 
-- **Scanning**: `File.stream()` → `TextDecoderStream` → a character scanner that tracks an "inside quotes" state. A newline only ends a record when it is outside quotes.
-- **Splitting**: records are collected per output file and turned into a `Blob`. The header (if any) is prepended to each part.
-- **ZIP**: a minimal ZIP writer using the *store* method (no compression), with CRC-32 and UTF-8 file names.
-- **Row counting**: done first so that *number of output files* mode knows how many rows go in each file.
+- **Scanning**: `File.stream()` → `TextDecoderStream` → a character scanner that tracks an "inside quotes" state. A newline only ends a record when it is outside quotes. Blank lines are skipped.
+- **Parsing / writing** (`js/csv.js`): a small, dependency-free, unit-tested CSV parser and formatter.
+- **Sinks**: output is written through a sink that either collects `Blob` parts in memory or streams into a `FileSystemWritableFileStream`. The encoder handles UTF-8 (± BOM), Windows-1252 and UTF-16 LE.
+- **ZIP**: a minimal ZIP writer with CRC-32 and Deflate through the browser's `CompressionStream`.
+- **XLSX**: the workbook XML parts are generated by hand and zipped; no library.
+- **Structure**: each tool registers itself with a small router in `js/core.js` and shares the same components (file card, progress ring, result panel, presets, destination picker).
 
 ## Limitations
 
-- The ZIP is uncompressed and has no ZIP64 support, so it **cannot hold more than 4 GB**. For that, download files individually.
-- Output files are held in browser memory until downloaded. Files of hundreds of MB are fine; multi-GB files may be heavy.
+- ZIP output cannot exceed **4 GB** (no ZIP64). Use "Save to folder" or individual downloads for bigger results.
+- In download mode, output files are held in browser memory until downloaded. Hundreds of MB are fine; multi-GB results may be heavy: use "Save to folder" instead.
+- "Remove duplicates" and "Random N rows" keep data in memory (every unique row / the sampled rows).
 - Records are detected by `\n`, so very old files that end lines with a lone `\r` are not supported. `\r\n` works.
-- The tool does not parse columns, so the delimiter (`,` `;` tab) does not matter, and column counts are not validated.
+- Delimiters must be a single character; column counts are only validated in **Inspect**.
+- Saving directly to a folder needs a Chromium-based browser (Chrome, Edge, Opera).
 - The font is loaded from Google Fonts; offline, the system font is used instead.
 
 ## Project structure
 
 ```
-index.html          The app (HTML + CSS + JS in one file)
-generate_dummy.py   Dummy CSV generator for testing
-docs/               Screenshots used in this README
-README.md           Documentation
-LICENSE             MIT license
+index.html            App shell
+css/app.css           Styles (light + dark theme)
+js/csv.js             Pure CSV parser / formatter (also runs in Node)
+js/core.js            Shared state, streaming scanner, sinks, ZIP, UI components, router
+js/tools/             split.js, merge.js, inspect.js, transform.js, convert.js
+tests/csv.test.js     Unit tests for the parser
+examples/             Small sample CSV files
+generate_dummy.py     Large dummy CSV generator
+docs/                 Screenshots used in this README
+LICENSE               MIT license
 ```
 
 ## Testing
 
-Tested manually in a browser with `dummy_200k.csv`:
+Parser unit tests (Node ≥ 14, no dependencies):
 
-- row count detected as 200,000 (multi-line addresses are not double-counted);
-- splitting at 50,000 rows per file gives 4 files × 50,000 rows in under a second;
-- the header is present in every file;
-- all files joined together (header taken once) are byte-for-byte identical to the original;
-- the ZIP is valid and every entry's CRC matches.
+```bash
+node tests/csv.test.js
+```
+
+The tools themselves were tested in a real browser with `dummy_200k.csv`: row counts, byte-for-byte reassembly of split files, ZIP integrity, filter / de-duplication results compared against an independent Python implementation, JSON validity, encodings byte by byte, and `.xlsx` files re-opened with `openpyxl` (types, bold header, frozen pane, dates, multi-sheet overflow).
 
 ## License
 
