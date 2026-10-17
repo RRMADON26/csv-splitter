@@ -49,6 +49,7 @@
     sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
     moon: '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',
     star: '<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',
+    home: '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9"/>',
     gear: '<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>',
   };
   const icon = (name, cls = '') =>
@@ -825,6 +826,7 @@
       pick.textContent = shared ? (this.file.ready ? 'Change File…' : 'Choose File…') : (t.cta || 'Add Files…');
       const go = av && $('[data-go]', av);
       run.hidden = !go; run.textContent = t.verb || 'Run'; run.disabled = !go || go.disabled;
+      $('#tbInspector').hidden = !(av && av.classList.contains('has-file'));
     },
     goto(step) {
       const v = $(`.view[data-tool="${this.active.id}"]`);
@@ -844,6 +846,8 @@
         nav.appendChild(h(`<a href="#/${id}" data-nav="${id}" title="${t.blurb || t.label}">${icon(t.icon)}<span>${t.label}</span></a>`));
         views.appendChild(h(`<div class="view" data-tool="${id}" hidden></div>`));
       });
+      // the overview sits above the tools group
+      if (this.order[0] === 'home') nav.insertBefore($('#sbTools'), nav.children[1]);
       $('#pick').onclick = () => this.pickFiles();
       $('#tbRun').onclick = () => { const go = $(`.view[data-tool="${this.active.id}"] [data-go]`); if (go && !go.disabled) go.click(); };
       const toggle = (cls, btn, on, off) => { const hidden = document.body.classList.toggle(cls); btn.setAttribute('aria-pressed', String(!hidden)); btn.title = hidden ? on : off; btn.setAttribute('aria-label', btn.title); };
