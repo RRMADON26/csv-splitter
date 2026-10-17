@@ -822,6 +822,8 @@
     show(id) {
       const tool = this.tools[id] || this.tools[this.order[0]];
       if (this.active && this.active !== tool) $$('.toast').forEach(o => o.remove());
+      // the tool being left tidies up anything that floats above the page (sheets, backdrops)
+      if (this.active && this.active !== tool && this.active.onHide) this.active.onHide();
       this.active = tool;
       $$('.view').forEach(v => v.hidden = v.dataset.tool !== tool.id);
       $$('[data-nav]').forEach(a => { const on = a.dataset.nav === tool.id; a.classList.toggle('on', on); on ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current'); });

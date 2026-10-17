@@ -19,7 +19,7 @@ import pathlib
 import re
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-VERSION = "2026.10.17.7"          # bump on every release so browsers refetch CSS/JS
+VERSION = "2026.10.17.8"          # bump on every release so browsers refetch CSS/JS
 DATE_ISO = "2026-10-17"
 DATE_TEXT = "October 17, 2026"
 D = "https://YOUR-DOMAIN.example"  # replaced by tools/configure.py

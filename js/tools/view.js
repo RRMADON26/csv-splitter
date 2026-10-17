@@ -320,11 +320,12 @@
       }
       store.on('change', () => { if (!store.ready) reset(); });
       store.on('ready', () => { reset(); if (App.active && App.active.id === 'view') load(); });
-      this._load = load;
+      this._load = load; this._closeSheet = closeSheet;
       reset(); if (store.ready) load();
     },
 
     onShow() { this._load && this._load(); },
+    onHide() { this._closeSheet && this._closeSheet(); },
     pick() { App.file.pick(); },
     acceptFiles(files) { App.file.set(files[0]); },
   });
