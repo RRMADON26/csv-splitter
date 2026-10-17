@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>About | CSV Toolkit</title>
+<meta name="description" content="What CSV Toolkit is, how it works, and why your files never leave your browser.">
+<link rel="canonical" href="https://YOUR-DOMAIN.example/about.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="google-adsense-account" content="ca-pub-XXXXXXXXXXXXXXXX">
+<link rel="stylesheet" href="css/app.css?v=2026.10.17.3">
+<link rel="stylesheet" href="css/pages.css?v=2026.10.17.3">
+</head>
+<body class="page">
+<header class="page-top">
+  <a class="brand" href="index.html"><span class="app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3 9.5h18M9.5 9.5V20" stroke="currentColor" stroke-width="1.8"/></svg></span>CSV Toolkit</a>
+  <nav aria-label="Site"><a href="index.html">Tools</a><a href="guides.html">Guides</a><a href="about.html" aria-current="page">About</a></nav>
+  <a class="btn accent" href="index.html">Open the Tools</a>
+</header>
+<main class="page-main">
+<article class="prose">
+<h1>About CSV Toolkit</h1>
+<p class="lead">CSV Toolkit is a set of free tools for everyday work with CSV files: splitting big files, merging several files, finding problems in the data, cleaning and filtering rows, and converting to Excel or JSON.</p>
+
+<h2>How it works</h2>
+<p>Everything happens inside your web browser. When you open a file, the page reads it in small chunks with JavaScript, does the work on your own computer or phone, and hands the result back to you as a download. There is no server that receives your data, so the tools work the same whether your file holds a shopping list or customer records.</p>
+<p>Reading in chunks is also what lets the tools handle large files. A CSV with hundreds of thousands of rows is processed without freezing the page, and line breaks inside quoted fields (an address on two lines, for example) are kept inside their row instead of breaking the file apart.</p>
+
+<h2>The tools</h2>
+<ul>
+<li><a href="index.html#/split">Split</a> breaks a file into parts by row count, number of files, file size, or by the value of a column.</li>
+<li><a href="index.html#/merge">Merge</a> combines several files into one and can match columns by name.</li>
+<li><a href="index.html#/inspect">Inspect</a> previews the data, describes every column and lists problems such as rows with the wrong number of columns.</li>
+<li><a href="index.html#/transform">Transform</a> trims cells, filters rows, removes duplicates, takes samples and picks, renames or reorders columns.</li>
+<li><a href="index.html#/convert">Convert</a> produces TSV, JSON, JSON Lines or a real Excel workbook, and can change the text encoding.</li>
+</ul>
+
+<h2>Who makes it</h2>
+<p>CSV Toolkit is an open-source project maintained by <a href="https://github.com/RRMADON26">RRMADON26</a>. The full source code is on <a href="https://github.com/RRMADON26/csv-splitter">GitHub</a>, where you can read exactly what the page does with your files, report a problem or suggest a feature.</p>
+
+<h2>How it stays free</h2>
+<p>The tools cost nothing to use.<span data-ads-note hidden> The site shows a small number of ads from Google AdSense to cover hosting. Ads are kept away from the buttons you use to run the tools and download results, and they never have access to your files. See the <a href="privacy.html">privacy policy</a> for how ad cookies work.</span></p>
+</article>
+</main>
+<footer class="page-foot">
+  <nav aria-label="About this site"><a href="guides.html">Guides</a><a href="about.html">About</a><a href="privacy.html">Privacy policy</a><a href="terms.html">Terms of use</a><a href="contact.html">Contact</a></nav>
+  <p>CSV Toolkit is free and open source under the <a href="https://github.com/RRMADON26/csv-splitter/blob/main/LICENSE">MIT license</a>. Your CSV files are processed in your browser and never uploaded.</p>
+</footer>
+<script src="js/ads.js?v=2026.10.17.3"></script>
+</body>
+</html>

@@ -47,6 +47,8 @@
     <div class="tool-grid" data-grid></div>
   </section>
 
+  <div class="ad-slot" data-ad-slot="overview" hidden></div>
+
   <section class="home-sec" aria-labelledby="how-title">
     <h2 class="sec-title" id="how-title">How it works</h2>
     <ol class="how">
@@ -55,6 +57,20 @@
       <li><b>Run and download</b><span>Get a single file, a ZIP, or save the results straight into a folder.</span></li>
     </ol>
   </section>
+
+  <section class="home-sec" aria-labelledby="learn-title">
+    <h2 class="sec-title" id="learn-title">Learn more</h2>
+    <div class="learn">
+      <a class="learn-card" href="guide-split-large-csv.html"><b>How to split a large CSV file</b><span>When files are too big for Excel or an upload form, and how to cut them cleanly.</span></a>
+      <a class="learn-card" href="guide-merge-csv-files.html"><b>How to merge CSV files</b><span>Combining exports that don’t share the same columns or delimiters.</span></a>
+      <a class="learn-card" href="guide-fix-csv-encoding.html"><b>Fixing garbled characters in a CSV</b><span>Why “JosÃ©” happens and how to get “José” back.</span></a>
+    </div>
+  </section>
+
+  <footer class="home-foot">
+    <nav aria-label="About this site"><a href="guides.html">Guides</a><a href="about.html">About</a><a href="privacy.html">Privacy policy</a><a href="terms.html">Terms of use</a><a href="contact.html">Contact</a></nav>
+    <p>CSV Toolkit is free and open source under the MIT license.</p>
+  </footer>
 </div>`);
       root.appendChild(el);
 

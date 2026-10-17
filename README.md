@@ -6,7 +6,9 @@ A browser-only toolkit for **splitting, merging, inspecting, transforming and co
 
 ## Privacy
 
-**Your CSV never leaves your browser.** Files are read, processed and zipped locally by JavaScript running in the page. Nothing is uploaded, sent or stored on any server, and the app has no backend at all. You can verify this by opening your browser's developer tools (Network tab) while using any tool: once the page has loaded, it makes no network requests at all. It uses the system font, so nothing is fetched from font services either.
+**Your CSV never leaves your browser.** Files are read, processed and zipped locally by JavaScript running in the page. They are never uploaded, sent or stored anywhere, and the tools have no backend.
+
+Out of the box the page makes no network requests at all once it has loaded (it uses the system font, and ads are off). If you turn on Google AdSense (see below), the page also loads Google's ad script, which makes its own requests and may set cookies; the privacy banner and the privacy policy then say so automatically. The ad code never receives your files.
 
 ## The tools
 
@@ -100,6 +102,31 @@ Output options: delimiter, encoding, line endings, quote-everything, header on /
 
 ![Loading animation](docs/loading.png?v=10)
 
+## Google AdSense
+
+The site is prepared for AdSense but **ads stay off until you configure them**, so nothing from Google loads by default.
+
+What is already in place:
+
+- Pages reviewers look for: [About](about.html), [Privacy policy](privacy.html) (with the cookie and personalized-ads disclosures AdSense requires), [Terms of use](terms.html), [Contact](contact.html), and three original [guides](guides.html).
+- The AdSense site-verification meta tag, `ads.txt`, `robots.txt`, `sitemap.xml`, a favicon and page descriptions.
+- `js/ads.js`, which loads AdSense only when a real publisher ID is set, and fills ad slots only once they are visible (needed in a single-page app, where hidden tool views have no width).
+- Three placements, kept away from the controls that run the tools and download results: between the tool cards and "How it works" on the overview, at the very bottom of each tool's results column, and inside each guide. No ads appear in the loading sheet or next to Download buttons.
+
+Steps to go live:
+
+1. **Host it on a domain you own.** AdSense does not accept sites on a domain you don't control (for example a free `*.github.io` address). GitHub Pages with a custom domain, Netlify or Cloudflare Pages all work; the site is plain static files.
+2. **Sign up at [adsense.google.com](https://adsense.google.com/)** with that domain and copy your publisher ID (`ca-pub-…`).
+3. **Configure the site** (on a fresh checkout), then deploy:
+
+   ```bash
+   python3 tools/configure.py --domain https://your-domain.com --adsense ca-pub-1234567890123456
+   ```
+
+   Later, after you create ad units in AdSense (Ads → By ad unit → Display ads), add their IDs with `--slot-overview`, `--slot-tool` and `--slot-article`. Without unit IDs you can still use Auto ads from the AdSense dashboard.
+4. **Request review** in AdSense. Google checks the site and `ads.txt`; approval can take from a few days to a few weeks.
+5. **Turn on the consent message** in AdSense (Privacy & messaging → European regulations) so visitors from the EEA, UK and Switzerland are asked before personalized ads are shown.
+
 ## Usage
 
 1. Open `index.html` in a browser (double-click it, or use a local static server, see below).
@@ -156,8 +183,12 @@ index.html            App shell
 css/app.css           Styles (light + dark theme)
 js/csv.js             Pure CSV parser / formatter (also runs in Node)
 js/core.js            Shared state, streaming scanner, sinks, ZIP, UI components, router
+js/ads.js             AdSense loader (inactive until configured)
 js/tools/             home.js (overview), split.js, merge.js, inspect.js, transform.js, convert.js
 tests/csv.test.js     Unit tests for the parser
+tools/configure.py    Sets the domain and AdSense IDs
+*.html (other)        About, privacy, terms, contact and guide pages
+ads.txt, robots.txt, sitemap.xml   Site files with placeholders for your domain and publisher ID
 examples/             Small sample CSV files
 generate_dummy.py     Large dummy CSV generator
 docs/                 Screenshots used in this README

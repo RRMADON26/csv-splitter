@@ -803,7 +803,12 @@
       $$('.view').forEach(v => v.hidden = v.dataset.tool !== tool.id);
       $$('[data-nav]').forEach(a => { const on = a.dataset.nav === tool.id; a.classList.toggle('on', on); on ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current'); });
       const view = $(`.view[data-tool="${tool.id}"]`);
-      if (!tool.mounted) { tool.mounted = true; tool.mount(view); }
+      if (!tool.mounted) {
+        tool.mounted = true; tool.mount(view);
+        // one ad slot at the very end of each tool, below the results and summary
+        const stage = $('.stage', view);
+        if (stage) stage.appendChild(h('<div class="ad-slot" data-ad-slot="tool" hidden></div>'));
+      }
       tool.onShow && tool.onShow();
       this.refreshViews(); syncMore(view);
       document.title = `${tool.label}: CSV Toolkit`;

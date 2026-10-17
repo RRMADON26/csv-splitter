@@ -4,9 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light">
-<title>CSV Toolkit</title>
+<title>CSV Toolkit: split, merge, inspect, clean and convert CSV files in your browser</title>
+<meta name="description" content="Free CSV tools that run entirely in your browser: split large CSV files, merge files, find data problems, filter and de-duplicate rows, and convert to Excel or JSON. Your files are never uploaded.">
+<meta property="og:title" content="CSV Toolkit">
+<meta property="og:description" content="Split, merge, inspect, clean and convert CSV files in your browser. Your files are never uploaded.">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://YOUR-DOMAIN.example/">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<!-- Google AdSense: set your publisher ID with tools/configure.py. Ads stay off until then. -->
+<meta name="google-adsense-account" content="ca-pub-XXXXXXXXXXXXXXXX">
 <!-- Bump ?v= on every release so browsers fetch the new CSS and JS instead of a cached copy. -->
-<link rel="stylesheet" href="css/app.css?v=2026.10.17.2">
+<link rel="stylesheet" href="css/app.css?v=2026.10.17.3">
 </head>
 <body>
 <div class="app">
@@ -18,6 +26,9 @@
     </div>
     <div class="sb-sec" id="sbTools">Tools</div>
     <nav class="nav" id="nav" aria-labelledby="sbTools"></nav>
+    <nav class="sb-foot" aria-label="About this site">
+      <a href="guides.html">Guides</a><a href="about.html">About</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="contact.html">Contact</a>
+    </nav>
   </aside>
 
   <div class="main">
@@ -48,27 +59,29 @@
       <span class="safe-mini" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="3"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
       <div class="tx">
         <h2>Your files never leave this browser</h2>
-        <p>Everything is read, processed and zipped on your own device. Nothing is uploaded, and there is no server to upload to.</p>
+        <p>Your CSV files are read and processed on your own device and are never uploaded.<span data-ads-note hidden> The site is free and supported by ads from Google, which may use cookies. Ads never see your files.</span></p>
       </div>
       <ul>
         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>No upload</li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>No server</li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Works offline once loaded</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Processed on your device</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg><span data-noads-note>No tracking</span><span data-ads-note hidden>Ads never see your files</span></li>
       </ul>
     </aside>
 
     <div id="views"></div>
+    <noscript><div class="noscript"><h2>CSV Toolkit needs JavaScript</h2><p>The tools split, merge, inspect, clean and convert CSV files inside your browser, so they need JavaScript to run. Your files are never uploaded. Read the <a href="guides.html">guides</a>, or learn more <a href="about.html">about this site</a>.</p></div></noscript>
   </div>
 </div>
 
-<script src="js/csv.js?v=2026.10.17.2"></script>
-<script src="js/core.js?v=2026.10.17.2"></script>
-<script src="js/tools/home.js?v=2026.10.17.2"></script>
-<script src="js/tools/split.js?v=2026.10.17.2"></script>
-<script src="js/tools/merge.js?v=2026.10.17.2"></script>
-<script src="js/tools/inspect.js?v=2026.10.17.2"></script>
-<script src="js/tools/transform.js?v=2026.10.17.2"></script>
-<script src="js/tools/convert.js?v=2026.10.17.2"></script>
+<script src="js/csv.js?v=2026.10.17.3"></script>
+<script src="js/core.js?v=2026.10.17.3"></script>
+<script src="js/tools/home.js?v=2026.10.17.3"></script>
+<script src="js/tools/split.js?v=2026.10.17.3"></script>
+<script src="js/tools/merge.js?v=2026.10.17.3"></script>
+<script src="js/tools/inspect.js?v=2026.10.17.3"></script>
+<script src="js/tools/transform.js?v=2026.10.17.3"></script>
+<script src="js/tools/convert.js?v=2026.10.17.3"></script>
+<script src="js/ads.js?v=2026.10.17.3"></script>
 <script>App.start();</script>
 </body>
 </html>

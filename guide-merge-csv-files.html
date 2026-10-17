@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>How to merge CSV files | CSV Toolkit</title>
+<meta name="description" content="Combine several CSV exports into one file, even when their columns are in a different order, use different delimiters or come in different encodings.">
+<link rel="canonical" href="https://YOUR-DOMAIN.example/guide-merge-csv-files.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="google-adsense-account" content="ca-pub-XXXXXXXXXXXXXXXX">
+<link rel="stylesheet" href="css/app.css?v=2026.10.17.3">
+<link rel="stylesheet" href="css/pages.css?v=2026.10.17.3">
+</head>
+<body class="page">
+<header class="page-top">
+  <a class="brand" href="index.html"><span class="app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3 9.5h18M9.5 9.5V20" stroke="currentColor" stroke-width="1.8"/></svg></span>CSV Toolkit</a>
+  <nav aria-label="Site"><a href="index.html">Tools</a><a href="guides.html" aria-current="page">Guides</a><a href="about.html">About</a></nav>
+  <a class="btn accent" href="index.html">Open the Tools</a>
+</header>
+<main class="page-main">
+<article class="prose">
+<p class="meta"><a href="guides.html">Guides</a></p>
+<h1>How to merge CSV files</h1>
+<p class="lead">Merging CSV files sounds like copying one file under another, and sometimes it is. More often the files came from different exports, and small differences between them turn a simple paste into a mess.</p>
+
+<h2>What usually differs between files</h2>
+<ul>
+<li><strong>Column order.</strong> One export lists <code>name, id, city</code>, another <code>id, name, city</code>. Pasting them together puts names under the id column.</li>
+<li><strong>Extra or missing columns.</strong> A newer export added a column, or an older one lacks it.</li>
+<li><strong>Delimiters.</strong> Spreadsheet programs in many European locales save CSV files with semicolons instead of commas.</li>
+<li><strong>Encodings.</strong> Files saved on different systems may use UTF-8 or Windows-1252, so the same name appears correctly in one and garbled in the other.</li>
+<li><strong>Repeated headers.</strong> Gluing files together by hand leaves a header row in the middle of the data.</li>
+</ul>
+
+<div class="ad-slot" data-ad-slot="article" hidden></div>
+
+<h2>Two ways to combine rows</h2>
+<p><strong>Keep columns as they are</strong> appends the rows of each file in order and keeps a single header at the top. It is the right choice when every file has exactly the same columns in the same order.</p>
+<p><strong>Match columns by name</strong> builds the output from every column name found in any file, in order of first appearance, and puts each value under its own column. Cells for columns a file doesn’t have are left empty. Use it whenever the files are not identical.</p>
+
+<h2>Step by step</h2>
+<ol>
+<li>Open the <a href="index.html#/merge">Merge tool</a> and add all the files at once. Each file’s encoding and delimiter are detected automatically.</li>
+<li>Drag the files into the order you want the rows to appear. The first file is the reference, and any file whose columns differ from it is flagged.</li>
+<li>Choose <em>Match columns by name</em> if any file is flagged.</li>
+<li>Optionally tick <em>Add a column with the source file name</em>. It makes it easy to see later which rows came from where.</li>
+<li>Under <em>Format details</em>, pick the delimiter and encoding of the result, then click <em>Merge Files</em>.</li>
+</ol>
+
+<h2>Check the result</h2>
+<p>The merged file should contain as many rows as all the input files together. The summary after merging shows that total and how many files had different columns. Open the result and look at a few rows from each source, especially near the start of the second and third files, where problems tend to show up.</p>
+
+<h2>Tips</h2>
+<ul>
+<li>Column names must match exactly to be combined. “Email” and “E-mail” count as two different columns; rename one first in the <a href="index.html#/transform">Transform tool</a>.</li>
+<li>If the same records appear in several files, run the result through Transform’s <em>Remove duplicates</em> step.</li>
+</ul>
+</article>
+</main>
+<footer class="page-foot">
+  <nav aria-label="About this site"><a href="guides.html">Guides</a><a href="about.html">About</a><a href="privacy.html">Privacy policy</a><a href="terms.html">Terms of use</a><a href="contact.html">Contact</a></nav>
+  <p>CSV Toolkit is free and open source under the <a href="https://github.com/RRMADON26/csv-splitter/blob/main/LICENSE">MIT license</a>. Your CSV files are processed in your browser and never uploaded.</p>
+</footer>
+<script src="js/ads.js?v=2026.10.17.3"></script>
+</body>
+</html>

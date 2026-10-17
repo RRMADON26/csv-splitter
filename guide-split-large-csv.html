@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>How to split a large CSV file | CSV Toolkit</title>
+<meta name="description" content="When a CSV is too big for Excel, an upload form or an email, here is how to break it into smaller files without corrupting rows or losing the header.">
+<link rel="canonical" href="https://YOUR-DOMAIN.example/guide-split-large-csv.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="google-adsense-account" content="ca-pub-XXXXXXXXXXXXXXXX">
+<link rel="stylesheet" href="css/app.css?v=2026.10.17.3">
+<link rel="stylesheet" href="css/pages.css?v=2026.10.17.3">
+</head>
+<body class="page">
+<header class="page-top">
+  <a class="brand" href="index.html"><span class="app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3 9.5h18M9.5 9.5V20" stroke="currentColor" stroke-width="1.8"/></svg></span>CSV Toolkit</a>
+  <nav aria-label="Site"><a href="index.html">Tools</a><a href="guides.html" aria-current="page">Guides</a><a href="about.html">About</a></nav>
+  <a class="btn accent" href="index.html">Open the Tools</a>
+</header>
+<main class="page-main">
+<article class="prose">
+<p class="meta"><a href="guides.html">Guides</a></p>
+<h1>How to split a large CSV file</h1>
+<p class="lead">Big CSV exports run into limits all the time: Excel stops at 1,048,576 rows, import forms reject files above a certain size, and email providers cap attachments. Splitting the file into smaller parts is usually the simplest fix, as long as it is done carefully.</p>
+
+<h2>Why splitting “by lines” can go wrong</h2>
+<p>A CSV looks like one record per line, but that is not always true. A field wrapped in double quotes may contain a line break, for example an address written on two lines or a comment with several paragraphs. A tool that cuts the file every <em>n</em> lines, such as the Unix <code>split -l</code> command, can slice one of those records in half. The result is two broken files: one ending with half a row, the next starting with the other half.</p>
+<p>The second common problem is the header. Only the first part keeps the column names, so every later part is harder to import and easy to misread.</p>
+<p>A safe split therefore needs to understand quotes, so that it only cuts between records, and it should repeat the header in every part.</p>
+
+<div class="ad-slot" data-ad-slot="article" hidden></div>
+
+<h2>Choose how to divide the file</h2>
+<ul>
+<li><strong>Rows per file</strong> is the most common choice. Pick a number below the limit of wherever the files are going, for example 500,000 rows for comfortable work in Excel.</li>
+<li><strong>Number of files</strong> is useful when you want to share the work out, for example four equal parts for four people.</li>
+<li><strong>Maximum file size</strong> fits upload forms and email: tell it “10 MB” and each part stays under that size, including the header.</li>
+<li><strong>Column value</strong> creates one file per distinct value, such as one file per city, region or month. This is often what people really want when they split a report.</li>
+</ul>
+
+<h2>Step by step</h2>
+<ol>
+<li>Open the <a href="index.html#/split">Split tool</a> and choose your file, or drop it onto the page. The file is read on your device and is not uploaded.</li>
+<li>Check the file panel. It shows the number of rows and columns, and whether the first row is treated as a header. Untick that box if your file has no header.</li>
+<li>Pick how to split and enter a number. The strip at the top shows where the file will be cut before anything runs.</li>
+<li>Click <em>Split File</em>. When it finishes, download every part as one ZIP, download parts one at a time, or, in Chrome and Edge, save them straight into a folder.</li>
+</ol>
+
+<h2>Check the result</h2>
+<p>A quick sanity check catches most mistakes. The row counts of the parts should add up to the row count of the original file, and every part should open with the same header. If you split by column value, the summary lists how many rows went into each file.</p>
+
+<h2>Tips</h2>
+<ul>
+<li>If accents or symbols look wrong in the parts, the original was probably read with the wrong encoding. See <a href="guide-fix-csv-encoding.html">fixing garbled characters</a>.</li>
+<li>Keep the original file. Splitting never changes it, but it is the copy you will want if you need to split differently later.</li>
+<li>For files with more than a few million rows, saving to a folder avoids holding every part in memory at once.</li>
+</ul>
+</article>
+</main>
+<footer class="page-foot">
+  <nav aria-label="About this site"><a href="guides.html">Guides</a><a href="about.html">About</a><a href="privacy.html">Privacy policy</a><a href="terms.html">Terms of use</a><a href="contact.html">Contact</a></nav>
+  <p>CSV Toolkit is free and open source under the <a href="https://github.com/RRMADON26/csv-splitter/blob/main/LICENSE">MIT license</a>. Your CSV files are processed in your browser and never uploaded.</p>
+</footer>
+<script src="js/ads.js?v=2026.10.17.3"></script>
+</body>
+</html>
