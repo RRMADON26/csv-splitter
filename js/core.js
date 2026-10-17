@@ -795,7 +795,24 @@
     file: new FileStore(),
     tools: {}, order: [], active: null,
     register(tool) { this.tools[tool.id] = tool; this.order.push(tool.id); },
-    go(id) { location.hash = '#/' + id; },
+    /** Each tool has its own crawlable page; inside the app we switch views without reloading. */
+    PATHS: { home: 'index.html', split: 'split-csv.html', merge: 'merge-csv.html', inspect: 'validate-csv.html', transform: 'clean-csv.html', convert: 'convert-csv.html' },
+    pathFor(id) { return this.PATHS[id] || this.PATHS.home; },
+    idFromLocation() {
+      const hash = (location.hash.match(/^#\/(\w+)/) || [])[1];
+      if (hash && this.tools[hash]) return hash;
+      const file = decodeURIComponent(location.pathname.split('/').pop() || 'index.html');
+      const byPath = Object.keys(this.PATHS).find(k => this.PATHS[k] === file);
+      return byPath || document.documentElement.dataset.route || this.order[0];
+    },
+    go(id) {
+      if (!this.tools[id]) return;
+      try {
+        if (location.protocol === 'file:') throw new Error('no pushState on file://');
+        history.pushState({ id }, '', this.pathFor(id));
+      } catch (e) { location.hash = '#/' + id; return; }
+      this.show(id);
+    },
     show(id) {
       const tool = this.tools[id] || this.tools[this.order[0]];
       if (this.active && this.active !== tool) $$('.toast').forEach(o => o.remove());
@@ -805,13 +822,31 @@
       const view = $(`.view[data-tool="${tool.id}"]`);
       if (!tool.mounted) {
         tool.mounted = true; tool.mount(view);
+        const intro = document.getElementById('seo-intro');
+        if (intro && intro.dataset.route === tool.id) {
+          const foot = $('.home-foot', view), hero = $('.hero-wrap', view);
+          if (foot) foot.before(intro); else if (hero) hero.appendChild(intro); else view.appendChild(intro);
+          intro.hidden = false;
+        }
         // one ad slot at the very end of each tool, below the results and summary
         const stage = $('.stage', view);
         if (stage) stage.appendChild(h('<div class="ad-slot" data-ad-slot="tool" hidden></div>'));
       }
       tool.onShow && tool.onShow();
       this.refreshViews(); syncMore(view);
-      document.title = `${tool.label}: CSV Toolkit`;
+      this.applySeo(tool.id);
+    },
+    /** Keep title, description and canonical in step with the visible tool. */
+    applySeo(id) {
+      const d = (window.SEO_PAGES || {})[id];
+      if (!d) { document.title = `${this.tools[id].label}: CSV Toolkit`; return; }
+      document.title = d.title;
+      const set = (sel, attr, val) => { const el = document.head.querySelector(sel); if (el) el.setAttribute(attr, val); };
+      set('meta[name="description"]', 'content', d.description);
+      set('meta[property="og:title"]', 'content', d.title);
+      set('meta[property="og:description"]', 'content', d.description);
+      const canon = document.head.querySelector('link[rel="canonical"]');
+      if (canon) { const base = canon.href.replace(/[^/]*$/, ''); canon.href = base + (id === 'home' ? '' : this.pathFor(id)); }
     },
     /** Sync per-view state (has a file? which step?) and the header chrome. */
     refreshViews() {
@@ -849,7 +884,7 @@
       const nav = $('#nav'), views = $('#views');
       this.order.forEach(id => {
         const t = this.tools[id];
-        nav.appendChild(h(`<a href="#/${id}" data-nav="${id}" title="${t.blurb || t.label}">${icon(t.icon)}<span>${t.label}</span></a>`));
+        nav.appendChild(h(`<a href="${this.pathFor(id)}" data-nav="${id}" title="${t.blurb || t.label}">${icon(t.icon)}<span>${t.label}</span></a>`));
         views.appendChild(h(`<div class="view" data-tool="${id}" hidden></div>`));
       });
       // the overview sits above the tools group
@@ -863,8 +898,21 @@
         .observe(views, { attributes: true, attributeFilter: ['disabled'], subtree: true });
       this.file.on('change', () => this.refreshViews());
       document.addEventListener('click', e => { const b = e.target.closest('[data-goto]'); if (b) this.goto(b.dataset.goto); });
-      const route = () => this.show((location.hash.match(/^#\/(\w+)/) || [])[1]);
+      const route = () => this.show(this.idFromLocation());
       window.addEventListener('hashchange', route);
+      window.addEventListener('popstate', route);
+      // in-app links to tool pages switch views instead of reloading
+      document.addEventListener('click', e => {
+        const a = e.target.closest('a[href]');
+        if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.target) return;
+        const file = a.getAttribute('href').split('#')[0].split('/').pop();
+        const id = Object.keys(this.PATHS).find(k => this.PATHS[k] === file);
+        if (!id || !this.tools[id] || /^(https?:)?\/\//.test(a.getAttribute('href'))) return;
+        e.preventDefault(); this.go(id);
+      });
+      // an old #/tool link on any page: show the tool and tidy the address
+      const initial = this.idFromLocation();
+      if (location.hash && location.protocol !== 'file:') { try { history.replaceState({ id: initial }, '', this.pathFor(initial)); } catch (e) { /* keep the hash */ } }
       // full-window drop target
       const ov = h(`<div class="drop-ov" hidden><div class="drop-box">${icon('download')}<b data-t>Drop to Open</b><span>Your file stays on this device.</span></div></div>`);
       document.body.appendChild(ov);

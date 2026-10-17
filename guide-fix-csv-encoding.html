@@ -6,11 +6,30 @@
 <meta name="color-scheme" content="light">
 <title>Fixing garbled characters in a CSV file | CSV Toolkit</title>
 <meta name="description" content="Why names like José turn into JosÃ© or show question marks, and how to read and save a CSV with the right encoding.">
+<meta name="robots" content="index, follow">
 <link rel="canonical" href="https://YOUR-DOMAIN.example/guide-fix-csv-encoding.html">
+<meta property="og:site_name" content="CSV Toolkit">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://YOUR-DOMAIN.example/guide-fix-csv-encoding.html">
+<meta property="og:title" content="Fixing garbled characters in a CSV file | CSV Toolkit">
+<meta property="og:description" content="Why names like José turn into JosÃ© or show question marks, and how to read and save a CSV with the right encoding.">
+<meta property="og:image" content="https://YOUR-DOMAIN.example/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CSV Toolkit: split, merge, validate, clean and convert CSV files in your browser">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Fixing garbled characters in a CSV file | CSV Toolkit">
+<meta name="twitter:description" content="Why names like José turn into JosÃ© or show question marks, and how to read and save a CSV with the right encoding.">
+<meta name="twitter:image" content="https://YOUR-DOMAIN.example/og-image.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","headline":"Fixing garbled characters in a CSV file","description":"Why names like José turn into JosÃ© or show question marks, and how to read and save a CSV with the right encoding.","image":"https://YOUR-DOMAIN.example/og-image.png","datePublished":"2026-10-17","dateModified":"2026-10-17","author":{"@type":"Person","name":"RRMADON26","url":"https://github.com/RRMADON26"},"publisher":{"@type":"Person","name":"RRMADON26","url":"https://github.com/RRMADON26"},"mainEntityOfPage":"https://YOUR-DOMAIN.example/guide-fix-csv-encoding.html","inLanguage":"en","isPartOf":{"@id":"https://YOUR-DOMAIN.example/#website"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"CSV Toolkit","item":"https://YOUR-DOMAIN.example/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://YOUR-DOMAIN.example/guides.html"},{"@type":"ListItem","position":3,"name":"Fixing garbled characters in a CSV file","item":"https://YOUR-DOMAIN.example/guide-fix-csv-encoding.html"}]}]}</script>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<meta name="theme-color" content="#F2F2F7">
 <meta name="google-adsense-account" content="ca-pub-XXXXXXXXXXXXXXXX">
-<link rel="stylesheet" href="css/app.css?v=2026.10.17.3">
-<link rel="stylesheet" href="css/pages.css?v=2026.10.17.3">
+<link rel="stylesheet" href="css/app.css?v=2026.10.17.4">
+<link rel="stylesheet" href="css/pages.css?v=2026.10.17.4">
 </head>
 <body class="page">
 <header class="page-top">
@@ -20,7 +39,7 @@
 </header>
 <main class="page-main">
 <article class="prose">
-<p class="meta"><a href="guides.html">Guides</a></p>
+<p class="meta"><a href="guides.html">Guides</a> · Updated October 17, 2026</p>
 <h1>Fixing garbled characters in a CSV file</h1>
 <p class="lead">You open a CSV and “José” shows up as “JosÃ©”, “Zürich” as “ZÃ¼rich”, or curly quotes as “â€™”. Nothing is wrong with the data itself; it is being read with the wrong text encoding.</p>
 
@@ -35,13 +54,13 @@
 <div class="ad-slot" data-ad-slot="article" hidden></div>
 
 <h2>The other symptom: question marks and �</h2>
-<p>The opposite mistake looks different. If a Windows-1252 file is read as UTF-8, some bytes are simply invalid, and they show up as the replacement character “�” or as question marks. The <a href="index.html#/inspect">Inspect tool</a> reports both symptoms: it counts rows with undecodable characters and warns about likely garbled text.</p>
+<p>The opposite mistake looks different. If a Windows-1252 file is read as UTF-8, some bytes are simply invalid, and they show up as the replacement character “�” or as question marks. The <a href="validate-csv.html">Inspect tool</a> reports both symptoms: it counts rows with undecodable characters and warns about likely garbled text.</p>
 
 <h2>How to fix it</h2>
 <ol>
 <li>Open the file in any tool and expand <em>Encoding and delimiter</em> in the file panel. The detected encoding is shown there.</li>
 <li>If the preview shows “Ã©”-style text, choose UTF-8. If it shows � or question marks, choose Windows-1252. The preview and row counts update straight away.</li>
-<li>Once the text looks right, use the <a href="index.html#/convert">Convert tool</a> to save a clean copy. For general use pick UTF-8. If the file is going to be opened in Excel by double-clicking, pick <em>UTF-8 with BOM</em>.</li>
+<li>Once the text looks right, use the <a href="convert-csv.html">Convert tool</a> to save a clean copy. For general use pick UTF-8. If the file is going to be opened in Excel by double-clicking, pick <em>UTF-8 with BOM</em>.</li>
 </ol>
 
 <h2>Why Excel needs the BOM</h2>
@@ -52,9 +71,10 @@
 </article>
 </main>
 <footer class="page-foot">
+  <nav aria-label="Tools"><a href="split-csv.html">Split CSV</a><a href="merge-csv.html">Merge CSV</a><a href="validate-csv.html">Validate CSV</a><a href="clean-csv.html">Clean CSV</a><a href="convert-csv.html">Convert CSV</a></nav>
   <nav aria-label="About this site"><a href="guides.html">Guides</a><a href="about.html">About</a><a href="privacy.html">Privacy policy</a><a href="terms.html">Terms of use</a><a href="contact.html">Contact</a></nav>
   <p>CSV Toolkit is free and open source under the <a href="https://github.com/RRMADON26/csv-splitter/blob/main/LICENSE">MIT license</a>. Your CSV files are processed in your browser and never uploaded.</p>
 </footer>
-<script src="js/ads.js?v=2026.10.17.3"></script>
+<script src="js/ads.js?v=2026.10.17.4"></script>
 </body>
 </html>

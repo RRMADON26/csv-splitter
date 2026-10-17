@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://YOUR-DOMAIN.example/</loc><lastmod>2026-10-17</lastmod></url>
+  <url><loc>https://YOUR-DOMAIN.example/split-csv.html</loc><lastmod>2026-10-17</lastmod></url>
+  <url><loc>https://YOUR-DOMAIN.example/merge-csv.html</loc><lastmod>2026-10-17</lastmod></url>
+  <url><loc>https://YOUR-DOMAIN.example/validate-csv.html</loc><lastmod>2026-10-17</lastmod></url>
+  <url><loc>https://YOUR-DOMAIN.example/clean-csv.html</loc><lastmod>2026-10-17</lastmod></url>
+  <url><loc>https://YOUR-DOMAIN.example/convert-csv.html</loc><lastmod>2026-10-17</lastmod></url>
   <url><loc>https://YOUR-DOMAIN.example/guides.html</loc><lastmod>2026-10-17</lastmod></url>
   <url><loc>https://YOUR-DOMAIN.example/guide-split-large-csv.html</loc><lastmod>2026-10-17</lastmod></url>
   <url><loc>https://YOUR-DOMAIN.example/guide-merge-csv-files.html</loc><lastmod>2026-10-17</lastmod></url>

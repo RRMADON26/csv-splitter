@@ -78,7 +78,7 @@
       TOOLS.forEach(t => {
         const tool = App.tools[t.id];
         const card = h(`
-<a class="tool-card" href="#/${t.id}">
+<a class="tool-card" href="${App.pathFor(t.id)}">
   <span class="t-ic t-${t.tint}" aria-hidden="true">${icon(tool.icon)}</span>
   <span class="tc-body">
     <b>${esc(tool.label)}</b>

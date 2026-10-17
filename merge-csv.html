@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en" data-route="merge">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<!--seo:head-->
+<title>Merge CSV Files Online, Free and Private | CSV Toolkit</title>
+<meta name="description" content="Combine CSV files into one. Match columns by name, mix delimiters and encodings, keep a single header and add a source column. Runs in your browser, no upload.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://YOUR-DOMAIN.example/merge-csv.html">
+<meta property="og:site_name" content="CSV Toolkit">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://YOUR-DOMAIN.example/merge-csv.html">
+<meta property="og:title" content="Merge CSV Files Online, Free and Private | CSV Toolkit">
+<meta property="og:description" content="Combine CSV files into one. Match columns by name, mix delimiters and encodings, keep a single header and add a source column. Runs in your browser, no upload.">
+<meta property="og:image" content="https://YOUR-DOMAIN.example/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CSV Toolkit: split, merge, validate, clean and convert CSV files in your browser">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Merge CSV Files Online, Free and Private | CSV Toolkit">
+<meta name="twitter:description" content="Combine CSV files into one. Match columns by name, mix delimiters and encodings, keep a single header and add a source column. Runs in your browser, no upload.">
+<meta name="twitter:image" content="https://YOUR-DOMAIN.example/og-image.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"CSV Merger","url":"https://YOUR-DOMAIN.example/merge-csv.html","description":"Combine CSV files into one. Match columns by name, mix delimiters and encodings, keep a single header and add a source column. Runs in your browser, no upload.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript and a modern web browser","isAccessibleForFree":true,"inLanguage":"en","isPartOf":{"@id":"https://YOUR-DOMAIN.example/#website"},"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["Combine any number of CSV files","Match columns by name","Mixed delimiters and encodings","Optional source file column","Choose output delimiter and encoding"],"image":"https://YOUR-DOMAIN.example/og-image.png"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"CSV Toolkit","item":"https://YOUR-DOMAIN.example/"},{"@type":"ListItem","position":2,"name":"CSV Merger","item":"https://YOUR-DOMAIN.example/merge-csv.html"}]}]}</script>
+<!--/seo:head-->
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<meta name="theme-color" content="#F2F2F7">
+<!-- Google AdSense: set your publisher ID with tools/configure.py. Ads stay off until then. -->
+<meta name="google-adsense-account" content="ca-pub-XXXXXXXXXXXXXXXX">
+<!-- Bump ?v= on every release so browsers fetch the new CSS and JS instead of a cached copy. -->
+<link rel="stylesheet" href="css/app.css?v=2026.10.17.4">
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar" aria-label="Sidebar">
+    <div class="sb-head">
+      <span class="app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3 9.5h18M9.5 9.5V20" stroke="currentColor" stroke-width="1.8"/></svg></span>
+      <span class="app-name">CSV Toolkit</span>
+    </div>
+    <div class="sb-sec" id="sbTools">Tools</div>
+    <nav class="nav" id="nav" aria-labelledby="sbTools"></nav>
+    <nav class="sb-foot" aria-label="About this site">
+      <a href="guides.html">Guides</a><a href="about.html">About</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="contact.html">Contact</a>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <header class="toolbar">
+      <button type="button" class="tb-btn" id="tbSidebar" title="Hide Sidebar" aria-label="Hide Sidebar" aria-pressed="true">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M9 5v14M5.5 8.5h1.5M5.5 11h1.5"/></svg>
+      </button>
+      <div class="tb-title"><h1 id="winTitle">Merge</h1><span id="winSub">No file open</span></div>
+      <div class="tb-spacer"></div>
+      <button type="button" class="btn" id="pick">Choose File…</button>
+      <button type="button" class="tb-btn" id="tbInspector" title="Hide Inspector" aria-label="Hide Inspector" aria-pressed="true">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M15 5v14M17 8.5h1.5M17 11h1.5"/></svg>
+      </button>
+      <button type="button" class="btn accent" id="tbRun" hidden>Run</button>
+    </header>
+
+    <aside class="safe" aria-label="Privacy">
+      <svg class="ill" viewBox="0 0 200 90" fill="none" stroke="var(--label2)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="6" y="10" width="102" height="70" rx="8" fill="var(--content)"/>
+        <path d="M6 26h102"/><circle cx="16" cy="18" r="2.6" fill="#FF5F57" stroke="none"/><circle cx="25" cy="18" r="2.6" fill="#FEBC2E" stroke="none"/><circle cx="34" cy="18" r="2.6" fill="#28C840" stroke="none"/>
+        <path d="M20 38h44M20 48h44M20 58h28M34 34v30" stroke="var(--sep-strong)"/>
+        <rect x="62" y="48" width="34" height="26" rx="6" fill="var(--accent)" stroke="none"/>
+        <path d="M70 48v-6a9 9 0 0 1 18 0v6"/><circle cx="79" cy="60" r="2.6" fill="#fff" stroke="none"/><path d="M79 61v5" stroke="#fff"/>
+        <path d="M116 45h30" stroke-dasharray="3 5"/>
+        <path d="M160 70a14 14 0 0 1-2-27.8A18 18 0 0 1 192 46a12 12 0 0 1-2 24z" fill="var(--content)"/>
+        <path d="M150 80L196 28" stroke="var(--red)" stroke-width="3"/>
+      </svg>
+      <span class="safe-mini" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="3"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+      <div class="tx">
+        <h2>Your files never leave this browser</h2>
+        <p>Your CSV files are read and processed on your own device and are never uploaded.<span data-ads-note hidden> The site is free and supported by ads from Google, which may use cookies. Ads never see your files.</span></p>
+      </div>
+      <ul>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>No upload</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Processed on your device</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg><span data-noads-note>No tracking</span><span data-ads-note hidden>Ads never see your files</span></li>
+      </ul>
+    </aside>
+
+    <div id="views"></div>
+<!--seo:intro-->
+<section id="seo-intro" class="seo-intro card" data-route="merge">
+<h2>Merge CSV files online, free and private</h2>
+<p>This tool combines several CSV files into a single file, directly in your browser. It handles the differences that usually make merging painful: columns in a different order, extra columns in some files, semicolon and comma delimiters, and files saved in different encodings.</p>
+<h3>How to merge CSV files</h3>
+<ol><li>Add all the files at once, by choosing them or dropping them onto the page.</li><li>Drag them into the order the rows should appear. Files whose columns differ from the first one are flagged.</li><li>Choose <em>Match columns by name</em> if any file is flagged, and optionally add a column with each row’s source file.</li><li>Click <em>Merge Files</em> and download the result.</li></ol>
+<h3>What if the files have different columns?</h3><p>Match columns by name builds the output from every column found in any file and leaves cells empty where a file has no value.</p><h3>Do the files need the same delimiter?</h3><p>No. Each file’s delimiter and encoding are detected separately, and you choose the delimiter and encoding of the merged file.</p><h3>Is the header repeated in the middle?</h3><p>No. The merged file has a single header row at the top.</p>
+<p>Read the full guide: <a href="guide-merge-csv-files.html">How to merge CSV files</a>.</p>
+</section>
+<!--/seo:intro-->
+    <noscript><div class="noscript"><h2>CSV Toolkit needs JavaScript</h2><p>The tools split, merge, inspect, clean and convert CSV files inside your browser, so they need JavaScript to run. Your files are never uploaded. Read the <a href="guides.html">guides</a>, or learn more <a href="about.html">about this site</a>.</p></div></noscript>
+  </div>
+</div>
+
+<script src="js/csv.js?v=2026.10.17.4"></script>
+<script src="js/seo-data.js?v=2026.10.17.4"></script>
+<script src="js/core.js?v=2026.10.17.4"></script>
+<script src="js/tools/home.js?v=2026.10.17.4"></script>
+<script src="js/tools/split.js?v=2026.10.17.4"></script>
+<script src="js/tools/merge.js?v=2026.10.17.4"></script>
+<script src="js/tools/inspect.js?v=2026.10.17.4"></script>
+<script src="js/tools/transform.js?v=2026.10.17.4"></script>
+<script src="js/tools/convert.js?v=2026.10.17.4"></script>
+<script src="js/ads.js?v=2026.10.17.4"></script>
+<script>App.start();</script>
+</body>
+</html>

@@ -102,6 +102,35 @@ Output options: delimiter, encoding, line endings, quote-everything, header on /
 
 ![Loading animation](docs/loading.png?v=10)
 
+## SEO
+
+Every tool has its own address, so each one can rank for what people search for:
+
+| Page | Tool |
+| --- | --- |
+| `index.html` | Overview |
+| `split-csv.html` | Split |
+| `merge-csv.html` | Merge |
+| `validate-csv.html` | Inspect |
+| `clean-csv.html` | Transform |
+| `convert-csv.html` | Convert |
+
+Each page is the full app opened on that tool, with its own title, meta description, canonical URL, Open Graph and Twitter card tags (with a 1200×630 `og-image.png`), structured data (`WebApplication` and `BreadcrumbList`; `WebSite` on the overview; `Article` on guides) and a crawlable introduction with how-to steps and FAQs under the drop zone. The introduction disappears once a file is open, so it never gets in the way of the work.
+
+Inside the app, switching tools updates the address with the History API (no reload), along with the title, description and canonical link, and the back and forward buttons work. Old `index.html#/split` links still open the right tool and are tidied to the new address. Opened from `file://`, the app falls back to `#/tool` addresses.
+
+The site also ships `sitemap.xml` (all indexable pages), `robots.txt`, a `404.html` marked `noindex`, `site.webmanifest`, and touch and app icons.
+
+**All page heads, introductions, content pages, the sitemap and the manifest are generated** by `tools/build_pages.py` from `index.html`. Edit the content in that script and run it, rather than editing the generated pages by hand:
+
+```bash
+python3 tools/build_pages.py
+```
+
+It also sets the `?v=` asset version on every page (bump `VERSION` in the script on each release). Run it **before** `tools/configure.py`, because configure fills your real domain into the generated files.
+
+After deploying, submit `https://your-domain.com/sitemap.xml` in [Google Search Console](https://search.google.com/search-console).
+
 ## Google AdSense
 
 The site is prepared for AdSense but **ads stay off until you configure them**, so nothing from Google loads by default.
@@ -179,15 +208,20 @@ The result has 200,000 data rows plus 1 header. Every 1,000th row contains a mul
 ## Project structure
 
 ```
-index.html            App shell
-css/app.css           Styles (light + dark theme)
+index.html            App shell, opened on the overview
+*-csv.html            The same app opened on one tool (split, merge, validate, clean, convert)
+css/app.css           App styles
+css/pages.css         Styles for the content pages
 js/csv.js             Pure CSV parser / formatter (also runs in Node)
 js/core.js            Shared state, streaming scanner, sinks, ZIP, UI components, router
 js/ads.js             AdSense loader (inactive until configured)
+js/seo-data.js        Titles and descriptions used when switching tools (generated)
 js/tools/             home.js (overview), split.js, merge.js, inspect.js, transform.js, convert.js
 tests/csv.test.js     Unit tests for the parser
+tools/build_pages.py  Generates page heads, SEO content, content pages, sitemap and manifest
 tools/configure.py    Sets the domain and AdSense IDs
-*.html (other)        About, privacy, terms, contact and guide pages
+*.html (other)        About, privacy, terms, contact, guide and 404 pages (generated)
+og-image.png, icon-*.png, apple-touch-icon.png, site.webmanifest   Social preview and app icons
 ads.txt, robots.txt, sitemap.xml   Site files with placeholders for your domain and publisher ID
 examples/             Small sample CSV files
 generate_dummy.py     Large dummy CSV generator

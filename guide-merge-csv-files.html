@@ -6,11 +6,30 @@
 <meta name="color-scheme" content="light">
 <title>How to merge CSV files | CSV Toolkit</title>
 <meta name="description" content="Combine several CSV exports into one file, even when their columns are in a different order, use different delimiters or come in different encodings.">
+<meta name="robots" content="index, follow">
 <link rel="canonical" href="https://YOUR-DOMAIN.example/guide-merge-csv-files.html">
+<meta property="og:site_name" content="CSV Toolkit">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://YOUR-DOMAIN.example/guide-merge-csv-files.html">
+<meta property="og:title" content="How to merge CSV files | CSV Toolkit">
+<meta property="og:description" content="Combine several CSV exports into one file, even when their columns are in a different order, use different delimiters or come in different encodings.">
+<meta property="og:image" content="https://YOUR-DOMAIN.example/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CSV Toolkit: split, merge, validate, clean and convert CSV files in your browser">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How to merge CSV files | CSV Toolkit">
+<meta name="twitter:description" content="Combine several CSV exports into one file, even when their columns are in a different order, use different delimiters or come in different encodings.">
+<meta name="twitter:image" content="https://YOUR-DOMAIN.example/og-image.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","headline":"How to merge CSV files","description":"Combine several CSV exports into one file, even when their columns are in a different order, use different delimiters or come in different encodings.","image":"https://YOUR-DOMAIN.example/og-image.png","datePublished":"2026-10-17","dateModified":"2026-10-17","author":{"@type":"Person","name":"RRMADON26","url":"https://github.com/RRMADON26"},"publisher":{"@type":"Person","name":"RRMADON26","url":"https://github.com/RRMADON26"},"mainEntityOfPage":"https://YOUR-DOMAIN.example/guide-merge-csv-files.html","inLanguage":"en","isPartOf":{"@id":"https://YOUR-DOMAIN.example/#website"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"CSV Toolkit","item":"https://YOUR-DOMAIN.example/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://YOUR-DOMAIN.example/guides.html"},{"@type":"ListItem","position":3,"name":"How to merge CSV files","item":"https://YOUR-DOMAIN.example/guide-merge-csv-files.html"}]}]}</script>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<meta name="theme-color" content="#F2F2F7">
 <meta name="google-adsense-account" content="ca-pub-XXXXXXXXXXXXXXXX">
-<link rel="stylesheet" href="css/app.css?v=2026.10.17.3">
-<link rel="stylesheet" href="css/pages.css?v=2026.10.17.3">
+<link rel="stylesheet" href="css/app.css?v=2026.10.17.4">
+<link rel="stylesheet" href="css/pages.css?v=2026.10.17.4">
 </head>
 <body class="page">
 <header class="page-top">
@@ -20,7 +39,7 @@
 </header>
 <main class="page-main">
 <article class="prose">
-<p class="meta"><a href="guides.html">Guides</a></p>
+<p class="meta"><a href="guides.html">Guides</a> · Updated October 17, 2026</p>
 <h1>How to merge CSV files</h1>
 <p class="lead">Merging CSV files sounds like copying one file under another, and sometimes it is. More often the files came from different exports, and small differences between them turn a simple paste into a mess.</p>
 
@@ -41,7 +60,7 @@
 
 <h2>Step by step</h2>
 <ol>
-<li>Open the <a href="index.html#/merge">Merge tool</a> and add all the files at once. Each file’s encoding and delimiter are detected automatically.</li>
+<li>Open the <a href="merge-csv.html">Merge tool</a> and add all the files at once. Each file’s encoding and delimiter are detected automatically.</li>
 <li>Drag the files into the order you want the rows to appear. The first file is the reference, and any file whose columns differ from it is flagged.</li>
 <li>Choose <em>Match columns by name</em> if any file is flagged.</li>
 <li>Optionally tick <em>Add a column with the source file name</em>. It makes it easy to see later which rows came from where.</li>
@@ -53,15 +72,16 @@
 
 <h2>Tips</h2>
 <ul>
-<li>Column names must match exactly to be combined. “Email” and “E-mail” count as two different columns; rename one first in the <a href="index.html#/transform">Transform tool</a>.</li>
+<li>Column names must match exactly to be combined. “Email” and “E-mail” count as two different columns; rename one first in the <a href="clean-csv.html">Transform tool</a>.</li>
 <li>If the same records appear in several files, run the result through Transform’s <em>Remove duplicates</em> step.</li>
 </ul>
 </article>
 </main>
 <footer class="page-foot">
+  <nav aria-label="Tools"><a href="split-csv.html">Split CSV</a><a href="merge-csv.html">Merge CSV</a><a href="validate-csv.html">Validate CSV</a><a href="clean-csv.html">Clean CSV</a><a href="convert-csv.html">Convert CSV</a></nav>
   <nav aria-label="About this site"><a href="guides.html">Guides</a><a href="about.html">About</a><a href="privacy.html">Privacy policy</a><a href="terms.html">Terms of use</a><a href="contact.html">Contact</a></nav>
   <p>CSV Toolkit is free and open source under the <a href="https://github.com/RRMADON26/csv-splitter/blob/main/LICENSE">MIT license</a>. Your CSV files are processed in your browser and never uploaded.</p>
 </footer>
-<script src="js/ads.js?v=2026.10.17.3"></script>
+<script src="js/ads.js?v=2026.10.17.4"></script>
 </body>
 </html>
