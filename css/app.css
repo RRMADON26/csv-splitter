@@ -576,3 +576,14 @@ input.bad { box-shadow: 0 0 0 2px var(--red); }
   .nav a { font-size: 9.5px; }
 }
 .nav .sb-sec { padding-top: 14px; }
+
+@media (max-width: 640px) {
+  /* the overview's quick start already offers Choose File… */
+  body.on-home #pick { display: none; }
+  body.on-home .toolbar { padding-bottom: 4px; }
+  .safe { gap: 8px 14px; padding: 14px 16px; }
+  .safe svg.ill { width: 84px; height: 38px; }
+  .safe h2 { font-size: 17px; }
+  .safe p { font-size: 14px; }
+  .safe ul { font-size: 13px; }
+}

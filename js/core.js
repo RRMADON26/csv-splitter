@@ -827,6 +827,7 @@
       const go = av && $('[data-go]', av);
       run.hidden = !go; run.textContent = t.verb || 'Run'; run.disabled = !go || go.disabled;
       $('#tbInspector').hidden = !(av && av.classList.contains('has-file'));
+      document.body.classList.toggle('on-home', t.id === 'home');
     },
     goto(step) {
       const v = $(`.view[data-tool="${this.active.id}"]`);
