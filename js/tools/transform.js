@@ -175,7 +175,16 @@
       const on = id => pref('en_' + id).checked;
 
       // ---------------------------------------------------------------- state ↔ UI
-      function resetCols() { st.cols = store.columns.map((name, i) => ({ src: i, name, out: name, keep: true })); st.rules = st.rules.filter(r => r.col < store.columns.length); st.dedupCols = new Set([...st.dedupCols].filter(i => i < store.columns.length)); }
+      // settings follow a column by its name: a file with the same columns keeps them, a different file drops them
+      // (never by position, which would silently point a rule at another column)
+      function resetCols() {
+        const prev = st.names || [], prevCols = st.cols, cur = store.columns;
+        const remap = i => (prev[i] == null ? -1 : cur.indexOf(prev[i]));
+        st.rules = st.rules.map(r => ({ ...r, col: remap(r.col) })).filter(r => r.col >= 0);
+        st.dedupCols = new Set([...st.dedupCols].map(remap).filter(i => i >= 0));
+        st.cols = cur.map((name, i) => { const old = prevCols.find(c => c.name === name); return { src: i, name, out: old ? old.out : name, keep: old ? old.keep : true }; });
+        st.names = cur.slice();
+      }
       const colOptions = (sel) => store.columns.map((c, i) => `<option value="${i}" ${i === sel ? 'selected' : ''}>${esc(c)}</option>`).join('');
 
       function renderRules() {

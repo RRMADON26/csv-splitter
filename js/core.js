@@ -609,7 +609,9 @@
         exp.classList.remove('ready');
         E('title').textContent = 'No output yet'; E('text').textContent = 'Run the tool to create your files.';
         E('sw').hidden = true; E('alt').hidden = true; E('main').disabled = true; E('main').textContent = 'Download'; setStatus('');
-        E('main').onclick = null;
+        E('main').onclick = null; E('alt').onclick = null;   // let go of the previous output's blobs
+        // a "files are ready · Download" notification would now point at output that no longer exists
+        $$('#toasts .toast.has-act').forEach(t => t.remove());
         const v = view(); if (v) v.dataset.stage = v.classList.contains('has-file') ? 'file' : '';
       },
       show(outputs, { folderName = '', note = '', gz = true, announce = true } = {}) {

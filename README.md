@@ -182,9 +182,12 @@ Steps to go live:
 ### Run with a local server (optional)
 
 ```bash
-python3 -m http.server 8765
-# then open http://localhost:8765
+python3 tools/serve.py
 ```
+
+Then open http://localhost:8765. This is `python3 -m http.server` with caching turned off, so a reload always shows your latest changes (a plain static server lets the browser keep old pages around).
+
+When you host the site, `_headers` sets the cache rules on Netlify and Cloudflare Pages: pages are always revalidated, while CSS and JS (versioned with `?v=`) are cached for a year. On another host, set the same headers in its config.
 
 ## Try it with sample data
 
@@ -236,6 +239,8 @@ js/tools/             home.js (overview), view.js, split.js, merge.js, inspect.j
 tests/csv.test.js     Unit tests for the parser
 tools/build_pages.py  Generates page heads, SEO content, content pages, sitemap and manifest
 tools/configure.py    Sets the domain and AdSense IDs
+tools/serve.py        Local server without caching
+_headers              Cache rules for Netlify / Cloudflare Pages
 *.html (other)        About, privacy, terms, contact, guide and 404 pages (generated)
 og-image.png, icon-*.png, apple-touch-icon.png, site.webmanifest   Social preview and app icons
 ads.txt, robots.txt, sitemap.xml   Site files with placeholders for your domain and publisher ID
