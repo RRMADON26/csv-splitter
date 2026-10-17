@@ -12,16 +12,31 @@ Out of the box the page makes no network requests at all once it has loaded (it 
 
 ## The tools
 
-The app opens on an **Overview** page: open a file once, then jump straight into the tool you need. Each tool has a card that says what it does. Dropping several files on the overview takes you to Merge.
+The app opens on an **Overview** page (on a phone, the tab bar holds the six tools and a back button returns to the Overview): open a file once, then jump straight into the tool you need. Each tool has a card that says what it does. Dropping several files on the overview takes you to Merge.
 
 
 | Tool | What it does |
 |---|---|
+| **View** | Open a file and read all of it: scroll every row, search, sort by any column, jump to a row number and read a whole row in full. |
 | **Split** | Break a big file into several smaller ones: by rows per file, number of files, maximum file size, or by the value of a column (one file per city, month, …). |
 | **Merge** | Combine many files into one. Reorder them, match columns by name even when the order differs, and optionally add a column with each row's source file. |
 | **Inspect** | Preview the first rows, see per-column statistics and detected types, and catch ragged rows, broken quotes, bad encodings and other data problems. |
 | **Transform** | Clean cells, filter rows, remove duplicates, sample, and pick / rename / reorder columns, with a live preview. |
 | **Convert** | Turn CSV into TSV, JSON, JSON Lines or a real Excel `.xlsx`, and change the output encoding. |
+
+### View
+
+![View: search, sort and row details](docs/view.png?v=11)
+
+A CSV reader for files that are too big or too slow for a spreadsheet.
+
+- **Every row**, not just the first ones. Only the rows on screen are drawn (virtual scrolling), so 200,000 rows open in about a second and scroll smoothly. Up to 1,000,000 rows are shown.
+- **Search** all columns or one column; matches are highlighted and the count shows how many rows match.
+- **Sort** by clicking a column name: ascending, descending, then back to the file order. Numbers sort as numbers and empty cells go last.
+- **Go to row** by its number in the file, even while sorted. Row numbers always refer to the original file.
+- **Row Details** shows every value of the selected row in full, with **Copy Row** (tab-separated, ready to paste into a spreadsheet). On a phone it opens as a sheet.
+- **Resize columns** by dragging the edge of a column name; use the arrow keys, Page Up/Down, Home and End to move through rows.
+- **Download These Rows** saves the result of a search or sort as a new CSV.
 
 ### Split
 
@@ -109,6 +124,7 @@ Every tool has its own address, so each one can rank for what people search for:
 | Page | Tool |
 | --- | --- |
 | `index.html` | Overview |
+| `csv-viewer.html` | View |
 | `split-csv.html` | Split |
 | `merge-csv.html` | Merge |
 | `validate-csv.html` | Inspect |
@@ -209,14 +225,14 @@ The result has 200,000 data rows plus 1 header. Every 1,000th row contains a mul
 
 ```
 index.html            App shell, opened on the overview
-*-csv.html            The same app opened on one tool (split, merge, validate, clean, convert)
+*-csv.html, csv-viewer.html   The same app opened on one tool (view, split, merge, validate, clean, convert)
 css/app.css           App styles
 css/pages.css         Styles for the content pages
 js/csv.js             Pure CSV parser / formatter (also runs in Node)
 js/core.js            Shared state, streaming scanner, sinks, ZIP, UI components, router
 js/ads.js             AdSense loader (inactive until configured)
 js/seo-data.js        Titles and descriptions used when switching tools (generated)
-js/tools/             home.js (overview), split.js, merge.js, inspect.js, transform.js, convert.js
+js/tools/             home.js (overview), view.js, split.js, merge.js, inspect.js, transform.js, convert.js
 tests/csv.test.js     Unit tests for the parser
 tools/build_pages.py  Generates page heads, SEO content, content pages, sitemap and manifest
 tools/configure.py    Sets the domain and AdSense IDs

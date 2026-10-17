@@ -5,6 +5,7 @@
   const store = App.file;
 
   const TOOLS = [
+    { id: 'view', tint: 'purple', points: ['Scroll through every row of a large file', 'Search, sort and jump to any row', 'Read a whole row and copy it'] },
     { id: 'split', tint: 'blue', points: ['By rows, number of files, size or column value', 'The header is repeated in every file', 'Download a ZIP or save straight to a folder'] },
     { id: 'merge', tint: 'indigo', points: ['Drop in many files and drag them into order', 'Columns can be matched by name', 'Optionally record each row’s source file'] },
     { id: 'inspect', tint: 'orange', points: ['Preview with detected column types', 'Ragged rows, bad characters, stray spaces', 'Export the issues and column stats'] },
@@ -16,7 +17,7 @@
     id: 'home', label: 'Overview', icon: 'home', short: 'Overview', blurb: 'What each tool does',
     get cta() { return store.ready ? 'Change File…' : 'Choose File…'; }, steps: false,
     hasFile() { return false; },
-    subtitle() { return store.ready ? store.name : '5 tools for CSV files'; },
+    subtitle() { return store.ready ? store.name : '6 tools for CSV files'; },
 
     mount(root) {
       const el = h(`
@@ -97,7 +98,7 @@
         show('ready');
         $('[data-f="name"]', el).textContent = store.name;
         $('[data-f="meta"]', el).textContent = ` ${fmt(store.dataRows)} rows, ${fmt(store.columns.length)} columns, ${fmtSize(store.file.size)}`;
-        $('[data-f="next"]', el).innerHTML = ['split', 'inspect', 'transform', 'convert'].map((id, i) =>
+        $('[data-f="next"]', el).innerHTML = ['view', 'split', 'inspect', 'transform', 'convert'].map((id, i) =>
           `<button type="button" class="btn ${i === 0 ? 'accent' : ''}" data-go-tool="${id}">${icon(App.tools[id].icon)}${esc(App.tools[id].label)}</button>`).join('');
       }
       el.addEventListener('click', e => {

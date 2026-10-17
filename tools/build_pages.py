@@ -19,7 +19,7 @@ import pathlib
 import re
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-VERSION = "2026.10.17.5"          # bump on every release so browsers refetch CSS/JS
+VERSION = "2026.10.17.6"          # bump on every release so browsers refetch CSS/JS
 DATE_ISO = "2026-10-17"
 DATE_TEXT = "October 17, 2026"
 D = "https://YOUR-DOMAIN.example"  # replaced by tools/configure.py
@@ -91,16 +91,33 @@ APP = {
  "home": dict(
   path="index.html", h1="Overview", name="CSV Toolkit",
   title="CSV Toolkit: Free Online CSV Tools, No Upload",
-  desc="Free CSV tools in your browser: split large CSV files, merge files, validate data, remove duplicates and convert CSV to Excel or JSON. Nothing is uploaded.",
-  features=["Split CSV files", "Merge CSV files", "Validate and preview CSV data", "Filter rows and remove duplicates", "Convert CSV to Excel, JSON and TSV"],
+  desc="Free CSV tools in your browser: open and split large CSV files, merge files, validate data, remove duplicates and convert to Excel or JSON. No upload.",
+  features=["View large CSV files", "Split CSV files", "Merge CSV files", "Validate and preview CSV data", "Filter rows and remove duplicates", "Convert CSV to Excel, JSON and TSV"],
   intro=f"""<h2>Frequently Asked Questions</h2>
 {faq([
- ("Is CSV Toolkit free?", "Yes. All five tools are free, with no sign-up and no limit on how many files you process."),
+ ("Is CSV Toolkit free?", "Yes. All six tools are free, with no sign-up and no limit on how many files you process."),
  ("Are my files uploaded anywhere?", "No. Files are read and processed by your browser on your own device. They are never sent to a server, which is why the tools also work with confidential data."),
  ("How large can a CSV file be?", "Files with hundreds of thousands of rows are handled comfortably, and much larger ones work too. Files are read in chunks, so the practical limit is your device’s memory. In Chrome and Edge you can save results straight into a folder, which avoids holding them in memory."),
  ("Does it work with Excel?", "Yes. <a href=\"convert-csv.html\">Convert</a> creates real .xlsx workbooks, and any CSV can be saved as UTF-8 with BOM so Excel shows accented characters correctly."),
  ("Which delimiters and encodings are supported?", "Comma, semicolon, tab and pipe delimiters, and UTF-8, UTF-16 and Windows-1252 encodings. Both are detected automatically and can be changed by hand."),
  ("Does it work on a phone or tablet?", "Yes. The layout adapts to small screens and every tool works on mobile browsers."),
+])}"""),
+
+ "view": dict(
+  path="csv-viewer.html", h1="View", name="CSV Viewer",
+  title="CSV Viewer: Open Large CSV Files Online | CSV Toolkit",
+  desc="Open and read large CSV files in your browser. Scroll every row, search, sort by any column and jump to a row number. Nothing is uploaded.",
+  features=["Open CSV files with hundreds of thousands of rows", "Search all columns or one column", "Sort by any column", "Jump to a row number", "Read and copy a whole row"],
+  intro=f"""<h2>Open and read large CSV files</h2>
+<p>This CSV viewer opens a file in your browser and lets you scroll through all of it, not just the first rows. It is built for exports that are slow or impossible to open in a spreadsheet, and it never changes your file.</p>
+<h3>How to view a CSV file</h3>
+<ol><li>Choose a CSV file or drop it onto the page. It is read on your device, not uploaded.</li><li>Scroll the table. Only the rows on screen are drawn, so even very large files stay smooth.</li><li>Type in the search field to show only matching rows, or click a column name to sort by it.</li><li>Select a row to read every value in full, and copy it to paste into a spreadsheet.</li></ol>
+<h3>What you can do</h3>
+<ul><li><strong>Search</strong> across all columns or in one column; matches are highlighted.</li><li><strong>Sort</strong> by any column; numbers sort as numbers, empty cells go last.</li><li><strong>Go to row</strong> by its number in the file, even after sorting.</li><li><strong>Resize columns</strong> by dragging the edge of a column name.</li><li><strong>Download these rows</strong> to keep the result of a search or sort as a new CSV.</li></ul>
+{faq([
+ ("How large a CSV file can I open?", "Files with hundreds of thousands of rows open in a few seconds. Up to 1,000,000 rows are shown; for bigger files, use <a href=\"split-csv.html\">Split</a> to break them into parts."),
+ ("Can I open a CSV without Excel?", "Yes. This viewer runs in any modern browser on Windows, macOS, Linux, iPhone, iPad and Android, with nothing to install."),
+ ("Does the viewer change my file?", "No. It only reads it. To filter rows or remove columns for good, use <a href=\"clean-csv.html\">Clean</a>."),
 ])}"""),
 
  "split": dict(
@@ -236,7 +253,7 @@ def page(fname, title, desc, body, current="", og_type="website", ld=None, robot
 {body}
 </main>
 <footer class="page-foot">
-  <nav aria-label="Tools"><a href="split-csv.html">Split CSV</a><a href="merge-csv.html">Merge CSV</a><a href="validate-csv.html">Validate CSV</a><a href="clean-csv.html">Clean CSV</a><a href="convert-csv.html">Convert CSV</a></nav>
+  <nav aria-label="Tools"><a href="csv-viewer.html">CSV Viewer</a><a href="split-csv.html">Split CSV</a><a href="merge-csv.html">Merge CSV</a><a href="validate-csv.html">Validate CSV</a><a href="clean-csv.html">Clean CSV</a><a href="convert-csv.html">Convert CSV</a></nav>
   <nav aria-label="About this site"><a href="guides.html">Guides</a><a href="about.html">About</a><a href="privacy.html">Privacy policy</a><a href="terms.html">Terms of use</a><a href="contact.html">Contact</a></nav>
   <p>CSV Toolkit is free and open source under the <a href="{REPO}/blob/main/LICENSE">MIT license</a>. Your CSV files are processed in your browser and never uploaded.</p>
 </footer>
@@ -263,6 +280,7 @@ def build_content_pages():
 
 <h2>The tools</h2>
 <ul>
+<li><a href="csv-viewer.html">View</a> opens a whole file so you can scroll, search and sort every row.</li>
 <li><a href="split-csv.html">Split</a> breaks a file into parts by row count, number of files, file size, or by the value of a column.</li>
 <li><a href="merge-csv.html">Merge</a> combines several files into one and can match columns by name.</li>
 <li><a href="validate-csv.html">Inspect</a> previews the data, describes every column and lists problems such as rows with the wrong number of columns.</li>
@@ -374,7 +392,7 @@ def build_content_pages():
 <h1>Page not found</h1>
 <p class="lead">The page you were looking for doesn’t exist, or it has moved.</p>
 <p>Try one of the tools:</p>
-<ul><li><a href="split-csv.html">Split a CSV file</a></li><li><a href="merge-csv.html">Merge CSV files</a></li><li><a href="validate-csv.html">Validate a CSV file</a></li><li><a href="clean-csv.html">Clean a CSV file</a></li><li><a href="convert-csv.html">Convert a CSV file</a></li></ul>
+<ul><li><a href="csv-viewer.html">Open a CSV file</a></li><li><a href="split-csv.html">Split a CSV file</a></li><li><a href="merge-csv.html">Merge CSV files</a></li><li><a href="validate-csv.html">Validate a CSV file</a></li><li><a href="clean-csv.html">Clean a CSV file</a></li><li><a href="convert-csv.html">Convert a CSV file</a></li></ul>
 <p>Or go to the <a href="index.html">overview</a> or the <a href="guides.html">guides</a>.</p>
 </article>''', robots="noindex, follow")
 

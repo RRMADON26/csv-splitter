@@ -2,8 +2,13 @@
 window.SEO_PAGES = {
   "home": {
     "title": "CSV Toolkit: Free Online CSV Tools, No Upload",
-    "description": "Free CSV tools in your browser: split large CSV files, merge files, validate data, remove duplicates and convert CSV to Excel or JSON. Nothing is uploaded.",
+    "description": "Free CSV tools in your browser: open and split large CSV files, merge files, validate data, remove duplicates and convert to Excel or JSON. No upload.",
     "path": "index.html"
+  },
+  "view": {
+    "title": "CSV Viewer: Open Large CSV Files Online | CSV Toolkit",
+    "description": "Open and read large CSV files in your browser. Scroll every row, search, sort by any column and jump to a row number. Nothing is uploaded.",
+    "path": "csv-viewer.html"
   },
   "split": {
     "title": "Split CSV Files Online, Free and Private | CSV Toolkit",
