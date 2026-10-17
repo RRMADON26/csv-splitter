@@ -787,6 +787,8 @@
   // ======================================================================
   // app / router
   // ======================================================================
+  const IS_MAC = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
+  const MOD = IS_MAC ? '⌘' : 'Ctrl+';
   const App = window.App = {
     $, $$, h, esc, fmt, fmtSize, debounce, nextTick, baseName, safeName, icon, toast, task,
     loaderShow, loaderSet, loaderHide, scanRecords, makeEncoder, detectEncoding, destinationPicker, buildZip, gzipBlob,
@@ -832,6 +834,9 @@
         const stage = $('.stage', view);
         if (stage) stage.appendChild(h('<div class="ad-slot" data-ad-slot="tool" hidden></div>'));
       }
+      // a page's intro belongs to its own tool; opened on another tool (an old #/tool link) it stays out of sight
+      const strayIntro = document.getElementById('seo-intro');
+      if (strayIntro && !strayIntro.closest('.view')) strayIntro.hidden = true;
       tool.onShow && tool.onShow();
       this.refreshViews(); syncMore(view);
       this.applySeo(tool.id);
@@ -866,6 +871,7 @@
       pick.textContent = shared ? (this.file.ready ? 'Change File…' : 'Choose File…') : (t.cta || 'Add Files…');
       const go = av && $('[data-go]', av);
       run.hidden = !go; run.textContent = t.verb || 'Run'; run.disabled = !go || go.disabled;
+      pick.title = `${pick.textContent} (${MOD}O)`; run.title = `${run.textContent} (${MOD}↩)`;
       $('#tbInspector').hidden = !(av && av.classList.contains('has-file'));
       document.body.classList.toggle('on-home', t.id === 'home');
     },
@@ -909,6 +915,12 @@
         const id = Object.keys(this.PATHS).find(k => this.PATHS[k] === file);
         if (!id || !this.tools[id] || /^(https?:)?\/\//.test(a.getAttribute('href'))) return;
         e.preventDefault(); this.go(id);
+      });
+      // keyboard: ⌘O / Ctrl+O opens a file, ⌘↩ / Ctrl+Enter runs the current tool
+      document.addEventListener('keydown', e => {
+        if (!(IS_MAC ? e.metaKey : e.ctrlKey) || e.altKey || e.shiftKey) return;
+        if (e.key === 'o' || e.key === 'O') { e.preventDefault(); this.pickFiles(); }
+        else if (e.key === 'Enter') { const r = $('#tbRun'); if (!r.hidden && !r.disabled) { e.preventDefault(); r.click(); } }
       });
       // an old #/tool link on any page: show the tool and tidy the address
       const initial = this.idFromLocation();

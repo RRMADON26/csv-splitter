@@ -6,7 +6,7 @@
 
   App.register({
     id: 'merge', label: 'Merge', icon: 'merge',
-    short: 'Merge CSV files', blurb: 'Combine several files into one', verb: 'Merge', stepFile: 'Add Files', cta: 'Add Files…',
+    short: 'Merge CSV files', blurb: 'Combine several files into one', verb: 'Merge Files', stepFile: 'Add Files', cta: 'Add Files…',
     subtitle() { const n = this._count ? this._count() : 0; return n ? `${n} file${n > 1 ? 's' : ''} added` : 'No files added'; },
     hasFile() { return this._count ? this._count() > 0 : false; },
     hero: {

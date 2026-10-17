@@ -85,7 +85,7 @@
 
   App.register({
     id: 'transform', label: 'Transform', icon: 'transform',
-    short: 'Transform a CSV file', blurb: 'Clean, filter, de-duplicate, sample and pick columns', verb: 'Transform',
+    short: 'Transform a CSV file', blurb: 'Clean, filter, de-duplicate, sample and pick columns', verb: 'Transform File',
     hero: {
       points: [
         'Clean cells, filter rows, remove duplicates and take a sample, in that order.',
@@ -99,7 +99,7 @@
       const dest = App.destinationPicker();
       const progress = App.progressCard(['rows read', 'rows kept', 'seconds']);
       const out = App.resultPanel({ zipBase: () => 'transformed' });
-      const summary = App.summaryCard('What Happened', 'Choose Another File…', () => store.pick());
+      const summary = App.summaryCard('What Happened');
       const dz = App.dropzoneTile({ onPick: () => store.pick(), onFiles: f => f[0] && store.set(f[0]) });
       root.appendChild(App.heroHTML(this, dz));
       const { side, main } = App.workspace(root);
@@ -166,6 +166,10 @@
       $('[data-dest]', outCard).appendChild(dest.el);
       [fc, outCard].forEach(n => side.appendChild(n));
       [steps, prev, progress.el, out.exp, summary.el].forEach(n => main.appendChild(n));
+      // one column on narrow screens: set up the steps first, then the output and its Transform File button
+      const narrow = matchMedia('(max-width: 1000px)');
+      const place = () => { if (narrow.matches) prev.after(outCard); else if (outCard.parentNode !== side) side.appendChild(outCard); };
+      narrow.addEventListener('change', place); place();
 
       const pref = k => $(`[data-pref="${k}"]`, root);
       const on = id => pref('en_' + id).checked;

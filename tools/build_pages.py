@@ -19,7 +19,7 @@ import pathlib
 import re
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-VERSION = "2026.10.17.4"          # bump on every release so browsers refetch CSS/JS
+VERSION = "2026.10.17.5"          # bump on every release so browsers refetch CSS/JS
 DATE_ISO = "2026-10-17"
 DATE_TEXT = "October 17, 2026"
 D = "https://YOUR-DOMAIN.example"  # replaced by tools/configure.py
@@ -93,7 +93,7 @@ APP = {
   title="CSV Toolkit: Free Online CSV Tools, No Upload",
   desc="Free CSV tools in your browser: split large CSV files, merge files, validate data, remove duplicates and convert CSV to Excel or JSON. Nothing is uploaded.",
   features=["Split CSV files", "Merge CSV files", "Validate and preview CSV data", "Filter rows and remove duplicates", "Convert CSV to Excel, JSON and TSV"],
-  intro=f"""<h2>Frequently asked questions</h2>
+  intro=f"""<h2>Frequently Asked Questions</h2>
 {faq([
  ("Is CSV Toolkit free?", "Yes. All five tools are free, with no sign-up and no limit on how many files you process."),
  ("Are my files uploaded anywhere?", "No. Files are read and processed by your browser on your own device. They are never sent to a server, which is why the tools also work with confidential data."),

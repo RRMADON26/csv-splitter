@@ -99,7 +99,7 @@
 
   App.register({
     id: 'convert', label: 'Convert', icon: 'convert',
-    short: 'Convert a CSV file', blurb: 'Excel, JSON, JSON Lines, TSV and encodings', verb: 'Convert',
+    short: 'Convert a CSV file', blurb: 'Excel, JSON, JSON Lines, TSV and encodings', verb: 'Convert File',
     hero: {
       points: [
         'Make a real Excel workbook: bold frozen header, numbers stored as numbers, dates as dates.',

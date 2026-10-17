@@ -2,7 +2,7 @@
 
 A browser-only toolkit for **splitting, merging, inspecting, transforming and converting CSV files**, built to cope with hundreds of thousands of rows or more (tested with 200,000 rows, ~19 MB). Everything runs **in your browser**: your files are never uploaded anywhere.
 
-![Overview](docs/overview.png?v=10)
+![Overview](docs/overview.png?v=11)
 
 ## Privacy
 
@@ -25,7 +25,7 @@ The app opens on an **Overview** page: open a file once, then jump straight into
 
 ### Split
 
-![Split tool](docs/split.png?v=10)
+![Split tool](docs/split.png?v=11)
 
 
 - **Four modes**: rows per file, number of output files, maximum file size (MB), or one file per distinct value of a column (up to 500 values).
@@ -41,7 +41,7 @@ The app opens on an **Overview** page: open a file once, then jump straight into
 - Files may use different delimiters and encodings; each is detected automatically.
 - Optional **source column** with the original file name.
 
-![Merge tool](docs/merge.png?v=10)
+![Merge tool](docs/merge.png?v=11)
 
 ### Inspect
 
@@ -50,7 +50,7 @@ The app opens on an **Overview** page: open a file once, then jump straight into
 - **Validation**: wrong number of columns, unclosed quotes, undecodable characters (�), garbled text (mojibake), duplicate or missing column names, empty columns, stray leading / trailing spaces, mixed value types, mixed line endings, BOM, blank lines.
 - A health ring shows the share of clean rows; issues and column statistics can be exported as CSV.
 
-![Inspect tool](docs/inspect.png?v=10)
+![Inspect tool](docs/inspect.png?v=11)
 
 *(Screenshot uses `examples/messy-for-inspect.csv`.)*
 
@@ -66,7 +66,7 @@ A five-step pipeline: every step can be switched on or off, and the **live previ
 
 Output options: delimiter, encoding, line endings, quote-everything, header on / off.
 
-![Transform tool](docs/transform.png?v=10)
+![Transform tool](docs/transform.png?v=11)
 
 ### Convert
 
@@ -75,7 +75,7 @@ Output options: delimiter, encoding, line endings, quote-everything, header on /
 - Excel: bold, frozen header row; numbers stored as numbers; `YYYY-MM-DD` stored as real dates; automatic column widths; data beyond Excel's 1,048,576-row limit continues on extra sheets.
 - Output encodings: **UTF-8**, **UTF-8 with BOM** (best for Excel), **Windows-1252 / Latin-1**, **UTF-16 LE**.
 
-![Convert tool](docs/convert.png?v=10)
+![Convert tool](docs/convert.png?v=11)
 
 ## Everywhere
 
@@ -100,7 +100,7 @@ Output options: delimiter, encoding, line endings, quote-everything, header on /
 - **Follows the system appearance** (light or dark), responsive layout, visible keyboard focus states, respects reduced motion and reduced transparency.
 - **Zero dependencies**: no build step, no npm, no server.
 
-![Loading animation](docs/loading.png?v=10)
+![Loading animation](docs/loading.png?v=11)
 
 ## SEO
 

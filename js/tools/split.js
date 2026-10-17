@@ -6,7 +6,7 @@
 
   App.register({
     id: 'split', label: 'Split', icon: 'split',
-    short: 'Split a CSV file', blurb: 'Break a big file into smaller ones', verb: 'Split',
+    short: 'Split a CSV file', blurb: 'Break a big file into smaller ones', verb: 'Split File',
     hero: {
       points: [
         'Handles hundreds of thousands of rows. The file is read in chunks, so the page stays responsive.',
@@ -19,7 +19,7 @@
       const dest = App.destinationPicker();
       const progress = App.progressCard(['rows', 'files', 'seconds']);
       const out = App.resultPanel({ zipBase: () => baseName(store.name || 'split') + '_split' });
-      const summary = App.summaryCard('Summary', 'Choose Another File…', () => store.pick());
+      const summary = App.summaryCard('Summary');
       const files = App.dropzoneTile({ onPick: () => store.pick(), onFiles: f => f[0] && store.set(f[0]) });
 
       root.appendChild(App.heroHTML(this, files));

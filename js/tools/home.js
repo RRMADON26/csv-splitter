@@ -16,7 +16,7 @@
     id: 'home', label: 'Overview', icon: 'home', short: 'Overview', blurb: 'What each tool does',
     get cta() { return store.ready ? 'Change File…' : 'Choose File…'; }, steps: false,
     hasFile() { return false; },
-    subtitle() { return store.ready ? store.name : 'Everything runs in this browser'; },
+    subtitle() { return store.ready ? store.name : '5 tools for CSV files'; },
 
     mount(root) {
       const el = h(`
@@ -24,7 +24,7 @@
   <section class="card qs" aria-labelledby="qs-title">
     <div class="qs-empty" data-qs="empty">
       <div class="qs-text">
-        <h2 id="qs-title">Start with a file</h2>
+        <h2 id="qs-title">Start With a File</h2>
         <p>Open a CSV to use it in any tool. You can also drop it anywhere on this page.</p>
       </div>
       <div class="qs-actions">
@@ -34,7 +34,7 @@
     </div>
     <div class="qs-ready" data-qs="ready" hidden>
       <div class="qs-text">
-        <h2>Your file is open</h2>
+        <h2>Your File Is Open</h2>
         <p><b class="qs-name" data-f="name"></b><span data-f="meta"></span></p>
       </div>
       <div class="qs-actions" data-f="next"></div>
@@ -50,7 +50,7 @@
   <div class="ad-slot" data-ad-slot="overview" hidden></div>
 
   <section class="home-sec" aria-labelledby="how-title">
-    <h2 class="sec-title" id="how-title">How it works</h2>
+    <h2 class="sec-title" id="how-title">How It Works</h2>
     <ol class="how">
       <li><b>Open a file</b><span>Drop it anywhere or choose it. It is read on this device and never uploaded.</span></li>
       <li><b>Pick a tool and its settings</b><span>Previews update as you change things, before anything runs.</span></li>
@@ -59,7 +59,7 @@
   </section>
 
   <section class="home-sec" aria-labelledby="learn-title">
-    <h2 class="sec-title" id="learn-title">Learn more</h2>
+    <h2 class="sec-title" id="learn-title">Learn More</h2>
     <div class="learn">
       <a class="learn-card" href="guide-split-large-csv.html"><b>How to split a large CSV file</b><span>When files are too big for Excel or an upload form, and how to cut them cleanly.</span></a>
       <a class="learn-card" href="guide-merge-csv-files.html"><b>How to merge CSV files</b><span>Combining exports that don’t share the same columns or delimiters.</span></a>
