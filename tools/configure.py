@@ -20,15 +20,15 @@ SLOT_PH = {"overview": "SLOT_OVERVIEW", "tool": "SLOT_TOOL", "article": "SLOT_AR
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--domain", help="Site address, e.g. https://csvtoolkit.example (no trailing slash)")
+    ap.add_argument("--domain", help="Site address, e.g. https://csvtoolkit.example, or https://yourblog.com/csv-toolkit for a folder (no trailing slash)")
     ap.add_argument("--adsense", help="AdSense publisher ID, e.g. ca-pub-1234567890123456")
     for k in SLOT_PH:
         ap.add_argument(f"--slot-{k}", help=f"Ad unit ID for the {k} placement (digits)")
     a = ap.parse_args()
     if not (a.domain or a.adsense):
         ap.error("give --domain and/or --adsense")
-    if a.domain and not re.fullmatch(r"https://[a-z0-9.-]+\.[a-z]{2,}", a.domain.rstrip("/")):
-        ap.error("--domain must look like https://example.com")
+    if a.domain and not re.fullmatch(r"https://[a-z0-9.-]+\.[a-z]{2,}(/[A-Za-z0-9._~-]+)*", a.domain.rstrip("/")):
+        ap.error("--domain must look like https://example.com, or https://example.com/folder when the toolkit lives in a folder of your site")
     if a.adsense and not re.fullmatch(r"ca-pub-\d{10,20}", a.adsense):
         ap.error("--adsense must look like ca-pub-1234567890123456")
     for k in SLOT_PH:

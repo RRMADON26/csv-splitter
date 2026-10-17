@@ -147,6 +147,28 @@ It also sets the `?v=` asset version on every page (bump `VERSION` in the script
 
 After deploying, submit `https://your-domain.com/sitemap.xml` in [Google Search Console](https://search.google.com/search-console).
 
+## Put it on your own site or blog
+
+The toolkit is plain static files with relative links, so it works in a folder of an existing site, unchanged.
+
+**In a folder** (recommended, the full UI as is): copy the files into, for example, `csv-toolkit/` on your site so it is served at `https://yourblog.com/csv-toolkit/`, then run
+
+```bash
+python3 tools/configure.py --domain https://yourblog.com/csv-toolkit
+```
+
+Search engines only read `robots.txt` and `ads.txt` at the root of a domain, so add the toolkit's `Sitemap:` line to your site's own `robots.txt` (or submit the sitemap in Search Console), and merge `ads.txt` into yours if you use AdSense. If you use `_headers`, prefix its paths with `/csv-toolkit`. Your host's own 404 page is used instead of `404.html`.
+
+**As a subdomain** (`tools.yourblog.com`): deploy the folder as its own site and configure it with that address. Everything, including `robots.txt` and `ads.txt`, works as shipped.
+
+**Inside a blog post**: embed it with an iframe.
+
+```html
+<iframe src="/csv-toolkit/csv-viewer.html" title="CSV Toolkit" allow="clipboard-write" style="width:100%;height:860px;border:0;border-radius:16px"></iframe>
+```
+
+In a narrow post column the app uses its compact layout (tab bar instead of sidebar). Opening, running and downloading all work inside the frame. Saving straight to a folder only works when the frame is on the same domain as the post.
+
 ## Google AdSense
 
 The site is prepared for AdSense but **ads stay off until you configure them**, so nothing from Google loads by default.
